@@ -1,7 +1,11 @@
 <template>
   <div class="box">
     <div class="login">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" size="medium" auto-complete="on" label-position="left" >
+      <!-- <el-form :model="ruleForm" :rules="rules" ref="ruleForm" size="medium" auto-complete="on" label-position="left" >
+        <div class="title">
+          <h3>后台登录</h3>
+        </div> -->
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
         <div class="title">
           <h3>后台登录</h3>
         </div>
@@ -9,7 +13,7 @@
           <span class="svg-container svg-container_login">
             <!-- <svg-icon icon-class="user" /> -->用户名
           </span>
-          <el-input type="password" v-model="ruleForm.user" auto-complete="off"></el-input>
+          <el-input v-model="ruleForm.user"></el-input>
         </el-form-item>
         <el-form-item prop="pass">
           <span class="svg-container svg-container_login">
@@ -36,35 +40,46 @@
 <script>
 export default {
   data () {
-    var validateUser = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入用户名'))
-      } else {
-        if (this.ruleForm.checkUser !== '') {
-          this.$refs.ruleForm.validateField('checkUser')
-        }
-        callback()
-      }
-    }
-    var validatePass = (rule, value, callback) => {
-      if (value === '' || value.length < 6) {
-        callback(new Error('请输入不少于6位密码'))
-      } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass')
-        }
-        callback()
-      }
-    }
     return {
       ruleForm: {
         user: '',
         pass: ''
       },
       rules: {
-        user: [ { validator: validateUser, trigger: 'blur' } ],
-        pass: [ { validator: validatePass, trigger: 'blur' } ]
+        user: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
+        pass: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
+        ]
       }
+    }
+  },
+  methods: {
+    openSuccess(text) {
+      this.$message({
+        message: text,
+        type: 'success'
+      });
+    },
+    openError(text) {
+      this.$message({
+        showClose: true,
+        message: text,
+        type: 'error'
+      });
+    },
+    submitForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.openSuccess('submit!')
+        } else {
+          this.openError('error submit!!')
+          return false
+        }
+      })
     }
   }
 }
