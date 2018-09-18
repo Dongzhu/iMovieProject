@@ -19,7 +19,7 @@ const store = new Vuex.Store({
   state: {
     isCollapse: false,
     dynamicTags: [ { index: 'choice1', value: '选项1' } ],
-    tag: 'choice1'
+    tag: { index: 'choice1', value: '选项1' }
   },
   mutations: {
     updateSidebar (state, flag) { state.isCollapse = flag },
@@ -28,7 +28,10 @@ const store = new Vuex.Store({
         state.dynamicTags.push({index: tag.index, value: tag.value})
       }
     },
-    updateTag (state, tag) { state.tag = tag }
+    updateTag (state, tag) {
+      state.tag.index = tag.index
+      state.tag.value = tag.value
+    }
   }
 })
 

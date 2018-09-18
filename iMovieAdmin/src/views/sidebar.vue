@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
     <el-menu :default-active="tag" class="el-menu-vertical-demo" id="el-menu"
-      @open="handleOpen" @close="handleClose"  @select="handdleSelect"
+      @open="handleOpen" @close="handleClose"
       :collapse="isCollapse" router :collapse-transition="true" mode="vertical" :show-timeout="200"
       :default-openeds="openeds"
       background-color="#304156"
@@ -39,7 +39,7 @@ export default {
   data () {
     return {
       // isCollapse: false
-      first: true,
+      hackReset: false,
       menulist: [
         { index: '1', icon: 'el-icon-location', name: '导航一', menuitem: [ {index: 'choice1', name: '选项1'}, {index: 'choice2', name: '选项2'} ] },
         { index: '2', icon: 'el-icon-menu', name: '导航二', menuitem: [ {index: 'choice3', name: '选项3'}, {index: 'choice4', name: '选项4'} ] },
@@ -52,12 +52,16 @@ export default {
   mounted () {
     let h = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight
     document.querySelector('.sidebar').style.height = h.toString() + 'px'
-    let content = document.querySelector('.content')
-    if (this.isCollapse) {
-      content.style.width = 'calc(100% - 64px)'
-    } else {
-      content.style.width = 'calc(100% - 200px)'
-    }
+
+    this.hackReset = true
+    this.$nextTick(function () {
+      let content = document.querySelector('.content')
+      if (this.isCollapse) {
+        content.style.width = 'calc(100% - 64px)'
+      } else {
+        content.style.width = 'calc(100% - 200px)'
+      }
+    })
   },
   computed: {
     isCollapse () { return this.$store.state.isCollapse },
@@ -72,7 +76,7 @@ export default {
     checkTag (choice, tag) {
       // console.log(choice, tag)
       this.$store.commit('addTag', {index: choice, value: tag})
-      this.$store.commit('updateTag', choice)
+      this.$store.commit('updateTag', {index: choice, value: tag})
     },
     handleOpen (key, keyPath) { console.log(key, keyPath) },
     handleClose (key, keyPath) { console.log(key, keyPath) }

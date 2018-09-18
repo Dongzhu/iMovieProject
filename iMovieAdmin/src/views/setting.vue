@@ -7,7 +7,7 @@
       <div class="top-info-2">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>面包屑</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/' }">{{tag.value}}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
     </div>
@@ -33,7 +33,8 @@ export default {
   },
   computed: {
     isCollapse () { return this.$store.state.isCollapse },
-    dynamicTags () { return this.$store.state.dynamicTags }
+    dynamicTags () { return this.$store.state.dynamicTags },
+    tag () { return this.$store.state.tag }
   },
   mounted () {
     let topinfo = document.querySelector('.top-info-1')
@@ -56,14 +57,12 @@ export default {
       let topinfo = document.querySelector('.top-info-1')
       let content = document.querySelector('.content')
       if (this.isCollapse) {
-        console.log('toggle 200')
         topinfo.style.transform = 'rotate(0deg)'
         this.$store.commit('updateSidebar', false)
         setTimeout(function () {
           content.style.width = 'calc(100% - 200px)'
         }, 15)
       } else {
-        console.log('toggle 60')
         topinfo.style.transform = 'rotate(90deg)'
         this.$store.commit('updateSidebar', true)
         setTimeout(function () {
@@ -74,6 +73,7 @@ export default {
     },
     viewTag (tag) {
       this.$router.push(tag.index)
+      this.$store.commit('updateTag', {index: tag.index, value: tag.value})
     }
   }
 }

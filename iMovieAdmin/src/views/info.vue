@@ -12,8 +12,15 @@ export default {
     }
   },
   computed: {
-    tag () {
-      return this.$store.state.tag
+    isCollapse () { return this.$store.state.isCollapse },
+    tag () { return this.$store.state.tag }
+  },
+  mounted () {
+    let content = document.querySelector('.content')
+    if (this.isCollapse) {
+      content.style.width = 'calc(100% - 64px)'
+    } else {
+      content.style.width = 'calc(100% - 200px)'
     }
   }
 }

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import login from '@/views/login'
-import main from '@/views/main'
+// import main from '@/views/main'
 import choice1 from '@/views/pages/choice1'
 import choice2 from '@/views/pages/choice2'
 import choice3 from '@/views/pages/choice3'
@@ -16,8 +16,9 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'main',
-      component: main
+      // name: 'main',
+      // component: main
+      redirect: '/choice1'
     },
     {
       path: '/login',

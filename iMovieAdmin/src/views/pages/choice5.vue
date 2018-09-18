@@ -2,10 +2,10 @@
   <div class="main">
     <sidebar></sidebar>
 
-    <div class="content">
+    <div class="content" v-if="hackReset">
       <setting></setting>
       <div class="info">
-        {{tag}} 555
+        {{tag}}
       </div>
     </div>
   </div>
@@ -19,12 +19,15 @@ export default {
   components: { sidebar, setting },
   data () {
     return {
-
+      hackReset: false
     }
   },
   computed: {
     isCollapse () { return this.$store.state.isCollapse },
     tag () { return this.$store.state.tag }
+  },
+  mounted () {
+    this.hackReset = true
   }
 }
 </script>
