@@ -1,3 +1,4 @@
+/* eslint-disable */
 var radius = 90;
 var d = 200;
 var dtr = Math.PI / 180;

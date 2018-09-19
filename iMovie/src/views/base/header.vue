@@ -31,19 +31,19 @@
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        msg: 'Welcome to Your Vue.js App'
-      }
-    },
-    mounted(){
-      let route = this.$route.path;
-      if(route.indexOf('index')>-1 || route.length===1){
-        document.querySelector('.top').style.color = '#fff';
-      }
+export default {
+  data () {
+    return {
+      msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  mounted () {
+    let route = this.$route.path
+    if (route.indexOf('index') > -1 || route.length === 1) {
+      document.querySelector('.top').style.color = '#fff'
     }
   }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
