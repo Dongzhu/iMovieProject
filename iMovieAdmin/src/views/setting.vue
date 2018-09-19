@@ -50,7 +50,8 @@ export default {
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
       if (this.dynamicTags.length !== 0) {
         this.$router.push(this.dynamicTags[this.dynamicTags.length - 1].index)
-        this.$store.commit('updateTag', this.dynamicTags[this.dynamicTags.length - 1].index)
+        let last = this.dynamicTags[this.dynamicTags.length - 1]
+        this.$store.commit('updateTag', {index: last.index, value: last.value})
       }
     },
     toggle () {

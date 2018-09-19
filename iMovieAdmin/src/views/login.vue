@@ -58,18 +58,18 @@ export default {
     }
   },
   methods: {
-    openSuccess(text) {
+    openSuccess (text) {
       this.$message({
         message: text,
         type: 'success'
-      });
+      })
     },
-    openError(text) {
+    openError (text) {
       this.$message({
         showClose: true,
         message: text,
         type: 'error'
-      });
+      })
     },
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
