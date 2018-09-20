@@ -1,0 +1,16 @@
+{
+  "name": "imovieserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "koa": "^2.5.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "openred",
+  "license": "ISC"
+}
