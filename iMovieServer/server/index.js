@@ -2,6 +2,7 @@ const koa = require('koa')
 const mongoose = require('mongoose')
 const { resolve } = require('path')
 const { connect, initSchemas } = require('../database/init')
+const router = require('../routes')
 
 ;(async () => {
   initSchemas()
@@ -17,8 +18,12 @@ const { connect, initSchemas } = require('../database/init')
 
 const app = new koa()
 
+app
+  .use(router.routes())
+  .use(router.allowedMethods())
+
 app.use(async (ctx, next) => {
-  ctx.body = 'index'
+  ctx.body = 'Hello Koa!'
 })
 
 app.listen(2333)
