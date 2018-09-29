@@ -1,0 +1,19 @@
+{
+  "name": "crawler",
+  "version": "1.0.0",
+  "description": "> 2018.09 创建iMovie项目",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenRed/iMovieProject.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OpenRed/iMovieProject/issues"
+  },
+  "homepage": "https://github.com/OpenRed/iMovieProject#readme"
+}

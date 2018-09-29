@@ -1,5 +1,5 @@
 {
-  "name": "imovieserver",
+  "name": "server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,9 +10,9 @@
     "koa": "^2.5.3",
     "koa-router": "^7.4.0",
     "lodash": "^4.17.11",
-    "mongoose": "^5.2.17",
+    "mongoose": "^5.2.18",
+    "nodemon": "^1.18.4",
     "path": "^0.12.7",
-    "puppeteer": "^1.8.0",
     "ramda": "^0.25.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
@@ -24,7 +24,7 @@
     "babel-polyfill": "^6.26.0"
   },
   "scripts": {
-    "start": "node server/index.js",
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "openred",
