@@ -13,22 +13,24 @@
           <div class="section-body">
             <div class="section-info">
               <div class="section-info1">
-                <img :src="itemInfo.url" :alt="itemInfo.name" width="100%">
+                <img :src="itemInfo.poster" :alt="itemInfo.name" width="100%">
               </div>
               <div class="section-info2">
-                <p>导演：{{itemInfo.director}}</p>
-                <p>主演：<span v-for="(item,index) in itemInfo.actor" :key="index">{{item}}</span></p>
-                <p>类型：<span v-for="(item,index) in itemInfo.type" :key="index">{{item}}</span></p>
-                <p>地区：<span v-for="(item,index) in itemInfo.area" :key="index">{{item}}</span></p>
-                <p>语言：<span v-for="(item,index) in itemInfo.language" :key="index">{{item}}</span></p>
-                <p>时长：{{itemInfo.duration}}分钟</p>
-                <p>上映日期：{{itemInfo.pubdate}}</p>
+                <p>导演：<span v-for="(item,index) in itemInfo.directors" :key="index">{{item.name}} </span></p>
+                <p>主演：<span v-for="(item,index) in itemInfo.actor" :key="index">{{item}} </span></p>
+                <p>语言：<span v-for="(item,index) in itemInfo.language" :key="index">{{item}} </span></p>
+                <p>时长：{{itemInfo.duration || 0}} 分钟</p>
+                <p>类型：<span v-for="(item,index) in itemInfo.genres" :key="index">{{item}} </span></p>
+                <p>地区：<span v-for="(item,index) in itemInfo.countries" :key="index">{{item}} </span></p>
+                <p>上映日期：{{itemInfo.year}}</p>
                 <p>评分：<el-rate
                     v-model="itemInfo.rate"
                     disabled
                     text-color="#ff9900">
                   </el-rate><span>{{itemInfo.rate}}</span>
                 </p>
+                <p>想看：{{itemInfo.wish_count}}</p>
+                <p>剧情简介：{{itemInfo.summary}}</p>
               </div>
             </div>
           </div>
@@ -71,23 +73,26 @@ import Header from '../base/header'
 import Footer from '../base/foot'
 import Page from '../base/page'
 
+import { getMovie } from '@/api/views/movies'
+
 export default {
   components: { Header, Footer, Page },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
+      rate: 8.6,
       itemInfo: {
-        id: 1,
-        name: '碟中谍6：全面瓦解',
-        director: '克里斯托弗·麦奎里',
-        rate: 8.3,
-        actor: ['汤姆·克鲁斯', '亨利·卡维尔', '文·瑞姆斯', '西蒙·佩吉', '丽贝卡·弗格森'],
-        type: ['动作', '惊悚', '冒险'],
-        area: ['美国'],
-        language: ['英语', '法语'],
-        duration: 147,
-        pubdate: '2018-08-31',
-        url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2529365085.webp'
+        // id: 1,
+        // name: '碟中谍6：全面瓦解',
+        // director: '克里斯托弗·麦奎里',
+        // rate: 8.3,
+        // actor: ['汤姆·克鲁斯', '亨利·卡维尔', '文·瑞姆斯', '西蒙·佩吉', '丽贝卡·弗格森'],
+        // type: ['动作', '惊悚', '冒险'],
+        // area: ['美国'],
+        // language: ['英语', '法语'],
+        // duration: 147,
+        // pubdate: '2018-08-31',
+        // url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2529365085.webp'
       },
       bestlist: [
         {name: '碟中谍6：全面瓦解', rate: 4.8, pubdate: '2018-08-31', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2529365085.webp'},
@@ -98,6 +103,15 @@ export default {
         {name: '西虹市首富', pubdate: '2018-07-27', rate: 2.8, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529206747.webp'}
       ]
     }
+  },
+  mounted () {
+    let doubanId = this.$route.path.split('detail/')[1]
+    getMovie(doubanId).then(data => {
+      console.log(data)
+      if (data.success) {
+        this.itemInfo = data.movie[0]
+      }
+    })
   },
   methods: {
     showChange (index) {

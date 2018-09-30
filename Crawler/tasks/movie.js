@@ -28,9 +28,9 @@ const Movie = mongoose.model('Movie')
     console.log('===========result===========')
     console.log(result)
     result.forEach(async (item) => {
-      let movie = await Movie.findOne({ doubanId: item.doubanId }).exec()
+      let movie = await Movie.findOne({ id: item.id }).exec()
       if (!movie) {
-        // console.log(item, item.doubanId)
+        // console.log(item, item.id)
         movie = new Movie(item)
         await movie.save()
       }

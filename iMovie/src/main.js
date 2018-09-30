@@ -12,6 +12,7 @@ import IconSvg from '@/components/IconSvg' // 引入svg组件
 
 import '@/assets/css/base.css'
 import '@/assets/js/iconfont.js'
+import '@/assets/js/cloud.js'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)

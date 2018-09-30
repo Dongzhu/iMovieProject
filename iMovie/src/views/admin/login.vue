@@ -38,12 +38,14 @@
 </template>
 
 <script>
+import { login } from '@/api/views/user'
+
 export default {
   data () {
     return {
       ruleForm: {
-        user: '',
-        pass: ''
+        user: 'admin',
+        pass: '123456'
       },
       rules: {
         user: [
@@ -75,6 +77,14 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.openSuccess('submit!')
+          // console.log(JSON.stringify(this.ruleForm))
+
+          login({user: this.ruleForm.user, password: this.ruleForm.pass}).then(data => {
+            console.log(data)
+            if (data.success === true) {
+              this.$router.push('/index')
+            }
+          })
         } else {
           this.openError('error submit!!')
           return false

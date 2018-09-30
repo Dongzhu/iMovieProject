@@ -6,7 +6,7 @@ const Category = mongoose.model('Category')
 // http://api.douban.com/v2/movie/subject/1764796
 
 async function fetchMovie(item) {
-  const url = `http://api.douban.com/v2/movie/subject/${item.doubanId}`
+  const url = `http://api.douban.com/v2/movie/subject/${item.id}`
   const res = await request(url)
 
   let body
@@ -20,7 +20,7 @@ async function fetchMovie(item) {
 
 ;(async () => {
   // let movies = [
-  //   { doubanId: 26925317,
+  //   { id: 26925317,
   //   title: '动物世界',
   //   rate: 7.3,
   //   poster: 'https://img1.doubanio.com/view/photo/l_ratio_poster/public/p2525528688.jpg' }
@@ -52,6 +52,13 @@ async function fetchMovie(item) {
       movie.subtype = movieData.subtype || ''
       movie.comments_count = movieData.comments_count || 0
       movie.ratings_count = movieData.ratings_count || 0
+      movie.reviews_count = movieData.ratings_count || 0
+      movie.wish_count = movieData.ratings_count || 0
+      movie.collect_count = movieData.ratings_count || 0
+      movie.images = movieData.images || {}
+      movie.alt = movieData.alt || ''
+      movie.mobile_url = movieData.mobile_url || ''
+      movie.share_url = movieData.share_url || ''
 
       for (let i=0; i<movieData.directors.length; i++) {
         let item = movieData.directors[i]

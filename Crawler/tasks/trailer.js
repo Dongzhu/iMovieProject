@@ -19,7 +19,7 @@ const Movie = mongoose.model('Movie')
   child.on('error', err => {
     if (invoked) return
     invoked = true
-    
+
     console.log(err)
   })
 
@@ -27,14 +27,14 @@ const Movie = mongoose.model('Movie')
     if (invoked) return
     invoked = false
     let err = code === 0 ? null : new Error('exit code ' + code)
-    
+
     console.log(err)
   })
 
   child.on('message', async data => {
-    let doubanId = data.doubanId
+    let id = data.id
     let movie = await Movie.findOne({
-      doubanId: doubanId
+      id: id
     }).exec()
 
     if (data.video) {
@@ -49,4 +49,3 @@ const Movie = mongoose.model('Movie')
 
   child.send(movies)
 })()
-  

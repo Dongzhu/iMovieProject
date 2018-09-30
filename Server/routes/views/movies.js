@@ -1,7 +1,7 @@
 const router = require('koa-router')()
 const mongoose = require('mongoose')
 
-router.get('/', async (ctx, next) => {
+router.get('/movies', async (ctx, next) => {
   const Movie = mongoose.model('Movie')
   const movies = await Movie.find({}).sort({
     'meta.createdAt': -1
@@ -10,12 +10,13 @@ router.get('/', async (ctx, next) => {
   ctx.body = { success: true, movies }
 })
 
-router.get('/:id', async (ctx, next) => {
+router.get('/movies/:id', async (ctx, next) => {
   const Movie = mongoose.model('Movie')
   const id = ctx.params.id
-  const movie = await Movie.find({_id:id}).sort({
+  const movie = await Movie.find({id:id}).sort({
     'meta.createdAt': -1
   })
+  console.log(movie)
 
   ctx.body = { success: true, movie }
 })

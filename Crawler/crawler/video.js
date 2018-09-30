@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer')
 
 const base = `https://movie.douban.com/subject/`
-const doubanId = '26996640'
+const id = '26996640'
 const video = `https://movie.douban.com/trailer/236337/#content`
 
 // 延时函数
@@ -20,7 +20,7 @@ const sleep = time => new Promise(resolve =>  {
   })
 
   const page = await browser.newPage()
-  await page.goto(base + doubanId, {
+  await page.goto(base + id, {
     waitUntil: 'networkidle2'
   })
 
@@ -57,7 +57,7 @@ const sleep = time => new Promise(resolve =>  {
     })
   }
 
-  const data = { video, doubanId, cover: result.cover}
+  const data = { video, id, cover: result.cover}
 
   browser.close()
   // console.log(data)

@@ -12,6 +12,7 @@
   "plugins": [
     "transform-vue-jsx",
     "transform-runtime",
+    "babel-plugin-transform-es2015-modules-commonjs",
     [
       "component",
       {

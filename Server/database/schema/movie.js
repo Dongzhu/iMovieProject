@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 const { ObjectId, Mixed } = Schema.Types
 
 const movieSchema = new Schema({
-  doubanId: { unique: true, type: String },
+  id: { unique: true, type: String },
   category: [ { type: ObjectId, ref: 'Category' } ],
   rate: Number,
   title: String,

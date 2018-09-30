@@ -1,9 +1,12 @@
-const router = require('koa-router')()
+const Router = require('koa-router')
+const koaBody = require('koa-body')
 
 const movies = require('./views/movies')
 const users = require('./views/users')
 
-router.use('/movies', movies.routes(), movies.allowedMethods())
-router.use('/users', users.routes(), users.allowedMethods())
+const router = new Router({prefix: '/api'})
+
+router.use(movies.routes(), koaBody(), movies.allowedMethods())
+router.use(users.routes(), koaBody(), users.allowedMethods())
 
 module.exports = router

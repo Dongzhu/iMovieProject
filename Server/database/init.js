@@ -10,6 +10,41 @@ exports.initSchemas = () => {
   glob.sync(resolve(__dirname, './schema', '**/*.js')).forEach(require)
 }
 
+exports.initAdmins = async () => {
+  // create a user a new user
+  const User = mongoose.model('User')
+
+  let user = await User.findOne({ username: 'admin' })
+  if (!user) {
+    const user = new User({
+      username: 'admin',
+      password: '123456',
+      email: '123456@gmail.com'
+    })
+    console.log('================')
+    await user.save()
+    // save user to database
+    // await user.save(function(err) {
+    //   console.log(2333)
+    //   if (err) throw err
+    //   // fetch user and test password verification
+    //   User.findOne({ username: 'admin' }, function(err, user) {
+    //     if (err) throw err
+    //     // test a matching password
+    //     user.comparePassword('123456', function(err, isMatch) {
+    //       if (err) throw err
+    //       console.log('123456:', isMatch) // -> 123456: true
+    //     })
+    //     // test a failing password
+    //     user.comparePassword('abcdefg', function(err, isMatch) {
+    //       if (err) throw err
+    //       console.log('abcdefg:', isMatch) // -> 123Password: false
+    //     })
+    //   })
+    // })
+  }
+}
+
 exports.connect = () => {
   let maxConnectTimes = 0
 

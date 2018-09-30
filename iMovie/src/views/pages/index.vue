@@ -40,7 +40,7 @@
                   </video>
                 </div> -->
                 <div class="card-info">
-                  <p class="over"><a href="/detail">{{item.name}} {{item.rate}}</a></p>
+                  <p><a href="/detail" class="over">{{item.name}} {{item.rate}}</a></p>
                   <p class="bottom clearfix">
                     <time class="time">{{ item.pubdate }}</time>
                   </p>
@@ -59,14 +59,14 @@
               </h4>
             </div>
             <div class="section-body">
-              <div class="card" v-for="(item,index) in newlist" :key="index" :title="item.name">
+              <div class="card" v-for="(item,index) in newlist" :key="index" :title="item.title">
                 <div class="card-bg">
-                  <img :src="item.url" :alt="item.name" width="100%" height="100%" class="image">
+                  <a :href="'/detail/'+item.id"><img :src="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
                 </div>
                 <div class="card-info">
-                  <p class="over">{{item.name}}</p>
+                  <p class="over"><a :href="'/detail/'+item.id">{{item.title}}</a></p>
                   <p class="bottom clearfix">
-                    <time class="time">{{ item.pubdate }}</time>
+                    <time class="time"><a :href="'/detail/'+item.id">{{ item.year }}</a></time>
                   </p>
                 </div>
               </div>
@@ -91,7 +91,7 @@
           <div class="navbar best">
             <h4>口碑榜</h4>
             <ul>
-              <li v-for="(item,index) in bestlist" :key="index">{{index+1}} <a href="">{{item.name}}</a></li>
+              <li v-for="(item,index) in bestlist" :key="index"><a href="" class="over">{{index+1}} {{item.name}}</a></li>
             </ul>
           </div>
         </div>
@@ -107,7 +107,9 @@
 import Header from '../base/header'
 import Footer from '../base/foot'
 import Page from '../base/page'
-import '@/assets/js/cloud.js'
+// import '@/assets/js/cloud.js'
+
+import { getMovies } from '@/api/views/movies'
 
 export default {
   components: { Header, Footer, Page },
@@ -130,16 +132,16 @@ export default {
         {id: 6, name: '西虹市首富', pubdate: '2018-07-27', rate: 2.8, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529206747.webp'}
       ],
       newlist: [
-        {id: 1, name: '狄仁杰之四大天王', pubdate: '2018-07-27', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2526405034.jpg'},
-        {id: 1, name: '瞒天过海：美人计 Oceans Eight', pubdate: '2018-06-08', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2508259902.jpg'},
-        {id: 1, name: '致所有我曾爱过的男孩 To All the Boys I have Loved Before', pubdate: '2018-08-17', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529112058.jpg'},
-        {id: 1, name: '遗传厄运 Hereditary', pubdate: '2018-06-08', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2518865763.jpg'},
-        {id: 1, name: '复仇者联盟3：无限战争 Avengers: Infinity War', pubdate: '2018-05-11', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2517753454.jpg'},
-        {id: 1, name: '燃烧 버닝', pubdate: '2018-05-16', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2520095279.jpg'},
-        {id: 1, name: '大象席地而坐', pubdate: '2018-02-16', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2511811355.jpg'},
-        {id: 1, name: '肆式青春 詩季織々', pubdate: '2018-08-04', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2526429256.jpg'},
-        {id: 1, name: '奇迹男孩 Wonder', pubdate: '2018-01-19', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2507709428.jpg'},
-        {id: 1, name: '行动时刻 Action Point', pubdate: '2018-06-01', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2520177065.jpg'}
+        // {id: 1, name: '狄仁杰之四大天王', pubdate: '2018-07-27', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2526405034.jpg'},
+        // {id: 1, name: '瞒天过海：美人计 Oceans Eight', pubdate: '2018-06-08', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2508259902.jpg'},
+        // {id: 1, name: '致所有我曾爱过的男孩 To All the Boys I have Loved Before', pubdate: '2018-08-17', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529112058.jpg'},
+        // {id: 1, name: '遗传厄运 Hereditary', pubdate: '2018-06-08', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2518865763.jpg'},
+        // {id: 1, name: '复仇者联盟3：无限战争 Avengers: Infinity War', pubdate: '2018-05-11', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2517753454.jpg'},
+        // {id: 1, name: '燃烧 버닝', pubdate: '2018-05-16', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2520095279.jpg'},
+        // {id: 1, name: '大象席地而坐', pubdate: '2018-02-16', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2511811355.jpg'},
+        // {id: 1, name: '肆式青春 詩季織々', pubdate: '2018-08-04', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2526429256.jpg'},
+        // {id: 1, name: '奇迹男孩 Wonder', pubdate: '2018-01-19', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2507709428.jpg'},
+        // {id: 1, name: '行动时刻 Action Point', pubdate: '2018-06-01', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2520177065.jpg'}
       ],
       bestlist: [
         {name: '碟中谍6：全面瓦解', rate: 4.8, pubdate: '2018-08-31', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2529365085.webp'},
@@ -156,6 +158,14 @@ export default {
     if (route.indexOf('index') > -1 || route.length === 1) {
       document.querySelector('.main').style.marginTop = '0'
     }
+
+    getMovies().then(data => {
+      if (data.success) {
+        this.newlist = data.movies
+      } else {
+        this.newlist = []
+      }
+    })
   },
   methods: {
     showChange (index) {
