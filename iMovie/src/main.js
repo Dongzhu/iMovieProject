@@ -5,6 +5,8 @@ import App from './App'
 import router from './router'
 import Vuex from 'vuex'
 
+import JsEncrypt from 'jsencrypt'
+
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
@@ -15,6 +17,7 @@ import '@/assets/js/iconfont.js'
 // import '@/assets/js/cloud.js'
 
 Vue.config.productionTip = false
+Vue.prototype.$jsEncrypt = JsEncrypt
 Vue.use(ElementUI)
 
 Vue.use(Vuex)

@@ -39,6 +39,7 @@
 
 <script>
 import { login } from '@/api/views/user'
+import { JSEncrypt } from 'jsencrypt'
 
 export default {
   data () {
@@ -77,12 +78,25 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.openSuccess('submit!')
-          // console.log(JSON.stringify(this.ruleForm))
 
-          login({user: this.ruleForm.user, password: this.ruleForm.pass}).then(data => {
-            console.log(data)
+          // 实例化一个JSEncrypt对象
+          let jse = new JSEncrypt()
+          jse.setPublicKey(`-----BEGIN PUBLIC KEY-----
+          MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8ygMKjJLSUpnfXqt8lRSAdDxA
+          HWKi9GbTFkCbAjkRCR6VUakxxXLXHQUtPCizKcvNpuYqZ5bO8LEgpY7SL3JEdEI9
+          OuMnZ6ToeHPfcHeS+EgN0oYmdQ49RB5wZkcBEFk80OBEAM6VhnE0IuHGkU5ko9oP
+          Hq3boEQ3Ej6r3T+UhQIDAQAB
+          -----END PUBLIC KEY-----`)
+          // 设置需要加密的字符串
+          let encrypted = jse.encrypt(this.ruleForm.pass)
+          // 输出加密结果
+          console.log(encrypted)
+
+          let params = {user: this.ruleForm.user, password: encrypted}
+          login(params).then(data => {
             if (data.success === true) {
-              this.$router.push('/index')
+              // this.$router.push('/index')
+              console.log(2333)
             }
           })
         } else {
