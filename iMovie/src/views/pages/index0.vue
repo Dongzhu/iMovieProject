@@ -73,8 +73,28 @@
             </div>
           </div>
         </div>
-
-        <Sidebar></Sidebar>
+        <div class="layer">
+          <div class="navbar">
+            <h4>猜您喜欢</h4>
+            <div id="tagscloud">
+              <a href="" class="tagc1">碟中谍6：全面瓦解</a>
+              <a href="" class="tagc2">碟中谍6：全面瓦解</a>
+              <a href="" class="tagc3">碟中谍6：全面瓦解</a>
+              <a href="" class="tagc1">碟中谍6：全面瓦解</a>
+              <a href="" class="tagc2">碟中谍6：全面瓦解</a>
+              <a href="" class="tagc3">碟中谍6：全面瓦解</a>
+              <a href="" class="tagc1">碟中谍6：全面瓦解</a>
+              <a href="" class="tagc2">碟中谍6：全面瓦解</a>
+              <a href="" class="tagc3">碟中谍6：全面瓦解</a>
+            </div>
+          </div>
+          <div class="navbar best">
+            <h4>口碑榜</h4>
+            <ul>
+              <li v-for="(item,index) in bestlist" :key="index"><a href="" class="over">{{index+1}} {{item.name}}</a></li>
+            </ul>
+          </div>
+        </div>
       </el-container>
     </div>
     <div class="clearfix"></div>
@@ -87,12 +107,12 @@
 import Header from '../base/header'
 import Footer from '../base/foot'
 import Page from '../base/page'
-import Sidebar from '../base/sidebar'
+// import '@/assets/js/cloud.js'
 
 import { getMovies } from '@/api/views/movies'
 
 export default {
-  components: { Header, Footer, Page, Sidebar },
+  components: { Header, Footer, Page },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
@@ -149,6 +169,7 @@ export default {
   },
   methods: {
     showChange (index) {
+      // console.log(index)
       document.querySelector('.bg').style.backgroundImage = 'url(' + this.bannerlist[index].url + ')'
     }
   }

@@ -6,60 +6,38 @@
 
     <div class="main">
       <el-container>
-        <div class="section">
+        <div class="section" v-if="itemInfo">
           <div class="section-header">
-            <h4>{{itemInfo.name}}</h4>
+            <h4>{{itemInfo.title || ''}}</h4>
           </div>
           <div class="section-body">
             <div class="section-info">
               <div class="section-info1">
-                <img :src="itemInfo.poster" :alt="itemInfo.name" width="100%">
+                <img :src="itemInfo.poster || ''" :alt="itemInfo.title || ''" width="100%">
               </div>
               <div class="section-info2">
-                <p>导演：<span v-for="(item,index) in itemInfo.directors" :key="index">{{item.name}} </span></p>
-                <p>主演：<span v-for="(item,index) in itemInfo.actor" :key="index">{{item}} </span></p>
-                <p>语言：<span v-for="(item,index) in itemInfo.language" :key="index">{{item}} </span></p>
+                <p>导演：<span v-for="(item,index) in itemInfo.directors || ''" :key="index">{{item.name}} </span></p>
+                <p>主演：<span v-for="(item,index) in itemInfo.actor || ''" :key="index">{{item}} </span></p>
+                <p>语言：<span v-for="(item,index) in itemInfo.language || ''" :key="index">{{item}} </span></p>
                 <p>时长：{{itemInfo.duration || 0}} 分钟</p>
-                <p>类型：<span v-for="(item,index) in itemInfo.genres" :key="index">{{item}} </span></p>
-                <p>地区：<span v-for="(item,index) in itemInfo.countries" :key="index">{{item}} </span></p>
-                <p>上映日期：{{itemInfo.year}}</p>
+                <p>类型：<span v-for="(item,index) in itemInfo.genres || ''" :key="index">{{item}} </span></p>
+                <p>地区：<span v-for="(item,index) in itemInfo.countries || ''" :key="index">{{item}} </span></p>
+                <p>上映日期：{{itemInfo.year || ''}}</p>
                 <p>评分：<el-rate
                     v-model="itemInfo.rate"
                     disabled
                     text-color="#ff9900">
                   </el-rate><span>{{itemInfo.rate}}</span>
                 </p>
-                <p>想看：{{itemInfo.wish_count}}</p>
-                <p>剧情简介：{{itemInfo.summary}}</p>
+                <p>想看：{{itemInfo.wish_count || 0 }}</p>
+                <p>剧情简介：{{itemInfo.summary || 0 }}</p>
               </div>
             </div>
           </div>
         </div>
-        <div class="layer">
-          <div class="navbar">
-            <h4>猜您喜欢</h4>
-            <div id="tagscloud">
-              <a href="" class="tagc1">碟中谍6：全面瓦解</a>
-              <a href="" class="tagc2">碟中谍6：全面瓦解</a>
-              <a href="" class="tagc3">碟中谍6：全面瓦解</a>
-              <a href="" class="tagc1">碟中谍6：全面瓦解</a>
-              <a href="" class="tagc2">碟中谍6：全面瓦解</a>
-              <a href="" class="tagc3">碟中谍6：全面瓦解</a>
-              <a href="" class="tagc1">碟中谍6：全面瓦解</a>
-              <a href="" class="tagc2">碟中谍6：全面瓦解</a>
-              <a href="" class="tagc3">碟中谍6：全面瓦解</a>
-              <a href="" class="tagc1">碟中谍6：全面瓦解</a>
-              <a href="" class="tagc2">碟中谍6：全面瓦解</a>
-              <a href="" class="tagc3">碟中谍6：全面瓦解</a>
-            </div>
-          </div>
-          <div class="navbar best">
-            <h4>口碑榜</h4>
-            <ul>
-              <li v-for="(item,index) in bestlist" :key="index">{{index+1}} <a href="">{{item.name}}</a></li>
-            </ul>
-          </div>
-        </div>
+        <div class="section" v-else><p>暂无数据</p></div>
+
+        <Sidebar></Sidebar>
       </el-container>
     </div>
     <div class="clearfix"></div>
@@ -72,11 +50,12 @@
 import Header from '../base/header'
 import Footer from '../base/foot'
 import Page from '../base/page'
+import Sidebar from '../base/sidebar'
 
 import { getMovie } from '@/api/views/movies'
 
 export default {
-  components: { Header, Footer, Page },
+  components: { Header, Footer, Page, Sidebar },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
@@ -107,9 +86,10 @@ export default {
   mounted () {
     let doubanId = this.$route.path.split('detail/')[1]
     getMovie(doubanId).then(data => {
-      console.log(data)
       if (data.success) {
         this.itemInfo = data.movie[0]
+      } else {
+        console.log('Error')
       }
     })
   },

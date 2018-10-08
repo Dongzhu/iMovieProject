@@ -18,7 +18,8 @@ export default new Router({
   mode: 'history',
   routes: [
     // iMovie
-    { path: '/', redirect: '/login' },
+    // { path: '/', redirect: '/index' },
+    { path: '/', component: index },
     { path: '/index', name: 'index', component: index },
     { path: '/detail/:id', name: 'detail', component: detail },
 

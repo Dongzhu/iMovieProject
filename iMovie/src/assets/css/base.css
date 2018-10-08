@@ -34,11 +34,19 @@ a:hover{color:#f60;}
 }
 .el-tag { padding: 5px 10px; display: inline; }
 /* header.vue */
-.top { padding-top: 15px; color: #000; }
+.top { padding-top: 15px; }
 .top a { color: inherit; }
 .top-left { float: left; height: 40px; line-height: 40px; cursor: pointer; }
-.top-right { float: right; height: 40px; line-height: 40px; }
+.top-right { float: right; height: 40px; line-height: 40px; cursor: pointer; }
 .top-right img { width: 40px; height: 40px; border-radius: 20px;}
+.top-right:hover .top-right-info { display: block; }
+.top-right-info {
+  margin-top: -15px;
+  background: white; color:#333333; border-radius: 1px;
+  position: relative; z-index: 100; display: none;
+}
+.top-right-info ul li { padding: 0 5px; }
+.top-right-info ul li:hover { background: rgba(0,0,0,.15); }
 .top-right i { width: 20px; height: 20px; line-height: 20px; margin-left: -35px; }
 .top-right input {
   width: 150px; height: 20px;
@@ -97,12 +105,11 @@ a:hover{color:#f60;}
   .top { padding: 15px 15px 0; }
   .section { width: 100%; margin-right: 0; padding: 0 15px; } .layer { display: none; }
   .tag { display: none; }
+  .search-box { display: none; }
 }
 @media screen and (min-width: 769px) and (max-width: 1199px) {
-  .el-header, .el-footer, .el-container { padding: 0; }
+  .el-header, .el-footer, .el-container { padding: 0 5%; }
   .el-carousel__container { height: 300px; }
-  .search-box { display: none; }
-  .top { padding: 15px; }
   .section { width: calc(100%); } .layer { width: 185px; }
 }
 @media screen and (min-width: 1200px) {

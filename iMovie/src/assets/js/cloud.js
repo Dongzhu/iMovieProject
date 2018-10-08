@@ -13,9 +13,13 @@ var mouseY = 10;
 var howElliptical = 1;
 var aA = null;
 var oDiv = null;
+
+var sa,ca,sb,cb,sc,cc;
+
 window.onload=function () {
 	var i=0;
 	var oTag=null;
+	if (!document.getElementById('tagscloud')) return;
 	oDiv=document.getElementById('tagscloud');
 	aA=oDiv.getElementsByTagName('a');
 	for(i=0;i<aA.length;i++)
@@ -48,9 +52,9 @@ window.onload=function () {
 	}
 	sineCosine( 0,0,0 );
 	positionAll();
-	(function () {
+	(function f() {
     update();
-    setTimeout(arguments.callee, 40);
+    setTimeout(f, 40);
   })();
 };
 function update() {

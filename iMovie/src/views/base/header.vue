@@ -6,7 +6,15 @@
           <a href="/">BRAND</a>
         </div>
         <div class="top-right">
+          <span style="vertical-align: text-bottom; color:white;">Admin</span>
           <img src="../../assets/images/avatar.jpg" alt="">
+          <div class="top-right-info">
+            <ul>
+              <li><a href="#">我的资料</a></li>
+              <li><a href="#">我的收藏</a></li>
+              <li><a href="#">退出</a></li>
+            </ul>
+          </div>
         </div>
         <div class="top-bottom">
           <div class="">
