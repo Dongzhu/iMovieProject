@@ -16,7 +16,6 @@ router.get('/movies/:id', async (ctx, next) => {
   const movie = await Movie.find({id:id}).sort({
     'meta.createdAt': -1
   })
-  console.log(movie)
 
   ctx.body = { success: true, movie }
 })

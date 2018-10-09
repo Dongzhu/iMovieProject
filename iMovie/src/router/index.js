@@ -25,12 +25,12 @@ export default new Router({
 
     // admin
     { path: '/login', name: 'login', component: login },
-    { path: '/admin', name: 'admin', component: choice1 },
-    { path: '/choice1', name: 'choice1', component: choice1 },
-    { path: '/choice2', name: 'choice2', component: choice2 },
-    { path: '/choice3', name: 'choice3', component: choice3 },
-    { path: '/choice4', name: 'choice4', component: choice4 },
-    { path: '/choice5', name: 'choice5', component: choice5 },
-    { path: '/choice6', name: 'choice6', component: choice6 }
+    { path: '/admin', name: 'admin', component: choice1, meta: { requireAuth: true } },
+    { path: '/choice1', name: 'choice1', component: choice1, meta: { requireAuth: true } },
+    { path: '/choice2', name: 'choice2', component: choice2, meta: { requireAuth: true } },
+    { path: '/choice3', name: 'choice3', component: choice3, meta: { requireAuth: true } },
+    { path: '/choice4', name: 'choice4', component: choice4, meta: { requireAuth: true } },
+    { path: '/choice5', name: 'choice5', component: choice5, meta: { requireAuth: true } },
+    { path: '/choice6', name: 'choice6', component: choice6, meta: { requireAuth: true } }
   ]
 })

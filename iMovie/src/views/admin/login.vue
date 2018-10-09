@@ -77,8 +77,6 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.openSuccess('submit!')
-
           // 实例化一个JSEncrypt对象
           let jse = new JSEncrypt()
           jse.setPublicKey(`-----BEGIN PUBLIC KEY-----
@@ -90,13 +88,13 @@ export default {
           // 设置需要加密的字符串
           let encrypted = jse.encrypt(this.ruleForm.pass)
           // 输出加密结果
-          console.log(encrypted)
+          // console.log(encrypted)
 
           let params = {user: this.ruleForm.user, password: encrypted}
           login(params).then(data => {
             if (data.success === true) {
-              // this.$router.push('/index')
-              console.log(2333)
+              this.openSuccess('Success Login!')
+              this.$router.push('/admin')
             }
           })
         } else {

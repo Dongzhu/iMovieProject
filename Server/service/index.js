@@ -17,10 +17,6 @@ const PORT = 2333
 
 const app = new koa()
 
-app.use( router.routes(), router.allowedMethods() )
-app.use(bodyParser())
-app.use(async (ctx, next) => { ctx.body = 'Hello Koa!' })
-
 // session
 app.keys = ['imovie']
 const CONFIG = {
@@ -36,6 +32,20 @@ const CONFIG = {
 }
 app.use(session(CONFIG, app))
 
+//登陆拦截
+app.use(async (ctx, next) => {
+  // console.log(ctx.cookies.get('koa:sess'), ctx.path, ctx.session.user)
+  if (!ctx.cookies.get('koa:sess') && ctx.path !== '/api/user/login') {
+    return ctx.body = { success: false, msg: '请先登录后再进行操作！' }
+  } else {
+    ctx.body = 'Hello Koa!'
+  }
+  await next()
+})
+app.use(router.routes(), router.allowedMethods())
+app.use(bodyParser({enableTypes:['json', 'form', 'text']}))
+// app.use(async (ctx, next) => { ctx.body = 'Hello Koa!' })
+
 app.use(cors())
 // app.use(cors({
 //     exposeHeaders: ['WWW-Authenticate', 'Server-Authorization', 'Date'],
@@ -44,6 +54,11 @@ app.use(cors())
 //     allowMethods: ['GET', 'POST', 'OPTIONS'],
 //     allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'X-Custom-Header', 'anonymous'],
 // }))
+
+// error-handling
+app.on('error', (err, ctx) => {
+  console.error('server error', err, ctx)
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:`+PORT)

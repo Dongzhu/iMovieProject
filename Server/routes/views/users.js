@@ -43,8 +43,7 @@ router.post('/user/login', async (ctx, next) => {
   -----END RSA PRIVATE KEY-----`)
   // 解密加密过的字符串
   let password2 = jse.decrypt(password)
-  // 打印结果
-  console.log(password2)
+  // console.log(password2) // 打印结果
 
   const data = await checkPassword(username, password2)
   const { user, match } = data
@@ -56,7 +55,7 @@ router.post('/user/login', async (ctx, next) => {
       username: user.username,
       email: user.email
     }
-    console.log('ctx.session ', JSON.stringify(ctx.session))
+    // console.log('ctx.session ', JSON.stringify(ctx.session))
 
     return (ctx.body = {
       success: true,

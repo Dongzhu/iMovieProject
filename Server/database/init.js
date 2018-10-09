@@ -21,27 +21,7 @@ exports.initAdmins = async () => {
       password: '123456',
       email: '123456@gmail.com'
     })
-    console.log('================')
     await user.save()
-    // save user to database
-    // await user.save(function(err) {
-    //   console.log(2333)
-    //   if (err) throw err
-    //   // fetch user and test password verification
-    //   User.findOne({ username: 'admin' }, function(err, user) {
-    //     if (err) throw err
-    //     // test a matching password
-    //     user.comparePassword('123456', function(err, isMatch) {
-    //       if (err) throw err
-    //       console.log('123456:', isMatch) // -> 123456: true
-    //     })
-    //     // test a failing password
-    //     user.comparePassword('abcdefg', function(err, isMatch) {
-    //       if (err) throw err
-    //       console.log('abcdefg:', isMatch) // -> 123Password: false
-    //     })
-    //   })
-    // })
   }
 }
 

@@ -9,6 +9,7 @@
           <el-breadcrumb-item :to="{ path: '/admin' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item :to="{ path: '/' }">{{tag.value}}</el-breadcrumb-item>
         </el-breadcrumb>
+        <span class="logout" @click="logout">退出</span>
       </div>
     </div>
     <div class="top-bread">
@@ -75,6 +76,11 @@ export default {
     viewTag (tag) {
       this.$router.push(tag.index)
       this.$store.commit('updateTag', {index: tag.index, value: tag.value})
+    },
+    logout () {
+      this.setCookie('koa:sess', '', -1)
+      this.setCookie('koa:sess.sig', '', -1)
+      this.$router.push('/login')
     }
   }
 }
@@ -82,34 +88,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.top-info {
-  height: 50px; line-height: 50px; padding: 0 10px;
-  border-bottom: solid 1px rgb(84, 92, 100, .3);
-}
-.top-bread {
-  min-height: 30px;
-  padding: 5px 10px; cursor: pointer;
-  box-shadow: 0 5px 5px rgba(0,0,0,.1);
-  overflow: auto;
-}
-.top-info-1, .top-info-2 { display: inline-block; }
-.top-info-2 { margin-left: 5px; }
-.top-info-1 {
-  /* transform:rotate(0deg);  */
-  transition:transform .3s linear; cursor: pointer; }
-.el-tag + .el-tag {
-  margin-left: 10px;
-}
-.button-new-tag {
-  margin-left: 10px;
-  height: 32px;
-  line-height: 30px;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-.input-new-tag {
-  width: 90px;
-  margin-left: 10px;
-  vertical-align: bottom;
-}
+
 </style>
