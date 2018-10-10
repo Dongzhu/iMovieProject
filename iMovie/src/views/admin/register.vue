@@ -13,49 +13,61 @@
           <span class="svg-container svg-container_login">
             <!-- <svg-icon icon-class="user" /> -->用户名
           </span>
-          <el-input v-model="ruleForm.user" autofocus @keyup.enter.native="submitForm('ruleForm')"></el-input>
+          <el-input v-model="ruleForm.user"></el-input>
         </el-form-item>
         <el-form-item prop="pass">
           <span class="svg-container svg-container_login">
             <!-- <svg-icon icon-class="user" /> -->密&nbsp;&nbsp;&nbsp;&nbsp;码
           </span>
-          <el-input type="password" v-model="ruleForm.pass" @keyup.enter.native="submitForm('ruleForm')" auto-complete="off"></el-input>
+          <el-input type="password" v-model="ruleForm.pass" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item prop="pass2">
+          <span class="svg-container svg-container_login">
+            <!-- <svg-icon icon-class="user" /> -->确认密码
+          </span>
+          <el-input type="password" v-model="ruleForm.pass2" auto-complete="off"></el-input>
         </el-form-item>
 
         <el-button type="primary" @click="submitForm('ruleForm')" style="width:100%;margin:10px auto 20px;">登录</el-button>
-
-        <div class="tips">
-          <p>
-            <span class="left">User: admin &nbsp;&nbsp; Pass: any</span>
-            <span class="right">
-              <a href="">忘记密码？</a>
-            </span>
-          </p>
-        </div>
       </el-form>
     </div>
   </div>
 </template>
 
 <script>
-import { login } from '@/api/views/user'
+import { register } from '@/api/views/user'
 import { JSEncrypt } from 'jsencrypt'
 
 export default {
   data () {
+    var checkPass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.ruleForm.pass) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
     return {
       ruleForm: {
         user: 'admin',
-        pass: '123456'
+        pass: '123456',
+        pass2: '123456'
       },
       rules: {
         user: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, message: '请输入用户名', trigger: 'change' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'change' }
         ],
         pass: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
+          { required: true, message: '请输入密码', trigger: 'change' },
+          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'change' }
+        ],
+        pass2: [
+          { required: true, message: '请输入密码', trigger: 'change' },
+          { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'change' },
+          { validator: checkPass, trigger: 'change' }
         ]
       }
     }
@@ -87,18 +99,14 @@ export default {
           -----END PUBLIC KEY-----`)
           // 设置需要加密的字符串
           let encrypted = jse.encrypt(this.ruleForm.pass)
-          // 输出加密结果
-          // console.log(encrypted)
+          let encrypted2 = jse.encrypt(this.ruleForm.pass2)
 
-          let params = {user: this.ruleForm.user, password: encrypted}
-          login(params).then(res => {
-            if (res.success) {
-              this.openSuccess('Success Login!')
-              if (res.data.superrole) {
-                this.$router.push('/admin')
-              } else {
-                this.$router.push('/')
-              }
+          let params = {user: this.ruleForm.user, password: encrypted, password2: encrypted2}
+          console.log(JSON.stringify(params))
+          register(params).then(res => {
+            if (res.success === true) {
+              this.openSuccess('Success Register!')
+              // this.$router.push('/login')
             } else {
               this.openError(res.message)
             }
@@ -115,5 +123,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>

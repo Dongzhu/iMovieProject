@@ -36,8 +36,10 @@ app.use(session(CONFIG, app))
 //登陆拦截
 app.use(async (ctx, next) => {
   // console.log(ctx.cookies.get('koa:sess'), ctx.path, ctx.session.user)
-  if (!ctx.cookies.get('koa:sess') && ctx.path !== '/api/user/login' && ctx.path !== '/api/movies') {
-    return ctx.body = { success: false, msg: '请先登录后再进行操作！' }
+  if (!ctx.cookies.get('koa:sess')) {
+    if (ctx.path !== '/api/user/login' && ctx.path !== '/api/user/register' && ctx.path !== '/api/movies') {
+      return ctx.body = { success: false, msg: '请先登录后再进行操作！' }
+    }
   } else {
     ctx.body = 'Hello Koa!'
   }

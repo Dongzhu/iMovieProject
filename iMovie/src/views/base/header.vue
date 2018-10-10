@@ -11,13 +11,13 @@
             <img class="userimg" src="../../assets/images/avatar.jpg" alt="">
           </span>
           <span :class="['username', {'color-fff':$route.path==='/'}]" v-if="username === ''">
-            <span>登录</span> /
-            <span>注册</span>
+            <a href="/login">登录</a> /
+            <a href="/register">注册</a>
           </span>
           <div class="top-right-info" v-if="username !== ''">
             <ul>
-              <li><span>我的资料</span></li>
-              <li><span>我的收藏</span></li>
+              <li>我的资料</li>
+              <li>我的收藏</li>
               <li @click="logout">退出</li>
             </ul>
           </div>

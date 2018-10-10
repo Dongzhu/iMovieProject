@@ -7,7 +7,7 @@ router.get('/movies', async (ctx, next) => {
     'meta.createdAt': -1
   })
 
-  ctx.body = { success: true, movies }
+  ctx.body = { success: true, message: '查询成功', movies }
 })
 
 router.get('/movies/:id', async (ctx, next) => {
@@ -17,7 +17,7 @@ router.get('/movies/:id', async (ctx, next) => {
     'meta.createdAt': -1
   })
 
-  ctx.body = { success: true, movie }
+  ctx.body = { success: true, message: '查询成功', movie }
 })
 
 module.exports = router

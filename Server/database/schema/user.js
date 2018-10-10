@@ -9,8 +9,8 @@ const LOCK_TIME = 2 * 60 * 60 * 1000  //锁定时长：两小时
 const userSchema = new Schema({
   username: { required: true, unique: true, type: String },
   password: { required: true, unique: true, type: String },
-  email: { required: true, unique: true, type: String },
-  role: { required: true, unique: true, type: String },
+  email: { unique: true, type: String },
+  role: { required: true, type: String },
   loginAttempts: { required: true, type: Number, default: 0 },
   lockUntil: Number,
   meta: {

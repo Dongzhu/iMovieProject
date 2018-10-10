@@ -10,3 +10,12 @@ export function login (po) {
   }
   return axios.post(`${base}/user/login`, qs.stringify(params)).then(res => { return res.data })
 }
+
+export function register (po) {
+  var params = {
+    'username': po.user,
+    'password': po.password,
+    'password2': po.password2
+  }
+  return axios.post(`${base}/user/register`, qs.stringify(params)).then(res => { return res.data })
+}

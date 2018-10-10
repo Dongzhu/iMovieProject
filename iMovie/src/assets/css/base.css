@@ -61,6 +61,41 @@ a:hover{color:#f60;}
 .top-bottom ul li { float: left; margin-left: 15px; list-style: none; }
 .top-bottom ul li:first-child { margin-left: 0; }
 
+/* login && register */
+.login .el-form-item {
+    background: rgba(0,0,0,.1);
+    border: 1px solid hsla(0,0%,100%,.1);
+    border-radius: 5px;
+    color: #454545;
+}
+.svg-container.svg-container_login {
+  color: #889aa4;
+  display: inline-block;
+  padding: 6px 5px 6px 15px;
+  vertical-align: middle;
+  width: 60px;
+}
+.login .el-input {
+    display: inline-block;
+    height: 37px;
+    width: 80%;
+}
+.login .title h3 {
+  color: #eee;
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+.login .tips {
+  color: #fff;
+}
+.login .tips p { margin-bottom: 10px; }
+.login .tips p span.left { float: left; }
+.login .tips p span.right { float: right; }
+.login .tips p span.right a { color: #fff; }
+.login .tips p span.right a:hover { color: #37a; }
+
 /* index */
 .banner { width: 100%; margin: 30px 0 10px; text-align: center; }
 .footer { width: 100%; padding: 20px; text-align: center; border-top:solid 1px #ccc; }
