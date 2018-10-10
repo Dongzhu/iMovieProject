@@ -8,9 +8,7 @@ const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
 const { window } = jsdom;
 global.window = window;
 global.document = window.document;
-global.navigator = {
-  userAgent: 'node.js',
-};
+global.navigator = { userAgent: 'node.js' };
 
 const { JSEncrypt } = require('jsencrypt')
 
@@ -53,15 +51,19 @@ router.post('/user/login', async (ctx, next) => {
     ctx.session.user = {
       _id: user._id,
       username: user.username,
-      email: user.email
+      email: user.email,
+      role: user.role
     }
-    // console.log('ctx.session ', JSON.stringify(ctx.session))
+    console.log('ctx.session ', JSON.stringify(ctx.session))
+
+    ctx.cookies.set('username', user.username, { httpOnly:false, maxAge: 86400000 })
 
     return (ctx.body = {
       success: true,
       data: {
         username: user.username,
-        email: user.email
+        // email: user.email,
+        superrole: user.role === 'admin' ? true : false
       }
     })
   }

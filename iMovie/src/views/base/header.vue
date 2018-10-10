@@ -5,14 +5,20 @@
         <div class="top-left">
           <a href="/">BRAND</a>
         </div>
-        <div class="top-right">
-          <span style="vertical-align: text-bottom; color:white;">Admin</span>
-          <img src="../../assets/images/avatar.jpg" alt="">
-          <div class="top-right-info">
+        <div class="top-right" v-if="hackReset">
+          <span v-if="username !== ''">
+            <span :class="['username', {'color-fff':$route.path==='/'}]">{{ username }}</span>
+            <img class="userimg" src="../../assets/images/avatar.jpg" alt="">
+          </span>
+          <span :class="['username', {'color-fff':$route.path==='/'}]" v-if="username === ''">
+            <span>登录</span> /
+            <span>注册</span>
+          </span>
+          <div class="top-right-info" v-if="username !== ''">
             <ul>
-              <li><a href="#">我的资料</a></li>
-              <li><a href="#">我的收藏</a></li>
-              <li><a href="#">退出</a></li>
+              <li><span>我的资料</span></li>
+              <li><span>我的收藏</span></li>
+              <li @click="logout">退出</li>
             </ul>
           </div>
         </div>
@@ -42,13 +48,37 @@
 export default {
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      username: '',
+      hackReset: false
     }
   },
   mounted () {
+    this.hack()
+    this.username = this.getCookie('username')
     let route = this.$route.path
     if (route.indexOf('index') > -1 || route.length === 1) {
-      document.querySelector('.top').style.color = '#fff'
+      if (document.querySelector('.top')) {
+        document.querySelector('.top').style.color = '#fff'
+      }
+    }
+  },
+  methods: {
+    hack () {
+      // console.log('hack it!')
+      this.hackReset = false // hack方法强制刷新组件
+      this.$nextTick(() => {
+        this.hackReset = true
+      })
+    },
+    logout () {
+      this.setCookie('koa:sess', '', -1)
+      this.setCookie('koa:sess.sig', '', -1)
+      this.setCookie('username', '', -1)
+      this.setCookie('username.sig', '', -1)
+      this.hack()
+      this.username = ''
+      this.$router.push('/')
     }
   }
 }
@@ -63,4 +93,6 @@ export default {
 .el-footer {
   line-height: 40px;
 }
+.username { vertical-align: text-bottom; color: #000; }
+.color-fff { color: #fff; }
 </style>

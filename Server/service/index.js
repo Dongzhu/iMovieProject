@@ -25,6 +25,7 @@ const CONFIG = {
   /** 'session' will result in a cookie that expires when session/browser is closed */
   /** Warning: If a session cookie is stolen, this cookie will never expire */
   maxAge: 86400000,
+  // maxAge: 10000,
   overwrite: true, /** (boolean) can overwrite or not (default true) */
   httpOnly: false, /** (boolean) httpOnly or not (default true) */
   signed: true, /** (boolean) signed or not (default true) */
@@ -35,7 +36,7 @@ app.use(session(CONFIG, app))
 //登陆拦截
 app.use(async (ctx, next) => {
   // console.log(ctx.cookies.get('koa:sess'), ctx.path, ctx.session.user)
-  if (!ctx.cookies.get('koa:sess') && ctx.path !== '/api/user/login') {
+  if (!ctx.cookies.get('koa:sess') && ctx.path !== '/api/user/login' && ctx.path !== '/api/movies') {
     return ctx.body = { success: false, msg: '请先登录后再进行操作！' }
   } else {
     ctx.body = 'Hello Koa!'

@@ -47,7 +47,6 @@ Vue.component('icon-svg', IconSvg) // 全局注册icon-svg
 router.beforeEach((to, from, next) => {
   // 获取store里面的token
   let token = document.cookie
-  console.log(token)
   // 判断要去的路由有没有requiresAuth
   if (to.meta.requireAuth) {
     if (token.indexOf('koa:sess') > -1) {

@@ -80,6 +80,8 @@ export default {
     logout () {
       this.setCookie('koa:sess', '', -1)
       this.setCookie('koa:sess.sig', '', -1)
+      this.setCookie('username', '', -1)
+      this.setCookie('username.sig', '', -1)
       this.$router.push('/login')
     }
   }

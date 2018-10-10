@@ -91,10 +91,14 @@ export default {
           // console.log(encrypted)
 
           let params = {user: this.ruleForm.user, password: encrypted}
-          login(params).then(data => {
-            if (data.success === true) {
+          login(params).then(res => {
+            if (res.success === true) {
               this.openSuccess('Success Login!')
-              this.$router.push('/admin')
+              if (res.data.superrole) {
+                this.$router.push('/')
+              } else {
+                this.$router.push('/')
+              }
             }
           })
         } else {

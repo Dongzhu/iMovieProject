@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     hack () {
-      console.log('hack it!')
+      // console.log('hack it!')
       this.hackReset = false // hack方法强制刷新组件
       this.$nextTick(() => {
         this.hackReset = true
