@@ -52,7 +52,7 @@
           <div class="section-item">
             <div class="section-header">
               <h4>最近更新
-                <span class="tag"><span class="active-tag">热门</span><span>最新</span><span>豆瓣高分</span><span>冷门佳片</span><span>华语</span><span>欧美</span><span>韩国</span><span>日本</span></span>
+                <span class="tag"><span class="active-tag">热门</span><span>最新</span><span>豆瓣高分</span><span>冷门佳片</span><span>华语</span><span>欧美</span><span>日韩</span></span>
                 <span>
                   <page showNum='true' style="float:right;"></page>
                 </span>

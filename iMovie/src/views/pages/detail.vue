@@ -16,20 +16,20 @@
                 <img :src="itemInfo.poster || ''" :alt="itemInfo.title || ''" width="100%">
               </div>
               <div class="section-info2">
-                <p>导演：<span v-for="(item,index) in itemInfo.directors || ''" :key="index">{{item.name}} </span></p>
-                <p>主演：<span v-for="(item,index) in itemInfo.actor || ''" :key="index">{{item}} </span></p>
+                <p>导演：<span v-for="(item,index) in itemInfo.director || ''" :key="index">{{item}} </span></p>
+                <p>主演：<span v-for="(item,index) in itemInfo.cast || ''" :key="index">{{item}} </span></p>
                 <p>语言：<span v-for="(item,index) in itemInfo.language || ''" :key="index">{{item}} </span></p>
-                <p>时长：{{itemInfo.duration || 0}} 分钟</p>
-                <p>类型：<span v-for="(item,index) in itemInfo.genres || ''" :key="index">{{item}} </span></p>
-                <p>地区：<span v-for="(item,index) in itemInfo.countries || ''" :key="index">{{item}} </span></p>
-                <p>上映日期：{{itemInfo.year || ''}}</p>
+                <p>时长：<span v-for="(item,index) in itemInfo.movie_duration || ''" :key="index">{{item}} </span></p>
+                <p>类型：<span v-for="(item,index) in itemInfo.movie_type || ''" :key="index">{{item}} </span></p>
+                <p>地区：<span v-for="(item,index) in itemInfo.country || ''" :key="index">{{item}} </span></p>
+                <p>上映日期：<span v-for="(item,index) in itemInfo.pubdate || ''" :key="index">{{item}} </span></p>
+                <p>年份：{{itemInfo.year || ''}}</p>
                 <p>评分：<el-rate
                     v-model="itemInfo.rate"
                     disabled
                     text-color="#ff9900">
                   </el-rate><span>{{itemInfo.rate}}</span>
                 </p>
-                <p>想看：{{itemInfo.wish_count || 0 }}</p>
                 <p>剧情简介：{{itemInfo.summary || 0 }}</p>
               </div>
             </div>

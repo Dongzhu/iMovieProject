@@ -1,27 +1,25 @@
 <template>
-  <div>
-      <div class="layer" v-show="hackReset">
-        <div class="navbar">
-          <h4>猜您喜欢</h4>
-          <div id="tagscloud">
-            <a href="" class="tagc1">碟中谍6：全面瓦解</a>
-            <a href="" class="tagc2">碟中谍6：全面瓦解</a>
-            <a href="" class="tagc3">碟中谍6：全面瓦解</a>
-            <a href="" class="tagc1">碟中谍6：全面瓦解</a>
-            <a href="" class="tagc2">碟中谍6：全面瓦解</a>
-            <a href="" class="tagc3">碟中谍6：全面瓦解</a>
-            <a href="" class="tagc1">碟中谍6：全面瓦解</a>
-            <a href="" class="tagc2">碟中谍6：全面瓦解</a>
-            <a href="" class="tagc3">碟中谍6：全面瓦解</a>
-          </div>
-        </div>
-        <div class="navbar best">
-          <h4>口碑榜</h4>
-          <ul>
-            <li v-for="(item,index) in bestlist" :key="index"><a href="" class="over">{{index+1}} {{item.name}}</a></li>
-          </ul>
-        </div>
+  <div class="layer" v-show="hackReset">
+    <div class="navbar">
+      <h4>猜您喜欢</h4>
+      <div id="tagscloud">
+        <a href="" class="tagc1">碟中谍6：全面瓦解</a>
+        <a href="" class="tagc2">碟中谍6：全面瓦解</a>
+        <a href="" class="tagc3">碟中谍6：全面瓦解</a>
+        <a href="" class="tagc1">碟中谍6：全面瓦解</a>
+        <a href="" class="tagc2">碟中谍6：全面瓦解</a>
+        <a href="" class="tagc3">碟中谍6：全面瓦解</a>
+        <a href="" class="tagc1">碟中谍6：全面瓦解</a>
+        <a href="" class="tagc2">碟中谍6：全面瓦解</a>
+        <a href="" class="tagc3">碟中谍6：全面瓦解</a>
       </div>
+    </div>
+    <div class="navbar best">
+      <h4>口碑榜</h4>
+      <ul>
+        <li v-for="(item,index) in bestlist" :key="index"><a href="" class="over">{{index+1}} {{item.name}}</a></li>
+      </ul>
+    </div>
   </div>
 </template>
 

@@ -6,7 +6,7 @@ const Category = mongoose.model('Category')
 // http://api.douban.com/v2/movie/subject/1764796
 
 async function fetchMovie(item) {
-  const url = `http://api.douban.com/v2/movie/subject/${item.id}`
+  const url = `http://api.douban.com/v2/movie/${item.id}`
   const res = await request(url)
 
   let body
@@ -41,35 +41,31 @@ async function fetchMovie(item) {
     let movieData = await fetchMovie(movie)
 
     if (movieData) {
-      let genres = movieData.genres || []
-      movie.genres = genres
+      movie.author = movieData.author || ''
+      movie.title = movieData.title || ''
+      movie.alt_title = movieData.alt_title || ''
+      movie.image = movieData.image || ''
       movie.summary = movieData.summary || ''
-      movie.title = movieData.alt_title || movieData.title || ''
-      movie.original_title = movieData.original_title || ''
-      movie.year = movieData.year || '2500'
-      movie.countries = movieData.countries || []
-      movie.aka = movieData.aka || []
-      movie.subtype = movieData.subtype || ''
-      movie.comments_count = movieData.comments_count || 0
-      movie.ratings_count = movieData.ratings_count || 0
-      movie.reviews_count = movieData.ratings_count || 0
-      movie.wish_count = movieData.ratings_count || 0
-      movie.collect_count = movieData.ratings_count || 0
-      movie.images = movieData.images || {}
-      movie.alt = movieData.alt || ''
-      movie.mobile_url = movieData.mobile_url || ''
-      movie.share_url = movieData.share_url || ''
+      movie.tags = movieData.tags || []
 
-      for (let i=0; i<movieData.directors.length; i++) {
-        let item = movieData.directors[i]
-        movie.directors.push(item)
+      if (movieData.attrs) {
+        let attrs = movieData.attrs
+        movie.language = attrs.language || ''
+        movie.pubdate = attrs.pubdate || ''
+        movie.country = attrs.country || ''
+        movie.writer = attrs.writer || ''
+        movie.director = attrs.director || ''
+        movie.cast = attrs.cast || ''
+        movie.movie_duration = attrs.movie_duration || ''
+        movie.year = attrs.year || ''
+        movie.movie_type = attrs.movie_type || ''
       }
 
-      for (let i=0; i<movie.genres.length; i++) {
-        let item = movie.genres[i]
-        let cate = await Category.findOne({ name: item })
+      for (let i=0; i<movie.tags.length; i++) {
+        let item = movie.tags[i]
+        let cate = await Category.findOne({ name: item.name })
         if (!cate) {
-          cate = new Category({ name: item, movies: [movie._id] })
+          cate = new Category({ name: item, movies: [ movie._id ] })
         } else {
           if (cate.movies.indexOf(movie._id) === -1) {
             cate.movies.push(movie._id)
@@ -86,12 +82,6 @@ async function fetchMovie(item) {
           }
         }
       }
-
-      genres.forEach(tag => {
-        if(tag.name!==null && tag.name!==undefined){
-          movie.genres.push(tag.name)
-        }
-      })
 
       await movie.save()
     }

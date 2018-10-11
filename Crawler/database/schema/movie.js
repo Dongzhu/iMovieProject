@@ -4,31 +4,24 @@ const { ObjectId, Mixed } = Schema.Types
 
 const movieSchema = new Schema({
   id: { unique: true, type: String },
-  category: [ { type: ObjectId, ref: 'Category' } ],
-  rate: Number,
-  reviews_count: Number,
-  wish_count: Number,
-  collect_count: Number,
-  year: String,
-  images: { small: String, large: String, medium: String },
-  alt: String,
-  mobile_url: String,
-  share_url: String,
+  category: [ { type: ObjectId, name: String, ref: 'Category' } ],
+  author: [ { name: String } ],
   title: String,
-  original_title: String,
-  countries: [String],
+  alt_title: String,
+  image: String,
   summary: String,
-  genres: [String],
-  directors: [
-    { alt: String, name: String, id: String }
-  ],
-  casts: [
-    { alt: String, name: String, id: String, avatars: { small: String, large: String, medium: String } }
-  ],
-  aka: [String],
-  subtype: String,
-  comments_count: Number,
-  ratings_count: Number,
+  language: [ String ],
+  pubdate: [ String ],
+  country: [ String ],
+  writer: [ String ],
+  director: [ String ],
+  cast: [ String ],
+  movie_duration: [ String ],
+  year: [ String ],
+  movie_type: [ String ],
+  tags: [ { name: String, count: Number } ],
+
+  rate: Number,
 
   video: String,
   poster: String,

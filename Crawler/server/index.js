@@ -6,6 +6,7 @@ const app = new koa()
 
 ;(async () => {
   initSchemas()
+  console.log(2333)
   // const Movie = mongoose.model('Movie')
   // const movies = await Movie.find({})
   // console.log(movies)
