@@ -20,16 +20,17 @@
         <div class="section">
           <div class="section-item">
             <div class="section-header">
-              <h4>正在热映
+              <h4>高分推荐
                 <span>
                   <page style="float:right;"></page>
                 </span>
               </h4>
             </div>
             <div class="section-body">
-              <div class="card" v-for="(item,index) in releaselist" :key="index" :title="item.name+' '+item.rate">
+              <div class="card" v-for="(item,index) in heighlist" :key="index" :title="item.name+' '+item.rate">
                 <div class="card-bg">
-                  <a :href="'/detail/'+item.id"><img :src="item.url" :alt="item.name" width="100%" height="100%" class="image"></a>
+                  <a :href="'/detail/'+item.id"><img :src="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
+                  <span class="card-rate">{{ item.rate }}</span>
                 </div>
                 <!-- <div class="video">
                   <video
@@ -40,9 +41,9 @@
                   </video>
                 </div> -->
                 <div class="card-info">
-                  <p><a href="/detail" class="over">{{item.name}} {{item.rate}}</a></p>
+                  <p class="over"><a :href="'/detail/'+item.id">{{item.title}}</a></p>
                   <p class="bottom clearfix">
-                    <time class="time">{{ item.pubdate }}</time>
+                    <time class="time"><a :href="'/detail/'+item.id">{{ item.year }}</a></time>
                   </p>
                 </div>
               </div>
@@ -104,12 +105,12 @@ export default {
         {id: 5, name: '中国有嘻哈', rate: 4.5, pubdate: '2018-08-31', url: require('@/assets/images/image5.jpg')}
       ],
       releaselist: [
-        {id: 1, name: '碟中谍6：全面瓦解', rate: 4.8, pubdate: '2018-08-31', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2529365085.webp'},
-        {id: 2, name: '阿尔法：狼伴归途 Alpha', rate: 3.8, pubdate: '2018-09-07', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2530871439.webp'},
-        {id: 3, name: '蚁人2：黄蜂女现身 Ant-Man', rate: 3.7, pubdate: '2018-08-24', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529389608.webp'},
-        {id: 4, name: '大三儿', pubdate: '2018-08-20', rate: 4.5, url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2530569532.webp'},
-        {id: 5, name: '传奇的诞生', pubdate: '2018-09-07', rate: 3.5, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2531286907.webp'},
-        {id: 6, name: '西虹市首富', pubdate: '2018-07-27', rate: 2.8, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529206747.webp'}
+        // {id: 1, name: '碟中谍6：全面瓦解', rate: 4.8, pubdate: '2018-08-31', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2529365085.webp'},
+        // {id: 2, name: '阿尔法：狼伴归途 Alpha', rate: 3.8, pubdate: '2018-09-07', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2530871439.webp'},
+        // {id: 3, name: '蚁人2：黄蜂女现身 Ant-Man', rate: 3.7, pubdate: '2018-08-24', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529389608.webp'},
+        // {id: 4, name: '大三儿', pubdate: '2018-08-20', rate: 4.5, url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2530569532.webp'},
+        // {id: 5, name: '传奇的诞生', pubdate: '2018-09-07', rate: 3.5, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2531286907.webp'},
+        // {id: 6, name: '西虹市首富', pubdate: '2018-07-27', rate: 2.8, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529206747.webp'}
       ],
       newlist: [
         // {id: 1, name: '狄仁杰之四大天王', pubdate: '2018-07-27', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2526405034.jpg'},
@@ -147,9 +148,17 @@ export default {
       }
     })
   },
+  computed: {
+    heighlist () {
+      return this.newlist.sort(this.sortRate).slice(0, 6)
+    }
+  },
   methods: {
     showChange (index) {
       document.querySelector('.bg').style.backgroundImage = 'url(' + this.bannerlist[index].url + ')'
+    },
+    sortRate (a, b) {
+      return b.rate - a.rate
     }
   }
 }
