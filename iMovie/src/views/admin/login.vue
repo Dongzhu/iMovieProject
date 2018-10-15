@@ -94,10 +94,15 @@ export default {
           login(params).then(res => {
             if (res.success) {
               this.openSuccess('Success Login!')
-              if (res.data.superrole) {
-                this.$router.push('/admin')
+              let path = window.localStorage.getItem('storage')
+              if (path !== '') {
+                this.$router.push(path)
               } else {
-                this.$router.push('/')
+                if (res.data.superrole) {
+                  this.$router.push('/admin')
+                } else {
+                  this.$router.push('/')
+                }
               }
             } else {
               this.openError(res.message)

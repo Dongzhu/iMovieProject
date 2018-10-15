@@ -4,7 +4,7 @@ const { ObjectId, Mixed } = Schema.Types
 
 const movieSchema = new Schema({
   id: { unique: true, type: String },
-  category: [ { type: ObjectId, name: String, ref: 'Category' } ],
+  category: [ { type: ObjectId, ref: 'Category' } ],
   author: [ { name: String } ],
   title: String,
   alt_title: String,

@@ -17,7 +17,7 @@
         :key="tag.value"
         v-for="tag in dynamicTags"
         closable
-        :disable-transitions="false"
+        :disable-transitions="true"
         @close="handleClose(tag)">
         <span @click="viewTag(tag)">{{tag.value}}</span>
       </el-tag>

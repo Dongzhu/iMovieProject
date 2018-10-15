@@ -1,5 +1,9 @@
 const router = require('koa-router')()
 const mongoose = require('mongoose')
+const ObjectID = require('mongodb').ObjectID
+// const Schema = mongoose.Schema
+// const { ObjectId } = Schema.Types
+// const CircularJSON = require('circular-json')
 
 router.get('/movies', async (ctx, next) => {
   const Movie = mongoose.model('Movie')
@@ -18,6 +22,34 @@ router.get('/movies/:id', async (ctx, next) => {
   })
 
   ctx.body = { success: true, message: '查询成功', movie }
+})
+
+router.get('/categories', async (ctx, next) => {
+  const Category = mongoose.model('Category')
+  const categories = await Category.find({}).sort({
+    'meta.createdAt': -1
+  })
+
+  ctx.body = { success: true, message: '查询成功', categories }
+})
+
+router.get('/category/:id', async (ctx, next) => {
+  const Category = mongoose.model('Category')
+  const id = ctx.params.id
+  const category = await Category.findOne({_id:id})
+
+  let movies = [], moviesid = category.movies
+  const Movie = mongoose.model('Movie')
+  for (let i=0; i<moviesid.length; i++) {
+    let item = moviesid[i]
+    let movie = await Movie.findOne({_id:mongoose.Types.ObjectId(item)})
+    movies.push(movie)
+  }
+  if (movies !== '') {
+    ctx.body = { success: true, message: '查询成功', movies }
+  } else {
+    ctx.body = { success: false, message: '查询失败', movies }
+  }
 })
 
 module.exports = router

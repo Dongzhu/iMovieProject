@@ -19,8 +19,7 @@ export async function checkRegister(username) {
   const User = mongoose.model('User')
   const user = await User.findOne({ username: username }).exec()
 
-  console.log('user: ',user);
-
+  // console.log('user: ', user);
   if (user) { register = true }
 
   return register

@@ -11,8 +11,8 @@
             <img class="userimg" src="../../assets/images/avatar.jpg" alt="">
           </span>
           <span :class="['username', {'color-fff':$route.path==='/'}]" v-if="username === ''">
-            <a href="/login">登录</a> /
-            <a href="/register">注册</a>
+            <a href="/login" @click="login">登录</a> /
+            <a href="/register" @click="register">注册</a>
           </span>
           <div class="top-right-info" v-if="username !== ''">
             <ul>
@@ -30,7 +30,7 @@
                 <li><a href="#">国产电影</a></li>
                 <li><a href="#">国外电影</a></li>
                 <li><a href="#">排行榜</a></li>
-                <li><a href="#">分类</a></li>
+                <li @click="gotoCate"><router-link :to="{ name: 'categories'}">分类</router-link></li>
               </ul>
             </div>
             <div class="top-right search-box">
@@ -71,6 +71,9 @@ export default {
         this.hackReset = true
       })
     },
+    gotoCate () { this.$store.commit('updateCate', '') },
+    login () { window.localStorage.setItem('storage', this.$route.path) },
+    register () { window.localStorage.setItem('storage', this.$route.path) },
     logout () {
       this.setCookie('koa:sess', '', -1)
       this.setCookie('koa:sess.sig', '', -1)

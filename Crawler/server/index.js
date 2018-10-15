@@ -6,7 +6,6 @@ const app = new koa()
 
 ;(async () => {
   initSchemas()
-  console.log(2333)
   // const Movie = mongoose.model('Movie')
   // const movies = await Movie.find({})
   // console.log(movies)
@@ -22,4 +21,4 @@ app.use(async (ctx, next) => {
   ctx.body = 'Hello Koa!'
 })
 
-app.listen(2333)
+app.listen(2334)

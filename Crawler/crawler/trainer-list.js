@@ -22,6 +22,7 @@ const sleep = time => new Promise(resolve =>  {
     waitUntil: 'networkidle2'
   })
 
+  console.log('Begin')
   await sleep(3000)   // 等待3s网页加载结束
 
   await page.waitForSelector('.more')

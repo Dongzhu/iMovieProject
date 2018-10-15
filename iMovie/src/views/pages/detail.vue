@@ -17,18 +17,20 @@
               </div>
               <div class="section-info2">
                 <p>导演：<span v-for="(item,index) in itemInfo.director || ''" :key="index">{{item}} </span></p>
-                <p>主演：<span v-for="(item,index) in itemInfo.cast || ''" :key="index">{{item}} </span></p>
+                <p>主演：<span v-for="(item,index) in itemInfo.cast || ''" :key="index"><span v-if="index !== 0"> / </span>{{item}}</span></p>
                 <p>语言：<span v-for="(item,index) in itemInfo.language || ''" :key="index">{{item}} </span></p>
                 <p>时长：<span v-for="(item,index) in itemInfo.movie_duration || ''" :key="index">{{item}} </span></p>
                 <p>类型：<span v-for="(item,index) in itemInfo.movie_type || ''" :key="index">{{item}} </span></p>
                 <p>地区：<span v-for="(item,index) in itemInfo.country || ''" :key="index">{{item}} </span></p>
                 <p>上映日期：<span v-for="(item,index) in itemInfo.pubdate || ''" :key="index">{{item}} </span></p>
                 <p>年份：{{itemInfo.year || ''}}</p>
-                <p>评分：<el-rate
+                <p>评分：
+                  <el-rate
                     v-model="itemInfo.rate"
                     disabled
                     text-color="#ff9900">
-                  </el-rate><span>{{itemInfo.rate}}</span>
+                  </el-rate>
+                  <span>{{itemInfo.rate*2}}</span>
                 </p>
                 <p>剧情简介：{{itemInfo.summary || 0 }}</p>
               </div>
@@ -88,6 +90,7 @@ export default {
     getMovie(doubanId).then(data => {
       if (data.success) {
         this.itemInfo = data.movie[0]
+        this.itemInfo.rate = this.itemInfo.rate / 2
       } else {
         console.log('Error')
       }

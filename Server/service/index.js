@@ -34,17 +34,17 @@ const CONFIG = {
 app.use(session(CONFIG, app))
 
 //登陆拦截
-app.use(async (ctx, next) => {
-  // console.log(ctx.cookies.get('koa:sess'), ctx.path, ctx.session.user)
-  if (!ctx.cookies.get('koa:sess')) {
-    if (ctx.path !== '/api/user/login' && ctx.path !== '/api/user/register' && ctx.path !== '/' && ctx.path.indexOf('/api/movies') < 0) {
-      return ctx.body = { success: false, msg: '请先登录后再进行操作！' }
-    }
-  } else {
-    ctx.body = 'Hello Koa!'
-  }
-  await next()
-})
+// app.use(async (ctx, next) => {
+//   // console.log(ctx.cookies.get('koa:sess'), ctx.path, ctx.session.user)
+//   if (!ctx.cookies.get('koa:sess')) {
+//     if (ctx.path !== '/api/user/login' && ctx.path !== '/api/user/register' && ctx.path !== '/' && ctx.path.indexOf('/api/movies') < 0) {
+//       return ctx.body = { success: false, msg: '请先登录后再进行操作！' }
+//     }
+//   } else {
+//     ctx.body = 'Hello Koa!'
+//   }
+//   await next()
+// })
 app.use(router.routes(), router.allowedMethods())
 app.use(bodyParser({enableTypes:['json', 'form', 'text']}))
 // app.use(async (ctx, next) => { ctx.body = 'Hello Koa!' })

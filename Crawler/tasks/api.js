@@ -5,7 +5,14 @@ const Category = mongoose.model('Category')
 
 // http://api.douban.com/v2/movie/subject/1764796
 
+// 延时函数
+const sleep = time => new Promise(resolve =>  {
+  setTimeout(resolve, time)
+})
+
 async function fetchMovie(item) {
+  sleep(2000)
+
   const url = `http://api.douban.com/v2/movie/${item.id}`
   const res = await request(url)
 
@@ -34,6 +41,7 @@ async function fetchMovie(item) {
       { summary: '' }
     ]
   })
+  // console.log(movies);
 
   // for (let i=0; i<[movies[0]].length; i++) {
   for (let i=0; i<movies.length; i++) {
@@ -65,7 +73,7 @@ async function fetchMovie(item) {
         let item = movie.tags[i]
         let cate = await Category.findOne({ name: item.name })
         if (!cate) {
-          cate = new Category({ name: item, movies: [ movie._id ] })
+          cate = new Category({ name: item.name, movies: [ movie._id ] })
         } else {
           if (cate.movies.indexOf(movie._id) === -1) {
             cate.movies.push(movie._id)

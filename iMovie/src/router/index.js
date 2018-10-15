@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import index from '@/views/pages/index'
 import detail from '@/views/pages/detail'
+import category from '@/views/pages/category'
 
 import login from '@/views/admin/login'
 import register from '@/views/admin/register'
@@ -23,6 +24,8 @@ export default new Router({
     { path: '/', component: index },
     { path: '/index', name: 'index', component: index },
     { path: '/detail/:id', name: 'detail', component: detail },
+    { path: '/categories', name: 'categories', component: category },
+    { path: '/category/:id', name: 'category', component: category },
 
     // admin
     { path: '/login', name: 'login', component: login },

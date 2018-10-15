@@ -4,7 +4,7 @@ const ObjectId = Schema.Types.ObjectId
 
 const categorySchema = new Schema({
   name: { unique: true, type: String },
-  movies: [ { type: ObjectId, name: String, ref: 'Movie'} ],
+  movies: [ { type: ObjectId, ref: 'Movie'} ],
   meta: {
     createAt: { type: Date, default: Date.now() },
     updateAt: { type: Date, default: Date.now() }

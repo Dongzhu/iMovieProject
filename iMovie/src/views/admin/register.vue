@@ -106,7 +106,12 @@ export default {
           register(params).then(res => {
             if (res.success === true) {
               this.openSuccess('Success Register!')
-              // this.$router.push('/login')
+              let path = window.localStorage.getItem('storage')
+              if (path !== '') {
+                this.$router.push(path)
+              } else {
+                this.$router.push('/login')
+              }
             } else {
               this.openError(res.message)
             }

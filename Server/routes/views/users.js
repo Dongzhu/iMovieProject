@@ -59,8 +59,7 @@ router.post('/user/register', async (ctx, next) => {
   let decrypted2 = jse.decrypt(password2)
 
   if (decrypted === decrypted2) {
-    let data = checkRegister(username)
-    let { register } = data
+    let register = await checkRegister(username)
 
     if (!register) {
       // create a user a new user

@@ -27,7 +27,7 @@
               </h4>
             </div>
             <div class="section-body">
-              <div class="card" v-for="(item,index) in heighlist" :key="index" :title="item.name+' '+item.rate">
+              <div class="card" v-for="(item,index) in heighlist" :key="index" :title="item.title+' '+item.rate">
                 <div class="card-bg">
                   <a :href="'/detail/'+item.id"><img :src="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
                   <span class="card-rate">{{ item.rate }}</span>
@@ -150,7 +150,8 @@ export default {
   },
   computed: {
     heighlist () {
-      return this.newlist.sort(this.sortRate).slice(0, 6)
+      let templist = this.newlist
+      return templist.sort(this.sortRate).slice(0, 6)
     }
   },
   methods: {

@@ -44,7 +44,7 @@ a:hover{color:#f60;}
 .top-right img { width: 40px; height: 40px; border-radius: 20px;}
 .top-right:hover .top-right-info { display: block; }
 .top-right-info {
-  margin-top: -15px;
+  margin-top: -15px; box-shadow: 0 5px 5px rgba(0,0,0,0.1);
   background: white; color:#333333; border-radius: 1px;
   position: relative; z-index: 100; display: none;
 }
@@ -60,6 +60,15 @@ a:hover{color:#f60;}
 .top-bottom ul { margin: 0 auto; padding-left: 0; }
 .top-bottom ul li { float: left; margin-left: 15px; list-style: none; }
 .top-bottom ul li:first-child { margin-left: 0; }
+
+/* navbar.vue */
+.navbar .more { float: right; font-size: 12px; color: #333; }
+.navbar .more:hover, .navbar-tag span:hover { color: #ff6f0a; }
+.tagspan {
+  width: auto; height: 20px; line-height: 20px; cursor: pointer;
+  margin: 4px 4px 4px 0; padding: 5px; display: inline-block;
+  border: 1px solid rgba(64,158,255,.2); color: #409eff; border-radius: 4px;
+}
 
 /* login && register */
 .login .el-form-item {
@@ -134,34 +143,6 @@ a:hover{color:#f60;}
 #tagscloud a.tagc3{background:#e6e13c;color:#fff;}
 #tagscloud a:hover{color:#fff;background:#0099ff;}
 
-.el-header, .el-footer, .el-container { margin: 0 auto; }
-.el-pagination { display: inline-block; }
-@media screen and (max-width: 767px) {
-  .main { margin: 0 15px; }
-  .el-carousel__container { height: 200px; }
-  .search-box { display: none; }
-  .top { padding: 15px 15px 0; }
-  .card { width: 46%; margin: 5px 2%; }
-  .layer { display: none; }
-  .section-info1 { width:100%; height: auto; float: none; }
-  .section-info2 { width: 100%; padding-left: 0; float: none; }
-  .tag { display: none; }
-  .search-box { display: none; }
-}
-@media screen and (min-width: 768px) and (max-width: 1217px) {
-  /* .el-header, .el-footer, .el-container { width: 100%; } */
-  .el-header, .el-footer, .el-container { width: 738px; }
-  .main { margin: 0 15px; }
-  .card { width: 150px; margin: 5px 12px; }
-  .el-carousel__container { height: 300px; }
-  .layer { width: 185px; }
-}
-@media screen and (min-width: 1218px) {
-  .el-header, .el-footer, .el-container { width: 1218px; }
-  .main { margin: 0 15px; }
-  .el-carousel__container { height: 400px; }
-}
-
 /* login.vue */
 .box {
   width: 100%; height: 100%;
@@ -176,13 +157,6 @@ a:hover{color:#f60;}
   position: absolute;
   right: 0;
   width: 520px;
-}
-@media screen and (max-width: 770px) {
-  .box .login {
-    padding: 35px 0 15px;
-    width: 90%;
-  }
-  .login .el-input { width: 75% !important; }
 }
 
 /* main.vue */
@@ -222,12 +196,57 @@ a:hover{color:#f60;}
 
 /* content.vue */
 .content {
-  /* width: calc(100% - 200px); margin-left: 200px; */
-  /* width: calc(100% - 64px); margin-left: 64px; */
   height: 100%;
   transition: all .3s ease;
   position: absolute;
   right: 0px;
 }
-/* @media screen and (max-width: 770px) { .content { width: calc(100% - 64px); margin-left: 64px; } } */
-/* @media screen and (min-width: 771px) { .content { width: calc(100% - 200px); margin-left: 200px; } } */
+
+/* category.vue */
+.category .el-container { display: block; }
+.cate-all {  }
+.cate-info { margin: 15px auto 20px; }
+.catemovies {
+  width: 100%;
+  margin-top: 15px; display: flex;
+  box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+}
+.catemovies:hover { box-shadow: 0 15px 30px rgba(0,0,0,0.1); transform: translate3d(0,-2px,0); -webkit-transition: all .2s linear; transition: all .2s linear; }
+.catemovies h4 { padding: 10px 0; }
+.movielogo { width: 160px; height: 240px; padding: 10px 8px; float: left; flex: none; }
+.movieinfo { padding: 10px 8px; float: left; }
+.movieinfo p { margin-bottom: 5px; line-height: 20px; }
+
+/* @media query */
+.el-header, .el-footer, .el-container { margin: 0 auto; padding: 0; }
+.el-pagination { display: inline-block; }
+@media screen and (max-width: 767px) {
+  .main { margin: 0 15px; }
+  .el-carousel__container { height: 200px; }
+  .search-box { display: none; }
+  .top { padding: 15px 15px 0; }
+  .card { width: 46%; margin: 5px 2%; }
+  .layer { display: none; }
+  .section-info1 { width:100%; height: auto; float: none; }
+  .section-info2 { width: 100%; padding-left: 0; float: none; }
+  .tag { display: none; }
+  .search-box { display: none; }
+  .box .login { padding: 35px 0 15px; width: 90%; }
+  .login .el-input { width: 75% !important; }
+  .catemovies { display: inline-block; }
+  .movies { display: inline-block; }
+  .movielogo { display: inline-block; position: relative; left: 50%; margin-left: -80px; }
+}
+@media screen and (min-width: 768px) and (max-width: 1217px) {
+  /* .el-header, .el-footer, .el-container { width: 100%; } */
+  .el-header, .el-footer, .el-container { width: 738px; }
+  .main { margin: 0 15px; }
+  .card { width: 150px; margin: 5px 12px; }
+  .el-carousel__container { height: 300px; }
+  .layer { width: 185px; }
+}
+@media screen and (min-width: 1218px) {
+  .el-header, .el-footer, .el-container { width: 1218px; }
+  .main { margin: 0 15px; }
+  .el-carousel__container { height: 400px; }
+}
