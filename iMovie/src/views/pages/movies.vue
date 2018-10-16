@@ -106,8 +106,12 @@ export default {
     },
     searchMovie (item) {
       console.log(item)
-      getMovies({ country: item }).then(res => {
-        console.log(res)
+      getMovies({ country: item }).then(data => {
+        if (data.success) {
+          this.movielist = data.movies
+        } else {
+          this.movielist = []
+        }
       })
     }
   }
