@@ -30,7 +30,7 @@
                 <li><a href="#">国产电影</a></li>
                 <li><a href="#">国外电影</a></li>
                 <li><a href="#">排行榜</a></li>
-                <li @click="gotoCate"><router-link :to="{ name: 'categories'}">分类</router-link></li>
+                <li @click="gotoCate"><router-link :to="{ name: 'movies'}">分类</router-link></li>
               </ul>
             </div>
             <div class="top-right search-box">

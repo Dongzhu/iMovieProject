@@ -6,46 +6,22 @@
 
     <div class="main category">
       <el-container>
-        <div class="cate-all">
-          所有分类：
-          <span v-for="(item,index) in catelist" :key="index" class="tagspan" @click="gotoCate(item)">
-            <router-link :to="{ name: 'category', params: { id: item._id }}">{{item.name}} {{item.movies.length}}</router-link>
-          </span>
-          <el-switch
-            v-model="value"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            @change="unfold">
-          </el-switch><span> {{valueText}}</span>
+        <div class="category-all">
+          <p class="condition">年份：<span v-for="(item, index) in yearlist" :key="index" @click="searchMovie(item)">{{item}}</span></p>
+          <p class="condition">地区：<span v-for="(item, index) in countrylist" :key="index" @click="searchMovie(item)">{{item}}</span></p>
+          <p class="category-rate">
+            <span style="cursor: default">评分：</span>
+            <span class="">
+              <el-slider
+                v-model="rate"
+                range
+                :max="10">
+              </el-slider>
+            </span>
+          </p>
         </div>
         <div class="clearfix"></div>
-        <div class="cate-info" v-if="category !== ''">
-          <h4>
-            当前分类：
-            <el-breadcrumb separator="/" v-if="hackReset">
-              <el-breadcrumb-item :to="{ path: '/categories' }">分类</el-breadcrumb-item>
-              <el-breadcrumb-item>{{category}}</el-breadcrumb-item>
-            </el-breadcrumb>
-          </h4>
-          <div class="catemovies" v-for="(item,index) in catemovies" :key="index">
-            <div class="movielogo">
-              <router-link :to="{ name: 'detail', params: {id:item.id} }">
-                <img :src="item.poster" :alt="item.title" width="100%" height="100%">
-              </router-link>
-            </div>
-            <div class="movieinfo">
-              <h4>
-                <router-link :to="{ name: 'detail', params: {id:item.id} }">
-                  {{item.title}} <span>{{item.rate}}</span>
-                </router-link>
-              </h4>
-              <p>主演：<span v-for="(item,index) in item.cast || ''" :key="index"><span v-if="index !== 0"> / </span>{{item}}</span></p>
-              <p>上映日期：<span v-for="(item,index) in item.pubdate || ''" :key="index">{{item}} </span></p>
-              <p>剧情简介：{{item.summary}}</p>
-            </div>
-          </div>
-        </div>
-        <div class="cate-info" v-else>
+        <div class="cate-info">
           <div class="catemovies" v-for="(item,index) in movielist" :key="index">
             <div class="movielogo">
               <router-link :to="{ name: 'detail', params: {id:item.id} }">
@@ -77,19 +53,18 @@ import Header from '../base/header'
 import Footer from '../base/foot'
 import Sidebar from '../base/sidebar'
 
-import { getMovies, getCategories, getCategory } from '@/api/views/movies'
+import { getMovies } from '@/api/views/movies'
 
 export default {
   components: { Header, Footer, Sidebar },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      // category: window.localStorage.getItem('storage') || '',
       value: true,
-      taglength: 30,
-      categories: [],
-      catemovies: [],
       movielist: [],
+      yearlist: [ '所有', '2018', '2017', '2010年代', '2000年代', '1990年代', '1980年代' ],
+      countrylist: [ '所有', '中国大陆', '美国', '香港', '台湾', '日本', '韩国', '英国', '法国', '德国', '意大利', '西班牙', '印度', '泰国', '俄罗斯', '伊朗', '加拿大', '澳大利亚', '爱尔兰', '瑞典', '巴西', '丹麦' ],
+      rate: [0, 10],
       bestlist: [
         {name: '碟中谍6：全面瓦解', rate: 4.8, pubdate: '2018-08-31', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2529365085.webp'},
         {name: '阿尔法：狼伴归途 Alpha', rate: 3.8, pubdate: '2018-09-07', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2530871439.webp'},
@@ -102,31 +77,13 @@ export default {
     }
   },
   mounted () {
-    getMovies().then(data => {
+    getMovies({}).then(data => {
       if (data.success) {
         this.movielist = data.movies
       } else {
         this.movielist = []
       }
     })
-
-    getCategories().then(data => {
-      if (data.success) {
-        this.categories = data.categories
-      } else {
-        this.categories = []
-      }
-    })
-
-    if (this.cateid !== '') {
-      getCategory(this.cateid).then(data => {
-        if (data.success) {
-          this.catemovies = data.movies
-        } else {
-          this.categories = []
-        }
-      })
-    }
 
     this.hack()
   },
@@ -135,16 +92,6 @@ export default {
     window.localStorage.setItem('storage', '')
   },
   computed: {
-    category () { return this.$store.state.category },
-    catelist () {
-      let templist = this.categories
-      return templist.sort(this.sortLen).slice(0, this.taglength)
-    },
-    valueText () { return this.value ? '展开' : '折叠' },
-    cateid () {
-      let path = this.$route.path.split('/category/')
-      return path.length > 1 ? path[1] : ''
-    }
   },
   methods: {
     hack () {
@@ -157,22 +104,10 @@ export default {
     sortLen (a, b) {
       return b.movies.length - a.movies.length
     },
-    unfold (value) {
-      if (value) {
-        this.taglength = 30
-      } else {
-        this.taglength = 9999
-      }
-    },
-    gotoCate (item) {
-      this.$store.commit('updateCate', item.name)
-      getCategory(this.cateid).then(data => {
-        if (data.success) {
-          this.catemovies = data.movies
-          this.hack()
-        } else {
-          this.categories = []
-        }
+    searchMovie (item) {
+      console.log(item)
+      getMovies({ country: item }).then(res => {
+        console.log(res)
       })
     }
   }

@@ -5,13 +5,40 @@ const ObjectID = require('mongodb').ObjectID
 // const { ObjectId } = Schema.Types
 // const CircularJSON = require('circular-json')
 
+// router.get('/movies', async (ctx, next) => {
+//   const Movie = mongoose.model('Movie')
+//   const movies = await Movie.find({}).sort({
+//     'meta.createdAt': -1
+//   })
+//
+//   ctx.body = { success: true, message: '查询成功', movies }
+// })
+
 router.get('/movies', async (ctx, next) => {
+  let cate = ctx.request.query.cate
+  let country = ctx.request.query.country
+  let year = ctx.request.query.year
+  let rate = ctx.request.query.rate
+  let page = parseInt(ctx.request.query.page)
+  let pageNum = parseInt(ctx.request.query.pageNum)
+  console.log('ctx.request.query: ', ctx.request.query)
+
+  if (!page) { page = 1, pageNum = 9999 }
+  if (page && !pageNum) { page = 1, pageNum = 10 }
+
+  let params = {}
+  if (country) { params.country = new RegExp(`^.*`+country+`.*$`) }
+  if (year) { params.year = new RegExp(`^.*`+year+`.*$`) }
+  if (rate) {
+    let gte = rate.split(',')[0], lte = rate.split(',')[1]
+    params.rate = { $gte:gte, $lte: lte}
+  }
   const Movie = mongoose.model('Movie')
-  const movies = await Movie.find({}).sort({
+  const movies = await Movie.find(params).limit(pageNum).skip((page-1) * pageNum).sort({
     'meta.createdAt': -1
   })
 
-  ctx.body = { success: true, message: '查询成功', movies }
+  ctx.body = { success: true, length: movies.length, message: '查询成功', movies }
 })
 
 router.get('/movies/:id', async (ctx, next) => {

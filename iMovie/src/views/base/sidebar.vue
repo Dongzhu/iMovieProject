@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="navbar cate">
-      <h4>分类<span class="more">更多</span></h4>
+      <h4>标签<span class="more" @click="gotoCate('categories')">更多</span></h4>
       <div class="navbar-tag">
         <span v-for="(item,index) in catelist" :key="index" class="tagspan" @click="gotoCate(item)">
           <router-link :to="{ name: 'category', params: { id: item._id }}">{{item.name}} {{item.movies.length}}</router-link>
@@ -79,7 +79,11 @@ export default {
       return b.movies.length - a.movies.length
     },
     gotoCate (item) {
-      window.localStorage.setItem('storage', item.name)
+      if (item === 'categories') {
+        this.$router.push('/categories')
+      } else {
+        window.localStorage.setItem('storage', item.name)
+      }
     }
   }
 }

@@ -17,6 +17,7 @@ input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inher
 address,cite,dfn,em,var{font-style:normal;} /* 将斜体扶正 */
 a{color:#37a;text-decoration:none;}         /* link */
 a:hover{color:#f60;}
+span,p,a { cursor: default }
 
 .clearfix { clear: both; }
 #el-menu { border: none; }
@@ -50,7 +51,7 @@ a:hover{color:#f60;}
 }
 .top-right-info ul li { padding: 0 5px; }
 .top-right-info ul li:hover { background: rgba(0,0,0,.15); }
-.top-right i { width: 20px; height: 20px; line-height: 20px; margin-left: -35px; }
+.top-right i { width: 20px; height: 20px; line-height: 20px; margin-left: -25px; }
 .top-right input {
   width: 150px; height: 20px;
   border-radius: 10px; border: 1px solid #dcdfe6; outline: none;
@@ -62,8 +63,8 @@ a:hover{color:#f60;}
 .top-bottom ul li:first-child { margin-left: 0; }
 
 /* navbar.vue */
-.navbar .more { float: right; font-size: 12px; color: #333; }
-.navbar .more:hover, .navbar-tag span:hover { color: #ff6f0a; }
+.navbar .more { float: right; font-size: 12px; color: #333; cursor: pointer; }
+.navbar .more:hover, .navbar-tag span:hover { color: #f60; }
 .tagspan {
   width: auto; height: 20px; line-height: 20px; cursor: pointer;
   margin: 4px 4px 4px 0; padding: 5px; display: inline-block;
@@ -109,7 +110,7 @@ a:hover{color:#f60;}
 .banner { width: 100%; margin: 30px 0 10px; text-align: center; }
 .footer { width: 100%; padding: 20px; text-align: center; border-top:solid 1px #ccc; }
 .main {  margin: 50px auto 15px; min-height: 720px; }
-.section {  }
+.section { min-height: 786px; }
 .section-item { margin-bottom: 15px; }
 .layer { width: 336px; float: right; padding: 0 15px; }
 .section h4 { border-bottom: 1px solid #eaeaea; }
@@ -202,10 +203,20 @@ a:hover{color:#f60;}
   right: 0px;
 }
 
+/* categories.vue */
+.category-all { margin-top: 20px; }
+.category-all p { line-height: 22px; margin-bottom: 5px; }
+.condition span { margin-right: 10px; cursor: pointer; }
+.condition span:hover { color: #f60; }
+.category-rate { height: 38px; line-height: 38px !important;  }
+.category-rate span { height: 38px; line-height: 38px; display: inline-block; }
+.category-rate span:nth-child(1) { position: relative; top: -15px; }
+.category-rate span:nth-child(2) { width: 50%; }
+
 /* category.vue */
 .category .el-container { display: block; }
 .cate-all {  }
-.cate-info { margin: 15px auto 20px; }
+.cate-info { min-height: 591px; margin: 15px auto 20px; }
 .catemovies {
   width: 100%;
   margin-top: 15px; display: flex;
