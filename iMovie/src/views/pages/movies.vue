@@ -17,13 +17,15 @@
           </p>
           <p class="category-rate">
             <span style="cursor: default">评分：</span>
-            <span class="">
+            <span>
               <el-slider
                 v-model="rate"
                 range
-                :max="10">
+                :max="10"
+                @change="changerate">
               </el-slider>
             </span>
+            <span>{{rate[0]}}, {{rate[1]}}</span>
           </p>
         </div>
         <div class="clearfix"></div>
@@ -73,7 +75,7 @@ export default {
       movielist: [],
       yearlist: [ '所有', '2018', '2017', '2010年代', '2000年代', '1990年代', '1980年代' ],
       countrylist: [ '所有', '中国大陆', '美国', '香港', '台湾', '日本', '韩国', '英国', '法国', '德国', '意大利', '西班牙', '印度', '泰国', '俄罗斯', '伊朗', '加拿大', '澳大利亚', '爱尔兰', '瑞典', '巴西', '丹麦' ],
-      rate: [0, 10],
+      // rate: [0, 10],
       bestlist: [
         {name: '碟中谍6：全面瓦解', rate: 4.8, pubdate: '2018-08-31', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2529365085.webp'},
         {name: '阿尔法：狼伴归途 Alpha', rate: 3.8, pubdate: '2018-09-07', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2530871439.webp'},
@@ -110,7 +112,8 @@ export default {
   },
   computed: {
     currentyear () { return this.$route.query.year || '' },
-    currentcountry () { return this.$route.query.country || '' }
+    currentcountry () { return this.$route.query.country || '' },
+    rate (){ return this.$route.query.rate.split(',') || [0,10] }
   },
   methods: {
     hack () {
@@ -122,7 +125,6 @@ export default {
     },
     sortLen (a, b) { return b.movies.length - a.movies.length },
     searchMovie (type, item) {
-      console.log(this.currentyear, this.currentcountry)
       let query = this.$route.query
       let params = {}
       if (query.cate) params.cate = query.cate
@@ -134,6 +136,35 @@ export default {
 
       if (type === 'year') params.year = item
       if (type === 'country') params.country = item
+      console.log(params)
+      getMovies(params).then(data => {
+        if (data.success) {
+          this.movielist = data.movies
+
+          this.$router.push({path: 'movies', query: params})
+        } else {
+          this.movielist = []
+        }
+      })
+    },
+    changerate (rate) {
+      console.log(rate)
+      let query = this.$route.query
+      let params = {}
+      if (query.cate) params.cate = query.cate
+      if (query.country) params.country = query.country
+      if (query.year) params.year = query.year
+      if (query.rate) params.rate = query.rate
+      if (query.page) params.page = query.page
+      if (query.pageNum) params.pageNum = query.pageNum
+
+      // if (query.rate !== undefined && rate.length !== 0) {
+      //   let newrate = rate.join(',')
+      //   if (query.rate !== newrate) {
+      //     params.rate = newrate
+      //   }
+      // }
+      params.rate = rate.join(',')
       console.log(params)
       getMovies(params).then(data => {
         if (data.success) {

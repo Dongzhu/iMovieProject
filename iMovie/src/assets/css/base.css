@@ -235,7 +235,8 @@ body::-webkit-scrollbar-track {
 .category-rate { height: 38px; line-height: 38px !important;  }
 .category-rate span { height: 38px; line-height: 38px; display: inline-block; }
 .category-rate span:nth-child(1) { position: relative; top: -15px; }
-.category-rate span:nth-child(2) { width: 50%; }
+.category-rate span:nth-child(2) { width: 200px; }
+.category-rate span:nth-child(3) { position: relative; top: -13px; margin-left: 10px; }
 .active-span { color: #f60; }
 /* 192.168.16.217 */
 
