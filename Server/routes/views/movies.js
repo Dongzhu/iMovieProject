@@ -1,9 +1,6 @@
 const router = require('koa-router')()
 const mongoose = require('mongoose')
 const ObjectID = require('mongodb').ObjectID
-// const Schema = mongoose.Schema
-// const { ObjectId } = Schema.Types
-// const CircularJSON = require('circular-json')
 
 // router.get('/movies', async (ctx, next) => {
 //   const Movie = mongoose.model('Movie')
@@ -21,7 +18,7 @@ router.get('/movies', async (ctx, next) => {
   let rate = ctx.request.query.rate
   let page = parseInt(ctx.request.query.page)
   let pageNum = parseInt(ctx.request.query.pageNum)
-  console.log('ctx.request.query: ', ctx.request.query)
+  let keywords = parseInt(ctx.request.query.keywords)
 
   if (!page) { page = 1, pageNum = 9999 }
   if (page && !pageNum) { page = 1, pageNum = 10 }
@@ -42,10 +39,26 @@ router.get('/movies', async (ctx, next) => {
     let gte = rate.split(',')[0], lte = rate.split(',')[1]
     params.rate = { $gte:gte, $lte: lte}
   }
+
   const Movie = mongoose.model('Movie')
-  const movies = await Movie.find(params).limit(pageNum).skip((page-1) * pageNum).sort({
-    'meta.createdAt': -1
-  })
+  let movies = []
+  if (keywords) {
+    let queryrate = parseFloat(keywords)
+    console.log('queryrate: ',queryrate)
+    params = {
+      $or: [
+        { country: new RegExp(`^.*`+keywords+`.*$`) },
+        { year: new RegExp(`^.*`+keywords+`.*$`) },
+        { summary: new RegExp(`^.*`+keywords+`.*$`) }
+      ]
+    }
+    movies = await Movie.find(params).limit(pageNum).skip((page-1) * pageNum).sort({ 'meta.createdAt': -1 })
+  } else {
+    console.log('keywords: ', keywords)
+    movies = await Movie.find(params).limit(pageNum).skip((page-1) * pageNum).sort({
+      'meta.createdAt': -1
+    })
+  }
 
   ctx.body = { success: true, length: movies.length, message: '查询成功', movies }
 })

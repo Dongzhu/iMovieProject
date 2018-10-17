@@ -8,7 +8,8 @@ export function getMovies (po) {
     year: po.year,
     rate: po.rate,
     page: po.page,
-    pageNum: po.pageNum
+    pageNum: po.pageNum,
+    keywords: po.keywords
   }
   return axios.get(`${base}/movies`, { params: params })
     .then(res => { return res.data })

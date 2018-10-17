@@ -70,7 +70,7 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      movielist: [],
+      // movielist: [],
       yearlist: [ '所有', '2018', '2017', '2010年代', '2000年代', '1990年代', '1980年代' ],
       countrylist: [ '所有', '中国大陆', '美国', '香港', '台湾', '日本', '韩国', '英国', '法国', '德国', '意大利', '西班牙', '印度', '泰国', '俄罗斯', '伊朗', '加拿大', '澳大利亚', '爱尔兰', '瑞典', '巴西', '丹麦' ],
       rate: [0, 10],
@@ -89,10 +89,11 @@ export default {
     }
     if (query.page) params.page = query.page
     if (query.pageNum) params.pageNum = query.pageNum
+    if (query.keywords) params.keywords = query.keywords
 
     getMovies(params).then(data => {
       if (data.success) {
-        this.movielist = data.movies
+        this.$store.commit('updateMovies', data.movies)
       } else {
         this.movielist = []
       }
@@ -105,6 +106,7 @@ export default {
     window.localStorage.setItem('storage', '')
   },
   computed: {
+    movielist () { return this.$store.state.movielist },
     currentyear () {
       let year = this.$route.query.year
       return year === 'all' ? '所有' : year
@@ -113,10 +115,6 @@ export default {
       let country = this.$route.query.country
       return country === 'all' ? '所有' : country
     }
-    // rate () {
-    //   let queryrate = this.$route.query.queryrate || '0,10'
-    //   return queryrate.split(',')
-    // }
   },
   methods: {
     hack () {
@@ -143,7 +141,7 @@ export default {
       console.log(params)
       getMovies(params).then(data => {
         if (data.success) {
-          this.movielist = data.movies
+          this.$store.commit('updateMovies', data.movies)
           this.$router.push({path: 'movies', query: params})
         } else {
           this.movielist = []
@@ -165,7 +163,7 @@ export default {
       console.log(params)
       getMovies(params).then(data => {
         if (data.success) {
-          this.movielist = data.movies
+          this.$store.commit('updateMovies', data.movies)
 
           this.$router.push({path: 'movies', query: params})
         } else {

@@ -34,8 +34,8 @@
               </ul>
             </div>
             <div class="top-right search-box">
-              <input type="text" placeholder="请输入内容">
-              <i class="el-icon-search"></i>
+              <input v-model="searchTxt" type="text" placeholder="请输入内容" @keyup.enter="searchMovie">
+              <i class="el-icon-search" @click="searchMovie"></i>
             </div>
           </div>
         </div>
@@ -45,16 +45,20 @@
 </template>
 
 <script>
+import { getMovies } from '@/api/views/movies'
+
 export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
       username: '',
+      searchTxt: '',
       hackReset: false
     }
   },
   mounted () {
     this.hack()
+    this.searchTxt = this.$route.query.keywords
     this.username = this.getCookie('username')
     let route = this.$route.path
     if (route.indexOf('index') > -1 || route.length === 1) {
@@ -69,6 +73,32 @@ export default {
       this.hackReset = false // hack方法强制刷新组件
       this.$nextTick(() => {
         this.hackReset = true
+      })
+    },
+    openSuccess (text) {
+      this.$message({
+        message: text,
+        type: 'success'
+      })
+    },
+    openError (text) {
+      this.$message({
+        showClose: true,
+        message: text,
+        type: 'error'
+      })
+    },
+    searchMovie () {
+      if (this.searchTxt === '') return this.openError('请输入关键字搜索！')
+
+      let params = {keywords: this.searchTxt}
+      getMovies(params).then(data => {
+        if (data.success) {
+          this.$store.commit('updateMovies', data.movies)
+          this.$router.push({path: 'movies', query: params})
+        } else {
+          this.movielist = []
+        }
       })
     },
     gotoCate () { this.$store.commit('updateCate', '') },

@@ -61,8 +61,7 @@ body::-webkit-scrollbar-track {
   left: 0;
   z-index: 1030;
   background-color: #f8f8f8;
- }
-.top a { color: inherit; }
+}
 .top-left { float: left; height: 40px; line-height: 40px; cursor: pointer; }
 .top-right { float: right; height: 40px; line-height: 40px; cursor: pointer; }
 .top-right img { width: 40px; height: 40px; border-radius: 20px;}
