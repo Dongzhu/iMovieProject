@@ -6,12 +6,12 @@
       <el-container>
         <div class="category-all">
           <p class="condition">年份：
-            <span v-for="(item, index) in yearlist" :key="index" @click="searchMovie('year', item)" :class="{'active-span': item===currentyear}">
+            <span v-for="(item, index) in yearlist" :key="index" @click="searchMovie('year', item)" :class="{'active-span': item === currentyear}">
               {{item}}
             </span>
           </p>
           <p class="condition">地区：
-            <span v-for="(item, index) in countrylist" :key="index" @click="searchMovie('country', item)" :class="{'active-span': item===currentcountry}">
+            <span v-for="(item, index) in countrylist" :key="index" @click="searchMovie('country', item)" :class="{'active-span': item === currentcountry}">
               {{item}}
             </span>
           </p>
@@ -20,8 +20,7 @@
             <span>
               <el-slider
                 v-model="rate"
-                range
-                :max="10"
+                range :max="10"
                 @change="changerate">
               </el-slider>
             </span>
@@ -71,19 +70,10 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      value: true,
       movielist: [],
       yearlist: [ '所有', '2018', '2017', '2010年代', '2000年代', '1990年代', '1980年代' ],
       countrylist: [ '所有', '中国大陆', '美国', '香港', '台湾', '日本', '韩国', '英国', '法国', '德国', '意大利', '西班牙', '印度', '泰国', '俄罗斯', '伊朗', '加拿大', '澳大利亚', '爱尔兰', '瑞典', '巴西', '丹麦' ],
-      // rate: [0, 10],
-      bestlist: [
-        {name: '碟中谍6：全面瓦解', rate: 4.8, pubdate: '2018-08-31', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2529365085.webp'},
-        {name: '阿尔法：狼伴归途 Alpha', rate: 3.8, pubdate: '2018-09-07', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2530871439.webp'},
-        {name: '蚁人2：黄蜂女现身 Ant-Man', rate: 3.7, pubdate: '2018-08-24', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529389608.webp'},
-        {name: '大三儿', pubdate: '2018-08-20', rate: 4.5, url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2530569532.webp'},
-        {name: '传奇的诞生', pubdate: '2018-09-07', rate: 3.5, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2531286907.webp'},
-        {name: '西虹市首富', pubdate: '2018-07-27', rate: 2.8, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529206747.webp'}
-      ],
+      rate: [0, 10],
       hackReset: false
     }
   },
@@ -93,9 +83,13 @@ export default {
     if (query.cate) params.cate = query.cate
     if (query.country) params.country = query.country
     if (query.year) params.year = query.year
-    if (query.rate) params.rate = query.rate
+    if (query.rate) {
+      params.rate = query.rate
+      this.rate = query.rate.split(',')
+    }
     if (query.page) params.page = query.page
     if (query.pageNum) params.pageNum = query.pageNum
+
     getMovies(params).then(data => {
       if (data.success) {
         this.movielist = data.movies
@@ -111,9 +105,18 @@ export default {
     window.localStorage.setItem('storage', '')
   },
   computed: {
-    currentyear () { return this.$route.query.year || '' },
-    currentcountry () { return this.$route.query.country || '' },
-    rate (){ return this.$route.query.rate.split(',') || [0,10] }
+    currentyear () {
+      let year = this.$route.query.year
+      return year === 'all' ? '所有' : year
+    },
+    currentcountry () {
+      let country = this.$route.query.country
+      return country === 'all' ? '所有' : country
+    }
+    // rate () {
+    //   let queryrate = this.$route.query.queryrate || '0,10'
+    //   return queryrate.split(',')
+    // }
   },
   methods: {
     hack () {
@@ -134,17 +137,13 @@ export default {
       if (query.page) params.page = query.page
       if (query.pageNum) params.pageNum = query.pageNum
 
-      if (type === 'year') {
-        params.year = item==='所有' ? 'all' : item
-      }
-      if (type === 'country') {
-        params.country = item==='所有' ? 'all' : item
-      }
+      if (type === 'year') { params.year = item === '所有' ? 'all' : item }
+      if (type === 'country') { params.country = item === '所有' ? 'all' : item }
+
       console.log(params)
       getMovies(params).then(data => {
         if (data.success) {
           this.movielist = data.movies
-
           this.$router.push({path: 'movies', query: params})
         } else {
           this.movielist = []
@@ -162,12 +161,6 @@ export default {
       if (query.page) params.page = query.page
       if (query.pageNum) params.pageNum = query.pageNum
 
-      // if (query.rate !== undefined && rate.length !== 0) {
-      //   let newrate = rate.join(',')
-      //   if (query.rate !== newrate) {
-      //     params.rate = newrate
-      //   }
-      // }
       params.rate = rate.join(',')
       console.log(params)
       getMovies(params).then(data => {

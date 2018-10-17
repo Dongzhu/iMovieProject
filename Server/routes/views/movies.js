@@ -30,7 +30,7 @@ router.get('/movies', async (ctx, next) => {
   if (country && country.indexOf('all') < 0) {
     params.country = new RegExp(`^.*`+country+`.*$`)
   }
-  if (year.indexOf('all') < 0) {
+  if (year && year.indexOf('all') < 0) {
     if (year.indexOf('年代') > -1) {
       let gte = parseInt(year.split('年代')[0]), lte = gte + 9
       params.year = { $gte:gte, $lte: lte}
