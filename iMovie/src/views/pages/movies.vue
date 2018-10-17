@@ -134,8 +134,12 @@ export default {
       if (query.page) params.page = query.page
       if (query.pageNum) params.pageNum = query.pageNum
 
-      if (type === 'year') params.year = item
-      if (type === 'country') params.country = item
+      if (type === 'year') {
+        params.year = item==='所有' ? 'all' : item
+      }
+      if (type === 'country') {
+        params.country = item==='所有' ? 'all' : item
+      }
       console.log(params)
       getMovies(params).then(data => {
         if (data.success) {

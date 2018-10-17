@@ -27,8 +27,17 @@ router.get('/movies', async (ctx, next) => {
   if (page && !pageNum) { page = 1, pageNum = 10 }
 
   let params = {}
-  if (country) { params.country = new RegExp(`^.*`+country+`.*$`) }
-  if (year) { params.year = new RegExp(`^.*`+year+`.*$`) }
+  if (country && country.indexOf('all') < 0) {
+    params.country = new RegExp(`^.*`+country+`.*$`)
+  }
+  if (year.indexOf('all') < 0) {
+    if (year.indexOf('年代') > -1) {
+      let gte = parseInt(year.split('年代')[0]), lte = gte + 9
+      params.year = { $gte:gte, $lte: lte}
+    } else {
+      params.year = new RegExp(`^.*`+year+`.*$`)
+    }
+  }
   if (rate) {
     let gte = rate.split(',')[0], lte = rate.split(',')[1]
     params.rate = { $gte:gte, $lte: lte}
