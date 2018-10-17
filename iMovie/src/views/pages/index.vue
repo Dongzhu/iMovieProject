@@ -1,7 +1,7 @@
 <template>
   <div>
+    <Header></Header>
     <div class="bg">
-      <Header></Header>
 
       <el-container>
         <div class="banner">

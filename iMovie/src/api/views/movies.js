@@ -10,7 +10,6 @@ export function getMovies (po) {
     page: po.page,
     pageNum: po.pageNum
   }
-  console.log('params', JSON.stringify(params))
   return axios.get(`${base}/movies`, { params: params })
     .then(res => { return res.data })
     .catch(error => { console.log(error) })

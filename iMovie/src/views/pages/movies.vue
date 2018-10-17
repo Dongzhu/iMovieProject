@@ -1,14 +1,20 @@
 <template>
   <div>
-    <div class="bg">
-      <Header></Header>
-    </div>
+    <Header></Header>
 
     <div class="main category">
       <el-container>
         <div class="category-all">
-          <p class="condition">年份：<span v-for="(item, index) in yearlist" :key="index" @click="searchMovie(item)">{{item}}</span></p>
-          <p class="condition">地区：<span v-for="(item, index) in countrylist" :key="index" @click="searchMovie(item)">{{item}}</span></p>
+          <p class="condition">年份：
+            <span v-for="(item, index) in yearlist" :key="index" @click="searchMovie('year', item)" :class="{'active-span': item===currentyear}">
+              {{item}}
+            </span>
+          </p>
+          <p class="condition">地区：
+            <span v-for="(item, index) in countrylist" :key="index" @click="searchMovie('country', item)" :class="{'active-span': item===currentcountry}">
+              {{item}}
+            </span>
+          </p>
           <p class="category-rate">
             <span style="cursor: default">评分：</span>
             <span class="">
@@ -22,7 +28,7 @@
         </div>
         <div class="clearfix"></div>
         <div class="cate-info">
-          <div class="catemovies" v-for="(item,index) in movielist" :key="index">
+          <div class="catemovies" v-for="(item,index) in movielist" :key="index" v-if="movielist.length !== 0">
             <div class="movielogo">
               <router-link :to="{ name: 'detail', params: {id:item.id} }">
                 <img :src="item.poster" :alt="item.title" width="100%" height="100%">
@@ -38,6 +44,9 @@
               <p>上映日期：<span v-for="(item,index) in item.pubdate || ''" :key="index">{{item}} </span></p>
               <p>剧情简介：{{item.summary}}</p>
             </div>
+          </div>
+          <div v-if="movielist.length === 0">
+            <p style="padding: 100px 0; text-align: center">暂无数据</p>
           </div>
         </div>
       </el-container>
@@ -77,7 +86,15 @@ export default {
     }
   },
   mounted () {
-    getMovies({}).then(data => {
+    let query = this.$route.query
+    let params = {}
+    if (query.cate) params.cate = query.cate
+    if (query.country) params.country = query.country
+    if (query.year) params.year = query.year
+    if (query.rate) params.rate = query.rate
+    if (query.page) params.page = query.page
+    if (query.pageNum) params.pageNum = query.pageNum
+    getMovies(params).then(data => {
       if (data.success) {
         this.movielist = data.movies
       } else {
@@ -92,6 +109,8 @@ export default {
     window.localStorage.setItem('storage', '')
   },
   computed: {
+    currentyear () { return this.$route.query.year || '' },
+    currentcountry () { return this.$route.query.country || '' }
   },
   methods: {
     hack () {
@@ -101,14 +120,26 @@ export default {
         this.hackReset = true
       })
     },
-    sortLen (a, b) {
-      return b.movies.length - a.movies.length
-    },
-    searchMovie (item) {
-      console.log(item)
-      getMovies({ country: item }).then(data => {
+    sortLen (a, b) { return b.movies.length - a.movies.length },
+    searchMovie (type, item) {
+      console.log(this.currentyear, this.currentcountry)
+      let query = this.$route.query
+      let params = {}
+      if (query.cate) params.cate = query.cate
+      if (query.country) params.country = query.country
+      if (query.year) params.year = query.year
+      if (query.rate) params.rate = query.rate
+      if (query.page) params.page = query.page
+      if (query.pageNum) params.pageNum = query.pageNum
+
+      if (type === 'year') params.year = item
+      if (type === 'country') params.country = item
+      console.log(params)
+      getMovies(params).then(data => {
         if (data.success) {
           this.movielist = data.movies
+
+          this.$router.push({path: 'movies', query: params})
         } else {
           this.movielist = []
         }

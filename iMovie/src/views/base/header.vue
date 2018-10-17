@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-header>
-      <div class="top">
+    <div class="top">
+      <el-header>
         <div class="top-left">
           <a href="/">BRAND</a>
         </div>
@@ -39,8 +39,8 @@
             </div>
           </div>
         </div>
-      </div>
-    </el-header>
+      </el-header>
+    </div>
   </div>
 </template>
 

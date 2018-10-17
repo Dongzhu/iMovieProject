@@ -19,6 +19,22 @@ a{color:#37a;text-decoration:none;}         /* link */
 a:hover{color:#f60;}
 span,p,a { cursor: default }
 
+/* 设置滚动条样式 */
+body::-webkit-scrollbar { width: 0; }
+/* body::-webkit-scrollbar {
+  width: 10px; height: 1px;
+}
+body::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #535353;
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+}
+body::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: #EDEDED;
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+} */
+
 .clearfix { clear: both; }
 #el-menu { border: none; }
 
@@ -38,7 +54,14 @@ span,p,a { cursor: default }
 .el-breadcrumb { display: inline-block; }
 
 /* header.vue */
-.top { padding-top: 15px; }
+.top {
+  /* padding-top: 15px; */
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+  background-color: #f8f8f8;
+ }
 .top a { color: inherit; }
 .top-left { float: left; height: 40px; line-height: 40px; cursor: pointer; }
 .top-right { float: right; height: 40px; line-height: 40px; cursor: pointer; }
@@ -107,6 +130,7 @@ span,p,a { cursor: default }
 .login .tips p span.right a:hover { color: #37a; }
 
 /* index */
+.bg { padding-top: 60px; }
 .banner { width: 100%; margin: 30px 0 10px; text-align: center; }
 .footer { width: 100%; padding: 20px; text-align: center; border-top:solid 1px #ccc; }
 .main {  margin: 50px auto 15px; min-height: 720px; }
@@ -212,8 +236,11 @@ span,p,a { cursor: default }
 .category-rate span { height: 38px; line-height: 38px; display: inline-block; }
 .category-rate span:nth-child(1) { position: relative; top: -15px; }
 .category-rate span:nth-child(2) { width: 50%; }
+.active-span { color: #f60; }
+/* 192.168.16.217 */
 
 /* category.vue */
+.category { padding-top: 80px; }
 .category .el-container { display: block; }
 .cate-all {  }
 .cate-info { min-height: 591px; margin: 15px auto 20px; }
