@@ -60,7 +60,7 @@ body::-webkit-scrollbar-track {
   right: 0;
   left: 0;
   z-index: 1030;
-  background-color: #f8f8f8;
+  /* background: #f8f8f8; */
 }
 .top-left { float: left; height: 40px; line-height: 40px; cursor: pointer; }
 .top-right { float: right; height: 40px; line-height: 40px; cursor: pointer; }
@@ -153,6 +153,7 @@ body::-webkit-scrollbar-track {
 .best ul li a { color: #37a; }
 
 /* detail */
+.detail { padding-top: 90px; }
 .section-info {}
 .section-info1 { width:180px; height: 260px; float: left; }
 .section-info2 { width: calc(100% - 195px); padding-left: 15px; float: left; }
@@ -240,7 +241,7 @@ body::-webkit-scrollbar-track {
 /* 192.168.16.217 */
 
 /* category.vue */
-.category { padding-top: 80px; }
+.category { padding-top: 100px; }
 .category .el-container { display: block; }
 .cate-all {  }
 .cate-info { min-height: 591px; margin: 15px auto 20px; }

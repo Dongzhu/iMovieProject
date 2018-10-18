@@ -18,7 +18,7 @@ router.get('/movies', async (ctx, next) => {
   let rate = ctx.request.query.rate
   let page = parseInt(ctx.request.query.page)
   let pageNum = parseInt(ctx.request.query.pageNum)
-  let keywords = parseInt(ctx.request.query.keywords)
+  let keywords = parseInt(ctx.request.query.keywords) || ctx.request.query.keywords
 
   if (!page) { page = 1, pageNum = 9999 }
   if (page && !pageNum) { page = 1, pageNum = 10 }
@@ -42,6 +42,7 @@ router.get('/movies', async (ctx, next) => {
 
   const Movie = mongoose.model('Movie')
   let movies = []
+  console.log('keywords: ',keywords)
   if (keywords) {
     let queryrate = parseFloat(keywords)
     console.log('queryrate: ',queryrate)
@@ -54,7 +55,6 @@ router.get('/movies', async (ctx, next) => {
     }
     movies = await Movie.find(params).limit(pageNum).skip((page-1) * pageNum).sort({ 'meta.createdAt': -1 })
   } else {
-    console.log('keywords: ', keywords)
     movies = await Movie.find(params).limit(pageNum).skip((page-1) * pageNum).sort({
       'meta.createdAt': -1
     })
@@ -66,7 +66,7 @@ router.get('/movies', async (ctx, next) => {
 router.get('/movies/:id', async (ctx, next) => {
   const Movie = mongoose.model('Movie')
   const id = ctx.params.id
-  const movie = await Movie.find({id:id}).sort({
+  const movie = await Movie.findOne({id:id}).sort({
     'meta.createdAt': -1
   })
 
@@ -95,7 +95,7 @@ router.get('/category/:id', async (ctx, next) => {
     movies.push(movie)
   }
   if (movies !== '') {
-    ctx.body = { success: true, message: '查询成功', movies }
+    ctx.body = { success: true, length: movies.length, message: '查询成功', data: { category, movies } }
   } else {
     ctx.body = { success: false, message: '查询失败', movies }
   }

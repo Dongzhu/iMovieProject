@@ -26,7 +26,6 @@ const store = new Vuex.Store({
     isCollapse: false,
     dynamicTags: [ { index: 'choice1', value: '选项1' } ],
     tag: { index: 'choice1', value: '选项1' },
-    category: '',
     movielist: []
   },
   mutations: {
@@ -40,7 +39,6 @@ const store = new Vuex.Store({
       state.tag.index = tag.index
       state.tag.value = tag.value
     },
-    updateCate (state, category) { state.category = category },
     updateMovies (state, movies) { state.movielist = movies }
   }
 })

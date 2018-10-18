@@ -1,15 +1,13 @@
 <template>
   <div>
-    <div class="bg">
-      <Header></Header>
-    </div>
+    <Header></Header>
 
     <div class="main category">
       <el-container>
         <div class="cate-all">
           所有分类：
           <span v-for="(item,index) in catelist" :key="index" class="tagspan" @click="gotoCate(item)">
-            <router-link :to="{ name: 'category', params: { id: item._id }}">{{item.name}} {{item.movies.length}}</router-link>
+            <router-link :to="{ name: 'category', params: { id: item._id }}" :class="{'active-span': cateid === item._id}">{{item.name}} {{item.movies.length}}</router-link>
           </span>
           <el-switch
             v-model="value"
@@ -19,7 +17,7 @@
           </el-switch><span> {{valueText}}</span>
         </div>
         <div class="clearfix"></div>
-        <div class="cate-info" v-if="category !== ''">
+        <div class="cate-info" v-if="cateid !== ''">
           <h4>
             当前分类：
             <el-breadcrumb separator="/" v-if="hackReset">
@@ -84,25 +82,17 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      // category: window.localStorage.getItem('storage') || '',
       value: true,
       taglength: 30,
       categories: [],
+      category: '',
       catemovies: [],
       movielist: [],
-      bestlist: [
-        {name: '碟中谍6：全面瓦解', rate: 4.8, pubdate: '2018-08-31', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2529365085.webp'},
-        {name: '阿尔法：狼伴归途 Alpha', rate: 3.8, pubdate: '2018-09-07', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2530871439.webp'},
-        {name: '蚁人2：黄蜂女现身 Ant-Man', rate: 3.7, pubdate: '2018-08-24', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529389608.webp'},
-        {name: '大三儿', pubdate: '2018-08-20', rate: 4.5, url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2530569532.webp'},
-        {name: '传奇的诞生', pubdate: '2018-09-07', rate: 3.5, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2531286907.webp'},
-        {name: '西虹市首富', pubdate: '2018-07-27', rate: 2.8, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529206747.webp'}
-      ],
       hackReset: false
     }
   },
   mounted () {
-    getMovies().then(data => {
+    getMovies({}).then(data => {
       if (data.success) {
         this.movielist = data.movies
       } else {
@@ -119,8 +109,10 @@ export default {
     })
 
     if (this.cateid !== '') {
-      getCategory(this.cateid).then(data => {
-        if (data.success) {
+      getCategory(this.cateid).then(res => {
+        if (res.success) {
+          const data = res.data
+          this.category = data.category.name
           this.catemovies = data.movies
         } else {
           this.categories = []
@@ -128,6 +120,7 @@ export default {
       })
     }
 
+    window.addEventListener('scroll', this.handleScroll)
     this.hack()
   },
   destroyed () {
@@ -135,7 +128,6 @@ export default {
     window.localStorage.setItem('storage', '')
   },
   computed: {
-    category () { return this.$store.state.category },
     catelist () {
       let templist = this.categories
       return templist.sort(this.sortLen).slice(0, this.taglength)
@@ -154,6 +146,10 @@ export default {
         this.hackReset = true
       })
     },
+    handleScroll () {
+      document.querySelector('.top').style.background = '#f8f8f8'
+      document.querySelector('.username').style.color = '#000'
+    },
     sortLen (a, b) {
       return b.movies.length - a.movies.length
     },
@@ -166,8 +162,10 @@ export default {
     },
     gotoCate (item) {
       this.$store.commit('updateCate', item.name)
-      getCategory(this.cateid).then(data => {
-        if (data.success) {
+      getCategory(this.cateid).then(res => {
+        if (res.success) {
+          const data = res.data
+          this.category = data.category.name
           this.catemovies = data.movies
           this.hack()
         } else {

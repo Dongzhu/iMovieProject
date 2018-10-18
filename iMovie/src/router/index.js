@@ -26,6 +26,7 @@ export default new Router({
     { path: '/index', name: 'index', component: index },
     { path: '/detail/:id', name: 'detail', component: detail },
     { path: '/movies', name: 'movies', component: movies },
+    { path: '/categories', name: 'categories', component: category },
     { path: '/category/:id', name: 'category', component: category },
 
     // admin

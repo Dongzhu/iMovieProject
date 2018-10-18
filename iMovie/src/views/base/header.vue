@@ -30,7 +30,7 @@
                 <li><a href="#">国产电影</a></li>
                 <li><a href="#">国外电影</a></li>
                 <li><a href="#">排行榜</a></li>
-                <li @click="gotoCate"><router-link :to="{ name: 'movies'}">分类</router-link></li>
+                <li><router-link :to="{ name: 'movies'}">分类</router-link></li>
               </ul>
             </div>
             <div class="top-right search-box">
@@ -95,13 +95,12 @@ export default {
       getMovies(params).then(data => {
         if (data.success) {
           this.$store.commit('updateMovies', data.movies)
-          this.$router.push({path: 'movies', query: params})
+          this.$router.push({path: '/movies', query: params})
         } else {
           this.movielist = []
         }
       })
     },
-    gotoCate () { this.$store.commit('updateCate', '') },
     login () { window.localStorage.setItem('storage', this.$route.path) },
     register () { window.localStorage.setItem('storage', this.$route.path) },
     logout () {

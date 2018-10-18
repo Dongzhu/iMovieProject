@@ -1,10 +1,8 @@
 <template>
   <div>
-    <div class="bg">
-      <Header></Header>
-    </div>
+    <Header></Header>
 
-    <div class="main">
+    <div class="main detail">
       <el-container>
         <div class="section" v-if="itemInfo">
           <div class="section-header">
@@ -89,7 +87,7 @@ export default {
     let doubanId = this.$route.path.split('detail/')[1]
     getMovie(doubanId).then(data => {
       if (data.success) {
-        this.itemInfo = data.movie[0]
+        this.itemInfo = data.movie
         this.itemInfo.rate = this.itemInfo.rate / 2
       } else {
         console.log('Error')

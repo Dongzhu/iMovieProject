@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Header></Header>
     <div class="bg">
+      <Header></Header>
 
       <el-container>
         <div class="banner">
@@ -60,7 +60,7 @@
               </h4>
             </div>
             <div class="section-body">
-              <div class="card" v-for="(item,index) in newlist" :key="index" :title="item.title">
+              <div class="card" v-for="(item,index) in newlist" :key="index" :title="item.title+' '+item.rate">
                 <div class="card-bg">
                   <a :href="'/detail/'+item.id"><img :src="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
                 </div>
@@ -104,14 +104,6 @@ export default {
         {id: 4, name: '权力的游戏', rate: 4.8, pubdate: '2018-08-31', url: require('@/assets/images/image4.jpg')},
         {id: 5, name: '中国有嘻哈', rate: 4.5, pubdate: '2018-08-31', url: require('@/assets/images/image5.jpg')}
       ],
-      releaselist: [
-        // {id: 1, name: '碟中谍6：全面瓦解', rate: 4.8, pubdate: '2018-08-31', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2529365085.webp'},
-        // {id: 2, name: '阿尔法：狼伴归途 Alpha', rate: 3.8, pubdate: '2018-09-07', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2530871439.webp'},
-        // {id: 3, name: '蚁人2：黄蜂女现身 Ant-Man', rate: 3.7, pubdate: '2018-08-24', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529389608.webp'},
-        // {id: 4, name: '大三儿', pubdate: '2018-08-20', rate: 4.5, url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2530569532.webp'},
-        // {id: 5, name: '传奇的诞生', pubdate: '2018-09-07', rate: 3.5, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2531286907.webp'},
-        // {id: 6, name: '西虹市首富', pubdate: '2018-07-27', rate: 2.8, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529206747.webp'}
-      ],
       newlist: [
         // {id: 1, name: '狄仁杰之四大天王', pubdate: '2018-07-27', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2526405034.jpg'},
         // {id: 1, name: '瞒天过海：美人计 Oceans Eight', pubdate: '2018-06-08', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2508259902.jpg'},
@@ -123,14 +115,6 @@ export default {
         // {id: 1, name: '肆式青春 詩季織々', pubdate: '2018-08-04', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2526429256.jpg'},
         // {id: 1, name: '奇迹男孩 Wonder', pubdate: '2018-01-19', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2507709428.jpg'},
         // {id: 1, name: '行动时刻 Action Point', pubdate: '2018-06-01', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2520177065.jpg'}
-      ],
-      bestlist: [
-        {name: '碟中谍6：全面瓦解', rate: 4.8, pubdate: '2018-08-31', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2529365085.webp'},
-        {name: '阿尔法：狼伴归途 Alpha', rate: 3.8, pubdate: '2018-09-07', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2530871439.webp'},
-        {name: '蚁人2：黄蜂女现身 Ant-Man', rate: 3.7, pubdate: '2018-08-24', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529389608.webp'},
-        {name: '大三儿', pubdate: '2018-08-20', rate: 4.5, url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2530569532.webp'},
-        {name: '传奇的诞生', pubdate: '2018-09-07', rate: 3.5, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2531286907.webp'},
-        {name: '西虹市首富', pubdate: '2018-07-27', rate: 2.8, url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529206747.webp'}
       ]
     }
   },
@@ -138,15 +122,19 @@ export default {
     let route = this.$route.path
     if (route.indexOf('index') > -1 || route.length === 1) {
       document.querySelector('.main').style.marginTop = '0'
+      document.querySelector('.bg').style.paddingTop = '0'
+      document.querySelector('.banner').style.marginTop = '90px'
     }
 
-    getMovies().then(data => {
+    getMovies({}).then(data => {
       if (data.success) {
         this.newlist = data.movies
       } else {
         this.newlist = []
       }
     })
+
+    window.addEventListener('scroll', this.handleScroll)
   },
   computed: {
     heighlist () {
@@ -155,6 +143,15 @@ export default {
     }
   },
   methods: {
+    handleScroll () {
+      if (window.scrollY > 480) {
+        document.querySelector('.top').style.background = '#f8f8f8'
+        document.querySelector('.username').style.color = '#000'
+      } else {
+        document.querySelector('.top').style.background = 'none'
+        document.querySelector('.username').style.color = '#fff'
+      }
+    },
     showChange (index) {
       document.querySelector('.bg').style.backgroundImage = 'url(' + this.bannerlist[index].url + ')'
     },
