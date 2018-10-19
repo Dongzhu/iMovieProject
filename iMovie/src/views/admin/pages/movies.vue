@@ -66,6 +66,14 @@ export default {
   },
   mounted () {
     this.hackReset = true
+    this.$nextTick(() => {
+      let content = document.querySelector('.content')
+      if (this.isCollapse) {
+        if (content && !this.isMobile) content.style.width = 'calc(100% - 36px)'
+      } else {
+        if (content && !this.isMobile) content.style.width = 'calc(100% - 200px)'
+      }
+    })
   },
   methods: {
     closesidebar () {

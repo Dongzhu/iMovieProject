@@ -61,14 +61,18 @@ export default {
     }
   },
   computed: {
-    isCollapse () { return this.$store.state.isCollapse },
     tag () { return this.$store.state.tag }
   },
   mounted () {
     this.hackReset = true
-  },
-  methods: {
-    closesidebar () { this.$store.commit('updateSidebar', true) }
+    this.$nextTick(() => {
+      let content = document.querySelector('.content')
+      if (this.isCollapse) {
+        if (content && !this.isMobile) content.style.width = 'calc(100% - 36px)'
+      } else {
+        if (content && !this.isMobile) content.style.width = 'calc(100% - 200px)'
+      }
+    })
   }
 }
 </script>

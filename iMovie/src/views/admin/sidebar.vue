@@ -51,16 +51,6 @@ export default {
     if (sidebar) sidebar.style.height = h.toString() + 'px'
     if (document.documentElement.clientWidth <= 600) this.$store.commit('updateMobile', true)
 
-    this.hackReset = true
-    this.$nextTick(() => {
-      let content = document.querySelector('.content')
-      if (this.isCollapse) {
-        if (content && !this.isMobile) content.style.width = 'calc(100% - 36px)'
-      } else {
-        if (content && !this.isMobile) content.style.width = 'calc(100% - 200px)'
-      }
-    })
-
     window.addEventListener('resize', this.handleResize)
     this.hack()
   },
