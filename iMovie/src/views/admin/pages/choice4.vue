@@ -1,11 +1,49 @@
 <template>
   <div class="main-admin">
     <sidebar></sidebar>
-
     <div class="content" v-if="hackReset">
       <setting></setting>
       <div class="info">
-        {{tag}}
+        <div class="info-section">
+          <div class="card-pannel">
+            <div class="card-pannel-left">
+              <icon-svg icon-class="yonghu" />
+            </div>
+            <div class="card-pannel-right">
+              1111
+            </div>
+          </div>
+          <div class="card-pannel">
+            <div class="card-pannel-left">
+              <icon-svg icon-class="message" />
+            </div>
+            <div class="card-pannel-right">
+              2222
+            </div>
+          </div>
+          <div class="card-pannel">
+            <div class="card-pannel-left">
+              <icon-svg icon-class="task" />
+            </div>
+            <div class="card-pannel-right">
+              1111
+            </div>
+          </div>
+          <div class="card-pannel">
+            <div class="card-pannel-left">
+              <icon-svg icon-class="news" />
+            </div>
+            <div class="card-pannel-right">
+              1111
+            </div>
+          </div>
+        </div>
+        <div class="info-section">
+          2222
+        </div>
+        <div class="info-section">
+          3333
+        </div>
       </div>
     </div>
   </div>
@@ -28,6 +66,11 @@ export default {
   },
   mounted () {
     this.hackReset = true
+  },
+  methods: {
+    closesidebar () {
+      this.$store.commit('updateSidebar', true)
+    }
   }
 }
 </script>

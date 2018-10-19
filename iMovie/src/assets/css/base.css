@@ -52,6 +52,7 @@ body::-webkit-scrollbar-track {
 .el-tag { padding: 5px 10px; display: inline; }
 .el-tag + .el-tag { margin-left: 10px; }
 .el-breadcrumb { display: inline-block; }
+.el-menu--vertical, .el-tooltip__popper { left: 36px !important; }
 
 /* header.vue */
 .top {
@@ -93,41 +94,6 @@ body::-webkit-scrollbar-track {
   border: 1px solid rgba(64,158,255,.2); color: #409eff; border-radius: 4px;
 }
 
-/* login && register */
-.login .el-form-item {
-    background: rgba(0,0,0,.1);
-    border: 1px solid hsla(0,0%,100%,.1);
-    border-radius: 5px;
-    color: #454545;
-}
-.svg-container.svg-container_login {
-  color: #889aa4;
-  display: inline-block;
-  padding: 6px 5px 6px 15px;
-  vertical-align: middle;
-  width: 60px;
-}
-.login .el-input {
-    display: inline-block;
-    height: 37px;
-    width: 80%;
-}
-.login .title h3 {
-  color: #eee;
-  font-size: 26px;
-  font-weight: 700;
-  margin: 0 auto 40px;
-  text-align: center;
-}
-.login .tips {
-  color: #fff;
-}
-.login .tips p { margin-bottom: 10px; }
-.login .tips p span.left { float: left; }
-.login .tips p span.right { float: right; }
-.login .tips p span.right a { color: #fff; }
-.login .tips p span.right a:hover { color: #37a; }
-
 /* index */
 .bg { padding-top: 60px; }
 .banner { width: 100%; margin: 30px 0 10px; text-align: center; }
@@ -168,64 +134,8 @@ body::-webkit-scrollbar-track {
 #tagscloud a.tagc3{background:#e6e13c;color:#fff;}
 #tagscloud a:hover{color:#fff;background:#0099ff;}
 
-/* login.vue */
-.box {
-  width: 100%; height: 100%;
-  background-color: #2d3a4b;
-  position: fixed;
-}
-.box .login {
-  left: 0;
-  margin: 150px auto;
-  max-width: 100%;
-  padding: 35px 35px 15px;
-  position: absolute;
-  right: 0;
-  width: 520px;
-}
-
 /* main.vue */
 .main-admin { height: 100%; overflow: hidden; }
-
-/* sidebar.vue */
-.sidebar { height: 100%; float: left; background-color:#304156; }
-
-/* setting.vue */
-.top-info {
-  height: 50px; line-height: 50px; padding: 0 10px;
-  border-bottom: solid 1px rgb(84, 92, 100, .3);
-}
-.top-bread {
-  min-height: 30px;
-  padding: 5px 10px; cursor: pointer;
-  box-shadow: 0 5px 5px rgba(0,0,0,.1);
-  overflow: auto;
-}
-.top-info-1, .top-info-2 { display: inline-block; }
-.top-info-1 { transition:transform .3s linear; cursor: pointer; width: 20px; }
-.top-info-2 { margin-left: 5px; width: calc(100% - 30px); }
-.logout { float: right; cursor: pointer; }
-.logout:hover { color: #409EFF; }
-.button-new-tag {
-  margin-left: 10px;
-  height: 32px;
-  line-height: 30px;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-.input-new-tag {
-  width: 90px;
-  margin-left: 10px;
-  vertical-align: bottom;
-}
-
-/* content.vue */
-.content {
-  height: 100%;
-  transition: all .3s ease;
-  position: absolute;
-  right: 0px;
-}
 
 /* categories.vue */
 .category-all { margin-top: 20px; }
@@ -256,6 +166,138 @@ body::-webkit-scrollbar-track {
 .movieinfo { padding: 10px 8px; float: left; }
 .movieinfo p { margin-bottom: 5px; line-height: 20px; }
 
+/* Admin：后台样式 2018.10.08 */
+/* login.vue && register.vue */
+.box {
+  width: 100%; height: 100%;
+  background-color: #2d3a4b;
+  position: fixed;
+}
+.box .login {
+  left: 0;
+  margin: 150px auto;
+  max-width: 100%;
+  padding: 35px 35px 15px;
+  position: absolute;
+  right: 0;
+  width: 520px;
+}
+.login .el-form-item {
+    background: rgba(0,0,0,.1);
+    border: 1px solid hsla(0,0%,100%,.1);
+    border-radius: 5px;
+    color: #454545;
+}
+.svg-container.svg-container_login {
+  color: #889aa4;
+  display: inline-block;
+  padding: 6px 5px 6px 15px;
+  vertical-align: middle;
+  width: 60px;
+}
+.login .el-input {
+    display: inline-block;
+    height: 37px;
+    width: 80%;
+}
+.login .title h3 {
+  color: #eee;
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+.login .tips {
+  color: #fff;
+}
+.login .tips p { margin-bottom: 10px; }
+.login .tips p span.left { float: left; }
+.login .tips p span.right { float: right; }
+.login .tips p span.right a { color: #fff; }
+.login .tips p span.right a:hover { color: #37a; }
+
+/* sidebar.vue */
+.sidebar {
+  float: left; background-color:#304156;
+  bottom: 0;
+  font-size: 0;
+  height: 100%;
+  left: 0;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  transition: width .28s;
+  /* width: 180px!important; */
+  z-index: 1001;
+}
+
+/* setting.vue */
+.item > li.el-menu-item, .el-submenu__title, .el-tooltip {
+  padding: 0 10px !important;
+}
+.isCollapse { width: 36px !important; }
+.top-info {
+  height: 50px; line-height: 50px; padding: 0 10px;
+  border-bottom: solid 1px rgb(84, 92, 100, .3);
+}
+.top-bread {
+  min-height: 30px;
+  padding: 5px 10px; cursor: pointer;
+  box-shadow: 0 5px 5px rgba(0,0,0,.1);
+  overflow: auto;
+}
+.top-info-1, .top-info-2 { display: inline-block; }
+.top-info-1 { transition:transform .3s linear; cursor: pointer; width: 20px; }
+.top-info-2 { margin-left: 5px; width: calc(100% - 30px); height: 100%; }
+.avatar { float: right; height: 100%; }
+.avatar span { height: 100%; float: left; margin: 0 5px; display: inline-block; border-radius: 5px; }
+.avatar span img { height: 40px; margin-top: 5px; border-radius: 10px; }
+.logout { cursor: pointer; }
+.logout:hover { color: #409EFF; }
+.button-new-tag {
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.input-new-tag {
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
+}
+
+/* content.vue */
+.content {
+  width: 100%; height: 100%;
+  transition: all .3s ease;
+  position: absolute;
+  right: 0px;
+}
+
+/* pages: api.vue/main.vue/movies.vue/users.vue */
+.mobile-warp {
+  background: #000;
+  height: 100%;
+  opacity: .3;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+.info { padding: 10px 0; background: #f0f2f5; }
+.info-section { margin-bottom: 15px; }
+.info-section:after { content: ''; clear: both; }
+.info-section:nth-child(1) { padding: 0 15px; }
+.info-section:nth-child(2) { padding: 0 30px; }
+.info-section:nth-child(3) { padding: 0 30px; }
+.card-pannel {
+  width: 25%; height: 100px; line-height: 100px; float: left;
+  margin-top: 15px; padding: 0 15px; text-align: center; box-sizing: border-box;
+}
+.card-pannel-left { width: 40%; font-size: 40px; float: left; background: #ffffff; }
+.card-pannel-right { width: 60%; float: left; background: #ffffff; }
+
 /* @media query */
 .el-header, .el-footer, .el-container { margin: 0 auto; padding: 0; }
 .el-pagination { display: inline-block; }
@@ -275,6 +317,7 @@ body::-webkit-scrollbar-track {
   .catemovies { display: inline-block; }
   .movies { display: inline-block; }
   .movielogo { display: inline-block; position: relative; left: 50%; margin-left: -80px; }
+  .card-pannel { width: 50%; }
 }
 @media screen and (min-width: 768px) and (max-width: 1217px) {
   /* .el-header, .el-footer, .el-container { width: 100%; } */

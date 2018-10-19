@@ -95,7 +95,7 @@ export default {
             if (res.success) {
               this.openSuccess('Success Login!')
               let path = window.localStorage.getItem('storage')
-              if (path !== '') {
+              if (path) {
                 this.$router.push(path)
               } else {
                 if (res.data.superrole) {

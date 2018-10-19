@@ -7,9 +7,14 @@
       <div class="top-info-2">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/admin' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: '/' }">{{tag.value}}</el-breadcrumb-item>
+          <el-breadcrumb-item>{{tag.value}}</el-breadcrumb-item>
         </el-breadcrumb>
-        <span class="logout" @click="logout">退出</span>
+        <div class="avatar">
+          <span>
+            <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80" height="100%" alt="">
+          </span>
+          <span class="logout" @click="logout">退出</span>
+        </div>
       </div>
     </div>
     <div class="top-bread">
@@ -35,7 +40,8 @@ export default {
   computed: {
     isCollapse () { return this.$store.state.isCollapse },
     dynamicTags () { return this.$store.state.dynamicTags },
-    tag () { return this.$store.state.tag }
+    tag () { return this.$store.state.tag },
+    isMobile () { return this.$store.state.isMobile }
   },
   mounted () {
     let topinfo = document.querySelector('.top-info-1')
@@ -58,18 +64,25 @@ export default {
     toggle () {
       let topinfo = document.querySelector('.top-info-1')
       let content = document.querySelector('.content')
+      let elmenuitem = document.querySelector('.el-menu-item')
       if (this.isCollapse) {
         topinfo.style.transform = 'rotate(0deg)'
         this.$store.commit('updateSidebar', false)
-        setTimeout(function () {
-          content.style.width = 'calc(100% - 200px)'
-        }, 15)
+        if (!this.isMobile) {
+          setTimeout(function () {
+            content.style.width = 'calc(100% - 200px)'
+            elmenuitem.style.padding = '0 20px'
+          }, 15)
+        }
       } else {
         topinfo.style.transform = 'rotate(90deg)'
         this.$store.commit('updateSidebar', true)
-        setTimeout(function () {
-          content.style.width = 'calc(100% - 64px)'
-        }, 50)
+        if (!this.isMobile) {
+          setTimeout(function () {
+            content.style.width = 'calc(100% - 36px)'
+            elmenuitem.style.padding = '0 10px !important'
+          }, 50)
+        }
       }
       this.rotate = !this.rotate
     },

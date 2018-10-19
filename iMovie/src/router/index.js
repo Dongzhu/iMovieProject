@@ -8,12 +8,12 @@ import category from '@/views/pages/category'
 
 import login from '@/views/admin/login'
 import register from '@/views/admin/register'
-import choice1 from '@/views/admin/pages/choice1'
-import choice2 from '@/views/admin/pages/choice2'
+import main from '@/views/admin/pages/main'
+import document from '@/views/admin/pages/document'
+import usercenter from '@/views/admin/pages/users'
+import moviecenter from '@/views/admin/pages/movies'
 import choice3 from '@/views/admin/pages/choice3'
 import choice4 from '@/views/admin/pages/choice4'
-import choice5 from '@/views/admin/pages/choice5'
-import choice6 from '@/views/admin/pages/choice6'
 
 Vue.use(Router)
 
@@ -32,12 +32,12 @@ export default new Router({
     // admin
     { path: '/login', name: 'login', component: login },
     { path: '/register', name: 'register', component: register },
-    { path: '/admin', name: 'admin', component: choice1, meta: { requireAuth: true } },
-    { path: '/choice1', name: 'choice1', component: choice1, meta: { requireAuth: true } },
-    { path: '/choice2', name: 'choice2', component: choice2, meta: { requireAuth: true } },
+    { path: '/admin', name: 'admin', component: main, meta: { requireAuth: true } },
+    { path: '/main', name: 'main', component: main, meta: { requireAuth: true } },
+    { path: '/document', name: 'document', component: document, meta: { requireAuth: true } },
+    { path: '/usercenter', name: 'usercenter', component: usercenter, meta: { requireAuth: true } },
+    { path: '/moviecenter', name: 'moviecenter', component: moviecenter, meta: { requireAuth: true } },
     { path: '/choice3', name: 'choice3', component: choice3, meta: { requireAuth: true } },
-    { path: '/choice4', name: 'choice4', component: choice4, meta: { requireAuth: true } },
-    { path: '/choice5', name: 'choice5', component: choice5, meta: { requireAuth: true } },
-    { path: '/choice6', name: 'choice6', component: choice6, meta: { requireAuth: true } }
+    { path: '/choice4', name: 'choice4', component: choice4, meta: { requireAuth: true } }
   ]
 })
