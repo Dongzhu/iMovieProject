@@ -5,18 +5,25 @@ import App from './App'
 import router from './router'
 import Vuex from 'vuex'
 
+// 引入JsEncrypt
 import JsEncrypt from 'jsencrypt'
 
+// 引入Element
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
+// 引入echarts
+import echarts from 'echarts'
+
 import IconSvg from '@/components/IconSvg' // 引入svg组件
 
+// 引入css、js静态文件
 import '@/assets/css/base.css'
 import '@/assets/js/iconfont.js'
 
 Vue.config.productionTip = false
 Vue.prototype.$jsEncrypt = JsEncrypt
+Vue.prototype.$echarts = echarts
 Vue.use(ElementUI)
 
 Vue.use(Vuex)

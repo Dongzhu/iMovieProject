@@ -60,7 +60,7 @@ router.get('/movies', async (ctx, next) => {
     })
   }
 
-  ctx.body = { success: true, length: movies.length, message: '查询成功', movies }
+  ctx.body = { success: true, message: '查询成功', rescode: 20010, data: { movies, legth: movies.length } }
 })
 
 router.get('/movies/:id', async (ctx, next) => {
@@ -70,7 +70,7 @@ router.get('/movies/:id', async (ctx, next) => {
     'meta.createdAt': -1
   })
 
-  ctx.body = { success: true, message: '查询成功', movie }
+  ctx.body = { success: true, message: '查询成功', rescode: 20020, data: { movie } }
 })
 
 router.get('/categories', async (ctx, next) => {
@@ -79,7 +79,7 @@ router.get('/categories', async (ctx, next) => {
     'meta.createdAt': -1
   })
 
-  ctx.body = { success: true, message: '查询成功', categories }
+  ctx.body = { success: true, message: '查询成功', rescode: 20030, data: { categories } }
 })
 
 router.get('/category/:id', async (ctx, next) => {
@@ -95,9 +95,9 @@ router.get('/category/:id', async (ctx, next) => {
     movies.push(movie)
   }
   if (movies !== '') {
-    ctx.body = { success: true, length: movies.length, message: '查询成功', data: { category, movies } }
+    ctx.body = { success: true, message: '查询成功', rescode: 20020, data: { category, movies, length: movies.length } }
   } else {
-    ctx.body = { success: false, message: '查询失败', movies }
+    ctx.body = { success: false, message: '查询失败', rescode: 20021, data: { movies } }
   }
 })
 

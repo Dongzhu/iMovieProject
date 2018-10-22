@@ -52,9 +52,9 @@ export default {
     }
   },
   mounted () {
-    getCategories().then(data => {
-      if (data.success) {
-        this.categories = data.categories
+    getCategories().then(res => {
+      if (res.success) {
+        this.categories = res.data.categories
       } else {
         this.categories = []
       }

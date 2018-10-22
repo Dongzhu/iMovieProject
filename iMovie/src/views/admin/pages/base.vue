@@ -1,11 +1,46 @@
 <template>
   <div class="main-admin">
     <sidebar></sidebar>
-
     <div class="content" v-if="hackReset">
       <setting></setting>
       <div class="info">
-        {{tag}}
+        <div class="info-section">
+          <div class="card-pannel">
+            <div class="card-pannel-left">
+              <icon-svg icon-class="yonghu" />
+            </div>
+            <div class="card-pannel-right">
+              Users
+            </div>
+          </div>
+          <div class="card-pannel">
+            <div class="card-pannel-left">
+              <icon-svg icon-class="message" />
+            </div>
+            <div class="card-pannel-right">
+              Messages
+            </div>
+          </div>
+          <div class="card-pannel">
+            <div class="card-pannel-left">
+              <icon-svg icon-class="task" />
+            </div>
+            <div class="card-pannel-right">
+              Tasks
+            </div>
+          </div>
+          <div class="card-pannel">
+            <div class="card-pannel-left">
+              <icon-svg icon-class="news" />
+            </div>
+            <div class="card-pannel-right">
+              News
+            </div>
+          </div>
+        </div>
+        <div class="info-section">
+          {{tag}}
+        </div>
       </div>
     </div>
   </div>
@@ -23,8 +58,9 @@ export default {
     }
   },
   computed: {
-    isCollapse () { return this.$store.state.isCollapse },
-    tag () { return this.$store.state.tag }
+    tag () { return this.$store.state.tag },
+    isMobile () { return this.$store.state.isMobile },
+    isCollapse () { return this.$store.state.isCollapse }
   },
   mounted () {
     this.hackReset = true
@@ -42,6 +78,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-/* @media screen and (max-width: 770px) { .content { width: calc(100% - 64px); margin-left: 64px; } }
-@media screen and (min-width: 771px) { .content { width: calc(100% - 200px); margin-left: 200px; } } */
 </style>

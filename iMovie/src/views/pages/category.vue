@@ -92,17 +92,17 @@ export default {
     }
   },
   mounted () {
-    getMovies({}).then(data => {
-      if (data.success) {
-        this.movielist = data.movies
+    getMovies({}).then(res => {
+      if (res.success) {
+        this.movielist = res.data.movies
       } else {
         this.movielist = []
       }
     })
 
-    getCategories().then(data => {
-      if (data.success) {
-        this.categories = data.categories
+    getCategories().then(res => {
+      if (res.success) {
+        this.categories = res.data.categories
       } else {
         this.categories = []
       }
@@ -111,9 +111,8 @@ export default {
     if (this.cateid !== '') {
       getCategory(this.cateid).then(res => {
         if (res.success) {
-          const data = res.data
-          this.category = data.category.name
-          this.catemovies = data.movies
+          this.category = res.data.category.name
+          this.catemovies = res.data.movies
         } else {
           this.categories = []
         }
@@ -161,12 +160,10 @@ export default {
       }
     },
     gotoCate (item) {
-      this.$store.commit('updateCate', item.name)
       getCategory(this.cateid).then(res => {
         if (res.success) {
-          const data = res.data
-          this.category = data.category.name
-          this.catemovies = data.movies
+          this.category = res.data.category.name
+          this.catemovies = res.data.movies
           this.hack()
         } else {
           this.categories = []

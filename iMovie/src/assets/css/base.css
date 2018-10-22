@@ -99,9 +99,9 @@ body::-webkit-scrollbar-track {
 .banner { width: 100%; margin: 30px 0 10px; text-align: center; }
 .footer { width: 100%; padding: 20px; text-align: center; border-top:solid 1px #ccc; }
 .main {  margin: 50px auto 15px; min-height: 720px; }
-.section { min-height: 786px; }
+.section { width: 100%; min-height: 786px; }
 .section-item { margin-bottom: 15px; }
-.layer { width: 336px; float: right; padding: 0 15px; }
+.layer { width: 270px; float: right; padding: 0 15px; }
 .section h4 { border-bottom: 1px solid #eaeaea; }
 .section h4, .layer h4 { height: 40px; line-height: 40px; }
 .section-header h4 span span { margin-left: 10px; color: #9B9B9B; font-size: 13px; }
@@ -232,7 +232,7 @@ body::-webkit-scrollbar-track {
 }
 
 /* setting.vue */
-.item > li.el-menu-item, .el-submenu__title, .el-tooltip {
+.item > li.el-menu-item, .el-submenu__title, .el-menu-item .el-tooltip {
   padding: 0 10px !important;
 }
 .isCollapse { width: 36px !important; }
@@ -271,8 +271,7 @@ body::-webkit-scrollbar-track {
 .content {
   width: 100%; height: 100%;
   transition: all .3s ease;
-  position: absolute;
-  right: 0px;
+  position: absolute; right: 0px;
 }
 
 /* pages: api.vue/main.vue/movies.vue/users.vue */
@@ -285,18 +284,25 @@ body::-webkit-scrollbar-track {
   width: 100%;
   z-index: 999;
 }
-.info { padding: 10px 0; background: #f0f2f5; }
-.info-section { margin-bottom: 15px; }
+.info { height: calc(100% - 92px); background: #f0f2f5;  }
+.info-section { height: fit-content; padding: 10px 30px; }
 .info-section:after { content: ''; clear: both; }
-.info-section:nth-child(1) { padding: 0 15px; }
-.info-section:nth-child(2) { padding: 0 30px; }
-.info-section:nth-child(3) { padding: 0 30px; }
+.info-users { height: 120px; padding: 10px 15px; }
+.info-search { height: 47px; }
 .card-pannel {
-  width: 25%; height: 100px; line-height: 100px; float: left;
-  margin-top: 15px; padding: 0 15px; text-align: center; box-sizing: border-box;
+  width: 25%; height: 100px; line-height: 100px;
+  margin-top: 15px; padding: 0 15px; float: left;
+  cursor: pointer; overflow: hidden; text-align: center; box-sizing: border-box;
 }
 .card-pannel-left { width: 40%; font-size: 40px; float: left; background: #ffffff; }
-.card-pannel-right { width: 60%; float: left; background: #ffffff; }
+.card-pannel-right { width: 60%; height: 100%; float: right; background: #ffffff; }
+.card-pannel-right div { height: 50%; position: relative; top: 50%; margin-top: -25px; }
+.card-pannel-right span { display: block; height: 50%; line-height: 25px; }
+
+#ChartOne { width: 100%; height: 300px; padding: 10px; box-sizing: border-box; background: #fff; }
+.info-search-left { width: 40%; float: left; }
+.info-search-right { width: 100px; height: 100%; float: right; }
+.info-search-right button { height: 47px; }
 
 /* @media query */
 .el-header, .el-footer, .el-container { margin: 0 auto; padding: 0; }

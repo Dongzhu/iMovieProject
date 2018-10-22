@@ -75,12 +75,13 @@ router.post('/user/register', async (ctx, next) => {
       return (ctx.body = {
         success: true,
         message: '注册成功',
+        rescode: 10010,
         data: { username: user.username }
       })
     } else {
-      return ctx.body = { success: false, message: '当前用户已存在' }
+      return ctx.body = { success: false, message: '当前用户已存在', rescode: 10012, data: {} }
     }
-    return ctx.body = { success: false, message: '哦噢，出了点小问题，请联系管理员！' }
+    return ctx.body = { success: false, message: '哦噢，出了点小问题，请联系管理员！', rescode: 10011, data: {} }
   }
 })
 
@@ -113,6 +114,7 @@ router.post('/user/login', async (ctx, next) => {
     return (ctx.body = {
       success: true,
       message: '登录成功',
+      rescode: 10020,
       data: {
         username: user.username,
         // email: user.email,
@@ -120,10 +122,21 @@ router.post('/user/login', async (ctx, next) => {
       }
     })
   } else {
-    return (ctx.body = { success: false, message: '密码错误' })
+    return (ctx.body = { success: false, message: '密码错误', rescode: 10022, data: {} })
   }
 
-  return ctx.body = { success: false, message: '哦噢，出了点小问题，请联系管理员！' }
+  return ctx.body = { success: false, message: '哦噢，出了点小问题，请联系管理员！', rescode: 10021, data: {} }
+})
+
+router.get('/users', async(ctx, next) => {
+  const User = mongoose.model('User')
+  const users = await User.find({}).sort({ 'meta.createdAt': -1 })
+
+  if (users) {
+    return (ctx.body = { success: true, message: '查找成功', rescode: 10030, data: { users } })
+  } else {
+    return (ctx.body = { success: false, message: '查找用户信息失败', rescode: 10031, data: { users } })
+  }
 })
 
 module.exports = router

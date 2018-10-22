@@ -63,7 +63,7 @@ export default {
     openeds () {
       let arr = []
       let that = this
-      that.menulist.forEach(item => { arr.push(that.menulist.indexOf(item).toString()) })
+      that.menulist.forEach(item => { arr.push(item.index) })
       return arr
     },
     isMobile () { return this.$store.state.isMobile }

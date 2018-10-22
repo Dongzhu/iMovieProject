@@ -9,10 +9,9 @@
           <el-breadcrumb-item :to="{ path: '/admin' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>{{tag.value}}</el-breadcrumb-item>
         </el-breadcrumb>
-        <div class="avatar">
-          <span>
-            <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80" height="100%" alt="">
-          </span>
+        <div class="avatar" v-if="username !== ''">
+          <span><img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80" height="100%" alt=""></span>
+          <span>{{username}}</span>
           <span class="logout" @click="logout">退出</span>
         </div>
       </div>
@@ -35,6 +34,7 @@ export default {
   data () {
     return {
       // dynamicTags: ['标签一', '标签二', '标签三']
+      username: ''
     }
   },
   computed: {
@@ -50,6 +50,7 @@ export default {
     } else {
       topinfo.style.transform = 'rotate(0deg)'
     }
+    this.username = this.getCookie('username')
   },
   methods: {
     handleClose (tag) {

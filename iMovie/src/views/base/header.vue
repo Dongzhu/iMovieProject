@@ -110,7 +110,13 @@ export default {
       this.setCookie('username.sig', '', -1)
       this.hack()
       this.username = ''
-      this.$router.push('/')
+      const page = window.localStorage.getItem('storage')
+      if (page) {
+        this.$router.push(page)
+      } else {
+        this.$router.push('/')
+      }
+      window.localStorage.setItem('storage', '')
     }
   }
 }

@@ -126,9 +126,9 @@ export default {
       document.querySelector('.banner').style.marginTop = '90px'
     }
 
-    getMovies({}).then(data => {
-      if (data.success) {
-        this.newlist = data.movies
+    getMovies({}).then(res => {
+      if (res.success) {
+        this.newlist = res.data.movies
       } else {
         this.newlist = []
       }

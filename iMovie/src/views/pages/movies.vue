@@ -90,9 +90,9 @@ export default {
     if (query.pageNum) params.pageNum = query.pageNum
     if (query.keywords) params.keywords = query.keywords
 
-    getMovies(params).then(data => {
-      if (data.success) {
-        this.$store.commit('updateMovies', data.movies)
+    getMovies(params).then(res => {
+      if (res.success) {
+        this.$store.commit('updateMovies', res.data.movies)
       } else {
         this.movielist = []
       }
@@ -142,9 +142,9 @@ export default {
       if (type === 'year') { params.year = item === '所有' ? 'all' : item }
       if (type === 'country') { params.country = item === '所有' ? 'all' : item }
 
-      getMovies(params).then(data => {
-        if (data.success) {
-          this.$store.commit('updateMovies', data.movies)
+      getMovies(params).then(res => {
+        if (res.success) {
+          this.$store.commit('updateMovies', res.data.movies)
           this.$router.push({path: 'movies', query: params})
         } else {
           this.movielist = []
@@ -162,9 +162,9 @@ export default {
       if (query.pageNum) params.pageNum = query.pageNum
       params.rate = rate.join(',')
 
-      getMovies(params).then(data => {
-        if (data.success) {
-          this.$store.commit('updateMovies', data.movies)
+      getMovies(params).then(res => {
+        if (res.success) {
+          this.$store.commit('updateMovies', res.data.movies)
 
           this.$router.push({path: 'movies', query: params})
         } else {

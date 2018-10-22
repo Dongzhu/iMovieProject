@@ -85,9 +85,9 @@ export default {
   },
   mounted () {
     let doubanId = this.$route.path.split('detail/')[1]
-    getMovie(doubanId).then(data => {
-      if (data.success) {
-        this.itemInfo = data.movie
+    getMovie(doubanId).then(res => {
+      if (res.success) {
+        this.itemInfo = res.data.movie
         this.itemInfo.rate = this.itemInfo.rate / 2
       } else {
         console.log('Error')
