@@ -135,7 +135,22 @@ router.get('/users', async(ctx, next) => {
   if (users) {
     return (ctx.body = { success: true, message: '查找成功', rescode: 10030, data: { users } })
   } else {
-    return (ctx.body = { success: false, message: '查找用户信息失败', rescode: 10031, data: { users } })
+    return (ctx.body = { success: false, message: '查找用户信息失败', rescode: 10031, data: {} })
+  }
+})
+
+router.get('/user/:username', async(ctx, next) => {
+  const username = ctx.params.username
+  let params = {}
+  if (username) params.username = username
+
+  const User = mongoose.model('User')
+  const users = await User.findOne(params).sort({ 'meta.createdAt': -1 })
+
+  if (users) {
+    return (ctx.body = { success: true, message: '查找成功', rescode: 10040, data: { users } })
+  } else {
+    return (ctx.body = { success: false, message: '查找用户信息失败', rescode: 10041, data: {} })
   }
 })
 

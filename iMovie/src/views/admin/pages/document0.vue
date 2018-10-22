@@ -110,47 +110,6 @@ export default {
         }
       })
     })
-  },
-  methods: {
-    openSuccess (text) {
-      this.$message({
-        message: text,
-        type: 'success'
-      })
-    },
-    openError (text) {
-      this.$message({
-        showClose: true,
-        message: text,
-        type: 'error'
-      })
-    },
-    drawLine () {
-      let data1 = []
-      let data2 = []
-      this.categories.forEach(item => {
-        if (item.movies && item.movies.length > 5) {
-          data1.push(item.name)
-          data2.push(item.movies.length)
-        }
-      })
-      // 基于准备好的dom，初始化echarts实例
-      let myChart = this.$echarts.init(document.getElementById('ChartOne'))
-      // 绘制图表
-      myChart.setOption({
-        title: { text: '电影数目分类表' },
-        tooltip: {},
-        xAxis: {
-          data: data1
-        },
-        yAxis: {},
-        series: [{
-          name: '数量',
-          type: 'bar',
-          data: data2
-        }]
-      })
-    }
   }
 }
 </script>

@@ -5,41 +5,40 @@
       <setting></setting>
       <div class="info">
         <div class="info-section">
-          <div class="card-pannel">
-            <div class="card-pannel-left">
-              <icon-svg icon-class="yonghu" />
-            </div>
-            <div class="card-pannel-right">
-              Users
-            </div>
-          </div>
-          <div class="card-pannel">
-            <div class="card-pannel-left">
-              <icon-svg icon-class="message" />
-            </div>
-            <div class="card-pannel-right">
-              Messages
-            </div>
-          </div>
-          <div class="card-pannel">
-            <div class="card-pannel-left">
-              <icon-svg icon-class="task" />
-            </div>
-            <div class="card-pannel-right">
-              Tasks
-            </div>
-          </div>
-          <div class="card-pannel">
-            <div class="card-pannel-left">
-              <icon-svg icon-class="news" />
-            </div>
-            <div class="card-pannel-right">
-              News
-            </div>
-          </div>
-        </div>
-        <div class="info-section">
-          {{tag}}
+          <el-table
+            :data="userlist"
+            style="width: 100%">
+            <el-table-column
+              label="用户姓名"
+              prop="username">
+            </el-table-column>
+            <el-table-column
+              label="用户邮箱"
+              prop="email">
+            </el-table-column>
+            <el-table-column
+              label="用户角色"
+              prop="role">
+            </el-table-column>
+            <el-table-column label="用户角色">
+              <template slot-scope="scope">
+                {{scope.row.role}}
+                <span v-if="scope.row.role === 'admin' && scope.row.username !== 'admin'" class="cancleadmin">取消管理员</span>
+                <span v-if="scope.row.role !== 'admin'" class="setadmin">设为管理员</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </div>
       </div>
     </div>
@@ -50,11 +49,14 @@
 import sidebar from '../sidebar'
 import setting from '../setting'
 
+import { getUsers } from '@/api/views/user'
+
 export default {
   components: { sidebar, setting },
   data () {
     return {
-      hackReset: false
+      hackReset: false,
+      userlist: []
     }
   },
   computed: {
@@ -71,11 +73,30 @@ export default {
       } else {
         if (content && !this.isMobile) content.style.width = 'calc(100% - 200px)'
       }
+
+      getUsers().then(res => {
+        if (res.success) {
+          this.userlist = res.data.users
+        } else {
+          this.openError(res.message)
+        }
+      })
     })
+  },
+  methods: {
+    handleEdit (index, row) {
+      console.log(row)
+    },
+    handleDelete (index, row) {
+      console.log(row)
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.cell .el-button+.el-button {
+    margin: 10px 0 0 0;
+}
 </style>

@@ -5,41 +5,31 @@
       <setting></setting>
       <div class="info">
         <div class="info-section">
-          <div class="card-pannel">
-            <div class="card-pannel-left">
-              <icon-svg icon-class="yonghu" />
+          <div class="card card-admin" v-for="(item,index) in movielist" :key="index">
+            <div class="card-bg" :title="item.title+' '+item.rate">
+              <a :href="'/detail/'+item.id"><img :src="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
+              <span class="card-rate">{{ item.rate }}</span>
             </div>
-            <div class="card-pannel-right">
-              Users
-            </div>
-          </div>
-          <div class="card-pannel">
-            <div class="card-pannel-left">
-              <icon-svg icon-class="message" />
-            </div>
-            <div class="card-pannel-right">
-              Messages
-            </div>
-          </div>
-          <div class="card-pannel">
-            <div class="card-pannel-left">
-              <icon-svg icon-class="task" />
-            </div>
-            <div class="card-pannel-right">
-              Tasks
-            </div>
-          </div>
-          <div class="card-pannel">
-            <div class="card-pannel-left">
-              <icon-svg icon-class="news" />
-            </div>
-            <div class="card-pannel-right">
-              News
+            <!-- <div class="video">
+              <video
+                src="http://120.132.18.193:8080/vod/2018/6/29/1530263522730512.mp4"
+                width="100%" height="100%"
+                onMouseOver="this.play()" onMouseOut="this.pause()" :poster="item.url">
+                您的浏览器不支持video标签
+              </video>
+            </div> -->
+            <div class="card-info">
+              <p class="over"><a :href="'/detail/'+item.id">{{item.title}}</a></p>
+              <p class="bottom clearfix">
+                <time class="time"><a :href="'/detail/'+item.id">{{ item.year }}</a></time>
+              </p>
+              <p>
+                <el-button type="text" class="button">置顶</el-button>
+                <el-button type="text" class="button">编辑</el-button>
+                <el-button type="text" class="button">删除</el-button>
+              </p>
             </div>
           </div>
-        </div>
-        <div class="info-section">
-          {{tag}}
         </div>
       </div>
     </div>
@@ -50,11 +40,14 @@
 import sidebar from '../sidebar'
 import setting from '../setting'
 
+import { getMovies } from '@/api/views/movies'
+
 export default {
   components: { sidebar, setting },
   data () {
     return {
-      hackReset: false
+      hackReset: false,
+      movielist: []
     }
   },
   computed: {
@@ -71,6 +64,14 @@ export default {
       } else {
         if (content && !this.isMobile) content.style.width = 'calc(100% - 200px)'
       }
+
+      getMovies({}).then(res => {
+        if (res.success) {
+          this.movielist = res.data.movies
+        } else {
+          this.openError(res.message)
+        }
+      })
     })
   }
 }

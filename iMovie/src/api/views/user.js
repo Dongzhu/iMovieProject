@@ -19,3 +19,11 @@ export function register (po) {
   }
   return axios.post(`${base}/user/register`, qs.stringify(params)).then(res => { return res.data })
 }
+
+export function getUsers (po) {
+  return axios.get(`${base}/users`).then(res => { return res.data })
+}
+
+export function getUser (username) {
+  return axios.get(`${base}/user/` + username).then(res => { return res.data })
+}
