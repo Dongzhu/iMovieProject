@@ -6,8 +6,8 @@
       <div class="info">
         <div class="info-section info-search">
           <div class="info-search-left">
-            <el-input placeholder="请输入内容" v-model="searchTxt" class="input-with-select">
-              <el-button slot="append" icon="el-icon-search" class="icon-search"></el-button>
+            <el-input placeholder="请输入接口名称/URL/ID" v-model="searchTxt" @keyup.enter.native="searchDocument" class="input-with-select">
+              <el-button slot="append" icon="el-icon-search" class="icon-search" @click="searchDocument"></el-button>
             </el-input>
           </div>
           <div class="info-search-right">
@@ -61,9 +61,16 @@
               label="接口地址"
               prop="url">
             </el-table-column>
-            <el-table-column
-              label="请求方式"
-              prop="method">
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              </template>
             </el-table-column>
           </el-table>
         </div>
@@ -102,7 +109,7 @@ export default {
         if (content && !this.isMobile) content.style.width = 'calc(100% - 200px)'
       }
 
-      getDocuments().then(res => {
+      getDocuments({}).then(res => {
         if (res.success) {
           this.documentlist = res.data.documents
         } else {
@@ -125,31 +132,21 @@ export default {
         type: 'error'
       })
     },
-    drawLine () {
-      let data1 = []
-      let data2 = []
-      this.categories.forEach(item => {
-        if (item.movies && item.movies.length > 5) {
-          data1.push(item.name)
-          data2.push(item.movies.length)
+    searchDocument () {
+      console.log(this.searchTxt)
+      getDocuments({keywords: this.searchTxt}).then(res => {
+        if (res.success) {
+          this.documentlist = res.data.documents
+        } else {
+          this.openError(res.message)
         }
       })
-      // 基于准备好的dom，初始化echarts实例
-      let myChart = this.$echarts.init(document.getElementById('ChartOne'))
-      // 绘制图表
-      myChart.setOption({
-        title: { text: '电影数目分类表' },
-        tooltip: {},
-        xAxis: {
-          data: data1
-        },
-        yAxis: {},
-        series: [{
-          name: '数量',
-          type: 'bar',
-          data: data2
-        }]
-      })
+    },
+    handleEdit (index, row) {
+      console.log(row)
+    },
+    handleDelete (index, row) {
+      console.log(row)
     }
   }
 }

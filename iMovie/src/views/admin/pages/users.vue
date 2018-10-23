@@ -97,6 +97,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .cell .el-button+.el-button {
-    margin: 10px 0 0 0;
+  margin: 10px 0 0 0;
 }
 </style>

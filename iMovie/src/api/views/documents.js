@@ -2,7 +2,12 @@ const axios = require('axios')
 const base = '/api'
 
 export function getDocuments (po) {
-  return axios.get(`${base}/documents`)
+  let params = {
+    keywords: po.keywords,
+    page: po.page,
+    pageNum: po.pageNum
+  }
+  return axios.get(`${base}/documents`, { params: params })
     .then(res => { return res.data })
     .catch(error => { console.log(error) })
 }
