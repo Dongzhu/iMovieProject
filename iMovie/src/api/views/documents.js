@@ -30,3 +30,20 @@ export function AddDocument (po) {
   }
   return axios.post(`${base}/document`, qs.stringify(params)).then(res => { return res.data })
 }
+
+export function UpdDocument (po) {
+  var params = {
+    _id: po.id,
+    name: po.name,
+    url: po.url,
+    method: po.method,
+    desc: po.desc,
+    request: po.request,
+    response: po.response
+  }
+  return axios.put(`${base}/document`, qs.stringify(params)).then(res => { return res.data })
+}
+
+export function DelDocument (po) {
+  return axios.delete(`${base}/document`, { params: { _id: po.id } }).then(res => { return res.data })
+}

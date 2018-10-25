@@ -113,7 +113,7 @@
 import sidebar from '../sidebar'
 import setting from '../setting'
 
-import { getDocuments, AddDocument } from '@/api/views/documents'
+import { getDocuments, AddDocument, UpdDocument, DelDocument } from '@/api/views/documents'
 
 export default {
   components: { sidebar, setting },
@@ -139,7 +139,7 @@ export default {
       documentlist: [],
       searchTxt: '',
       // Dialog
-      dialog1: true,
+      dialog1: false,
       form: {
         id: '',
         // name: '',
@@ -147,7 +147,7 @@ export default {
         // method: '',
         // desc: '',
         // request: '',
-        // response: '',
+        // response: ''
         name: '用户登录',
         url: '/api/user/login',
         method: 'POST',
@@ -162,12 +162,12 @@ export default {
         method: [ { required: true, message: '请输入接口方式', trigger: 'change' } ],
         desc: [ { required: true, message: '请输入接口描述', trigger: 'change' } ],
         request: [
-          // { required: true, message: '请输入请求参数', trigger: 'change' },
-          // { validator: isJSON, trigger: 'change' }
+          { required: true, message: '请输入请求参数', trigger: 'change' },
+          { validator: isJSON, trigger: 'change' }
         ],
         response: [
-          // { required: true, message: '请输入请求参数', trigger: 'change' },
-          // { validator: isJSON, trigger: 'change' }
+          { required: true, message: '请输入请求参数', trigger: 'change' },
+          { validator: isJSON, trigger: 'change' }
         ]
       }
     }
@@ -224,27 +224,30 @@ export default {
       this.dialog1 = true
     },
     confirmDialog (formName) {
-      // this.$refs[formName].validate((valid) => {
-      //   console.log(valid)
-      //   console.log(2221)
-      //   console.log(JSON.stringify(this.form))
-      //   if (valid) {
-      //   } else {
-      //     this.openError('error submit!!')
-      //     return false
-      //   }
-      console.log(2333)
       this.$refs[formName].validate((valid) => {
-        console.log(2222)
         if (valid) {
-          console.log(2221)
-          console.log(JSON.stringify(this.form))
-          console.log(this.form)
-          AddDocument(this.form).then(res => {
-            console.log(res)
-          })
-          // this.clearForm()
-          // this.dialog1 = false
+          if (this.form.id === '') {
+            AddDocument(this.form).then(res => {
+              if (res.success) {
+                this.openSuccess('添加成功！')
+                this.documentlist.push(res.data.save)
+                this.dialog1 = false
+                this.clearForm()
+              } else {
+                this.openError(res.message)
+              }
+            })
+          } else {
+            UpdDocument(this.form).then(res => {
+              if (res.success) {
+                this.openSuccess('更改成功！')
+                this.dialog1 = false
+                this.clearForm()
+              } else {
+                this.openError(res.message)
+              }
+            })
+          }
         } else {
           this.openError('Error submit!!')
           return false
@@ -261,8 +264,8 @@ export default {
       this.form.url = data.url
       this.form.method = data.method
       this.form.desc = data.desc
-      this.form.request = JSON.stringify(data.request)
-      this.form.response = JSON.stringify(data.response)
+      this.form.request = data.request
+      this.form.response = data.response
     },
     clearForm () {
       this.form.id = ''
@@ -275,11 +278,31 @@ export default {
     },
     handleEdit (index, row) {
       console.log(row)
-      this.dialog1 = true
       this.setForm(row)
+      this.dialog1 = true
     },
     handleDelete (index, row) {
       console.log(row)
+      this.$confirm('确认是否删除该接口信息？', '确认信息', {
+        distinguishCancelAndClose: true,
+        confirmButtonText: '删除',
+        cancelButtonText: '取消'
+      }).then(() => {
+        DelDocument({id: row._id}).then(res => {
+          if (res.success) {
+            this.openSuccess('删除成功！')
+            this.documentlist.forEach(item => {
+              if (item._id === row._id) {
+                this.documentlist.splice(this.documentlist.indexOf(item), 1)
+              }
+            })
+          } else {
+            this.openError(res.message)
+          }
+        })
+      }).catch(error => {
+        console.log(error)
+      })
     }
   }
 }

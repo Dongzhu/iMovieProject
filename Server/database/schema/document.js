@@ -8,16 +8,19 @@ const documentSchema = new Schema({
   url: { required: true, unique: true, type: String },
   method: { required: true, type: String },
   desc: { type: String },
-  request: {
-    username: { type: String },
-    password: { type: String },
-    password2: { type: String }
-  },
-  response: {
-    success: { type: Boolean },
-    message: { type: String },
-    data: { type: String }
-  },
+  request: { type: String },
+  response: { type: String },
+  // request: {
+  //   username: { type: String },
+  //   password: { type: String },
+  //   password2: { type: String }
+  // },
+  // response: {
+  //   success: { type: Boolean },
+  //   message: { type: String },
+  //   rescode: { type: Number },
+  //   data: { type: String }
+  // },
   meta: {
     createAt: { type: Date, default: Date.now() },
     updateAt: { type: Date, default: Date.now() }
