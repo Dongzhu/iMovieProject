@@ -331,6 +331,9 @@ body::-webkit-scrollbar-track {
   .card-pannel { width: 50%; padding: 0 5px; }
   .info-section { padding: 10px; }
   .info-users { height: 240px; padding: 5px; }
+  .documentdialog .el-dialog { width: 90% !important; }
+  .documentdialog .el-dialog .el-form-item__label { width: 80px !important; }
+  .documentdialog .el-dialog .el-form-item__content { margin-left: 80px !important; }
 }
 @media screen and (min-width: 768px) and (max-width: 1217px) {
   /* .el-header, .el-footer, .el-container { width: 100%; } */

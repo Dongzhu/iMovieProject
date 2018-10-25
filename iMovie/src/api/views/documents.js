@@ -1,5 +1,6 @@
 const axios = require('axios')
 const base = '/api'
+const qs = require('qs')
 
 export function getDocuments (po) {
   let params = {
@@ -16,4 +17,16 @@ export function getDocument (id) {
   return axios.get(`${base}/document/` + id)
     .then(res => { return res.data })
     .catch(error => { console.log(error) })
+}
+
+export function AddDocument (po) {
+  var params = {
+    name: po.name,
+    url: po.url,
+    method: po.method,
+    desc: po.desc,
+    request: po.request,
+    response: po.response
+  }
+  return axios.post(`${base}/document`, qs.stringify(params)).then(res => { return res.data })
 }

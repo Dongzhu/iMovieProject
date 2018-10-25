@@ -120,6 +120,7 @@ router.post('/user/login', async (ctx, next) => {
         // email: user.email,
         superrole: user.role === 'admin' ? true : false
       }
+      // { "success": true, "message": "登录成功", "rescode": 10020, "data": { "username": user.username, "superrole": false }
     })
   } else {
     return (ctx.body = { success: false, message: '密码错误', rescode: 10022, data: {} })
@@ -127,6 +128,55 @@ router.post('/user/login', async (ctx, next) => {
 
   return ctx.body = { success: false, message: '哦噢，出了点小问题，请联系管理员！', rescode: 10021, data: {} }
 })
+
+async function getDocumentId(){
+  const Document = mongoose.model('Document')
+  let documents = await Document.find({})
+  if (documents) {
+    return documents[documents.length - 1].id + 1
+  }
+  return 1001
+}
+
+// router.post('/document', async (ctx, next) => {
+//   console.log(ctx.request.body)
+//   return
+//   const { name, url, method, desc, request, response } = ctx.request.body
+//   let requestJSON = {}
+//   let responseJSON = {}
+//
+//   // console.log(getDocumentId(), typeof getDocumentId())
+//   try {
+//     requestJSON = JSON.parse(request)
+//     try {
+//       responseJSON = JSON.parse(response)
+//     } catch (e1) {
+//       return ctx.body = { success: true, message: '添加失败', rescode: 30032, data: { e1 } }
+//     }
+//   } catch (e2) {
+//     return ctx.body = { success: true, message: '添加失败', rescode: 30031, data: { e2 } }
+//   }
+//
+//   const Document = mongoose.model('Document')
+//   const id = await getDocumentId()
+//   const document = new Document({
+//     id: id,
+//     name: name,
+//     url: url,
+//     method: method,
+//     desc: desc,
+//     request: requestJSON,
+//     response: responseJSON
+//   })
+//
+//   try {
+//     document.save()
+//   } catch (e) {
+//     console.log(2333, e);
+//     // return ctx.body = { success: false, message: '添加失败', rescode: 30023, data: {} }
+//   }
+//   // return ctx.body = { success: true, message: '添加成功', rescode: 30020, data: { document } }
+// })
 
 router.get('/users', async(ctx, next) => {
   const User = mongoose.model('User')
