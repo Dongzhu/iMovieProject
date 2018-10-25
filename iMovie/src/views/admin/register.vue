@@ -65,7 +65,7 @@ export default {
           { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'change' }
         ],
         pass2: [
-          { required: true, message: '请输入密码', trigger: 'change' },
+          { required: true, message: '请输入确认密码', trigger: 'change' },
           { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'change' },
           { validator: checkPass, trigger: 'change' }
         ]

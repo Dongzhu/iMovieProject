@@ -34,8 +34,9 @@ router.get('/user/login', async (ctx, next) => {
 })
 
 router.post('/user/register', async (ctx, next) => {
-  const { username, password, password2 } = ctx.request.body
-
+  console.log(ctx.request.body)
+  if (!ctx.request.body) return ctx.body = { success: false, message: '注册失败，缺少参数', rescode: 10011, data: {} }
+  const { username, password, password2, email } = ctx.request.body
   // 实例化一个JSEncrypt对象
   let jse = new JSEncrypt()
   // 设置密钥
@@ -57,6 +58,7 @@ router.post('/user/register', async (ctx, next) => {
   // 解密加密过的字符串
   let decrypted = jse.decrypt(password)
   let decrypted2 = jse.decrypt(password2)
+  if (decrypted !== decrypted2) return ctx.body = { success: false, message: '注册失败，两次密码不一致', rescode: 10012, data: {} }
 
   if (decrypted === decrypted2) {
     let register = await checkRegister(username)
@@ -67,7 +69,7 @@ router.post('/user/register', async (ctx, next) => {
       const user = new User({
         username: username,
         password: decrypted,
-        // email: '123456@gmail.com',
+        email: email,
         role: 'normal'
       })
       user.save()
@@ -79,13 +81,14 @@ router.post('/user/register', async (ctx, next) => {
         data: { username: user.username }
       })
     } else {
-      return ctx.body = { success: false, message: '当前用户已存在', rescode: 10012, data: {} }
+      return ctx.body = { success: false, message: '当前用户已存在', rescode: 10014, data: {} }
     }
-    return ctx.body = { success: false, message: '哦噢，出了点小问题，请联系管理员！', rescode: 10011, data: {} }
+    return ctx.body = { success: false, message: '哦噢，出了点小问题，请联系管理员！', rescode: 10013, data: {} }
   }
 })
 
 router.post('/user/login', async (ctx, next) => {
+  if (!ctx.request.body) return ctx.body = { success: false, message: '登录失败，缺少参数', rescode: 10021, data: {} }
   const { username, password } = ctx.request.body
 
   // 实例化一个JSEncrypt对象
@@ -123,10 +126,10 @@ router.post('/user/login', async (ctx, next) => {
       // { "success": true, "message": "登录成功", "rescode": 10020, "data": { "username": user.username, "superrole": false }
     })
   } else {
-    return (ctx.body = { success: false, message: '密码错误', rescode: 10022, data: {} })
+    return (ctx.body = { success: false, message: '密码错误', rescode: 10023, data: {} })
   }
 
-  return ctx.body = { success: false, message: '哦噢，出了点小问题，请联系管理员！', rescode: 10021, data: {} }
+  return ctx.body = { success: false, message: '哦噢，出了点小问题，请联系管理员！', rescode: 10022, data: {} }
 })
 
 async function getDocumentId(){

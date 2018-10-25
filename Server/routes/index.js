@@ -7,8 +7,8 @@ const documents = require('./views/documents')
 
 const router = new Router({prefix: '/api'})
 
+router.use(movies.routes(), koaBody(), movies.allowedMethods())
 router.use(users.routes(), koaBody(), users.allowedMethods())
 router.use(documents.routes(), koaBody(), documents.allowedMethods())
-router.use(movies.routes(), koaBody(), movies.allowedMethods())
 
 module.exports = router

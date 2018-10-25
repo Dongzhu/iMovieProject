@@ -15,7 +15,8 @@ export function register (po) {
   var params = {
     'username': po.user,
     'password': po.password,
-    'password2': po.password2
+    'password2': po.password2,
+    'email': po.email
   }
   return axios.post(`${base}/user/register`, qs.stringify(params)).then(res => { return res.data })
 }
@@ -26,4 +27,12 @@ export function getUsers (po) {
 
 export function getUser (username) {
   return axios.get(`${base}/user/` + username).then(res => { return res.data })
+}
+
+export function updUser (po) {
+  var params = {
+    'username': po.user,
+    'email': po.email
+  }
+  return axios.put(`${base}/user`, qs.stringify(params)).then(res => { return res.data })
 }
