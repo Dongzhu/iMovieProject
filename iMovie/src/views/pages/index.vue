@@ -144,7 +144,11 @@ export default {
   },
   methods: {
     handleScroll () {
-      if (window.scrollY > 480) {
+      let scrollY = 480
+      if (document.documentElement.clientWidth <= 600) {
+        scrollY = 280
+      }
+      if (window.scrollY > scrollY) {
         document.querySelector('.top').style.background = '#f8f8f8'
         document.querySelector('.username').style.color = '#000'
       } else {

@@ -61,10 +61,14 @@ export default {
     this.searchTxt = this.$route.query.keywords
     this.username = this.getCookie('username')
     let route = this.$route.path
+
+    let top = document.querySelector('.top')
     if (route.indexOf('index') > -1 || route.length === 1) {
-      if (document.querySelector('.top')) {
-        document.querySelector('.top').style.color = '#fff'
+      if (top) {
+        top.style.color = '#fff'
       }
+    } else {
+      top.style.background = '#f8f8f8'
     }
   },
   methods: {
