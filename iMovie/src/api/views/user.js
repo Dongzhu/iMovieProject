@@ -22,7 +22,8 @@ export function register (po) {
 }
 
 export function getUsers (po) {
-  return axios.get(`${base}/users`).then(res => { return res.data })
+  let params = { 'keywords': po.keywords || '' }
+  return axios.get(`${base}/users`, { params: params }).then(res => { return res.data })
 }
 
 export function getUser (username) {
@@ -31,8 +32,15 @@ export function getUser (username) {
 
 export function updUser (po) {
   var params = {
-    'username': po.user,
-    'email': po.email
+    '_id': po._id,
+    'username': po.username,
+    'email': po.email,
+    'role': po.role
   }
+  console.log(params)
   return axios.put(`${base}/user`, qs.stringify(params)).then(res => { return res.data })
+}
+
+export function delUser (po) {
+  return axios.delete(`${base}/user`, { params: { _id: po.id } }).then(res => { return res.data })
 }

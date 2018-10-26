@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const mongoose = require('mongoose')
 const router = new Router()
+const ObjectID = require('mongodb').ObjectID
 
 /* setup.js: solve the problem "ReferenceError: navigator is not defined" */
 const { JSDOM } = require('jsdom');
@@ -40,21 +41,7 @@ router.post('/user/register', async (ctx, next) => {
   // 实例化一个JSEncrypt对象
   let jse = new JSEncrypt()
   // 设置密钥
-  jse.setPrivateKey(`-----BEGIN RSA PRIVATE KEY-----
-  MIICXgIBAAKBgQC8ygMKjJLSUpnfXqt8lRSAdDxAHWKi9GbTFkCbAjkRCR6VUakx
-  xXLXHQUtPCizKcvNpuYqZ5bO8LEgpY7SL3JEdEI9OuMnZ6ToeHPfcHeS+EgN0oYm
-  dQ49RB5wZkcBEFk80OBEAM6VhnE0IuHGkU5ko9oPHq3boEQ3Ej6r3T+UhQIDAQAB
-  AoGBAIO8JwEedHlE4FBovBsT4Bl+gmhu2NxC1NlpBq3jkDSd+3RQZlLvp6IJgwo8
-  l13lxWv8kVF3tVkzxTW1sQJjz0RYShH8vXLl94gf6mFkJbeOPP6uA0mGDG81yINw
-  KUpE0RM6ZM9yKEeVdK3u67TkEBcC6Td5KBl8Yof3q7qxiOWhAkEA4BXEtpnfhgm3
-  7s1VjDxdIHTtWL1PihMT+SCOqp+Vv27ABVrxtDW/w2R3ZzR5ezROI2v1DVhj5wvs
-  xPGXx6OpSQJBANetVvazS/5SQNvb+Cmjw9Rt5NilyxfX5IsSswaIojbwhZY2FVZy
-  AlFH9K/YS2FYFyU7iIqN6IIkOxXpOcj/bV0CQQCRYM4MgWuotClmfkSgBJGOew14
-  4uj1dUch+2NTgtFOLvXZA5WICs7sXwOwKzUdH2QKSwHitJOr0+q6ItsLpDwxAkBX
-  zvDK+/CCmIZjfMkqWsxN3nf/ZHCtQm5/2Jsem94/M+mPYHGLgltDMGKEfTEjbrPt
-  qrFKh8ATzCBqKUwncybZAkEAmVNW1dftWWoriZZXXMvfFkTDgYvRmytoVEThhnd0
-  J/AOhZiUAs9+kHfGKivlTE209AY6Bw8aRzuTCziSwQhhBQ==
-  -----END RSA PRIVATE KEY-----`)
+  jse.setPrivateKey(privateKey)
   // 解密加密过的字符串
   let decrypted = jse.decrypt(password)
   let decrypted2 = jse.decrypt(password2)
@@ -132,15 +119,48 @@ router.post('/user/login', async (ctx, next) => {
   return ctx.body = { success: false, message: '哦噢，出了点小问题，请联系管理员！', rescode: 10022, data: {} }
 })
 
-async function getDocumentId(){
-  const Document = mongoose.model('Document')
-  let documents = await Document.find({})
-  if (documents) {
-    return documents[documents.length - 1].id + 1
-  }
-  return 1001
-}
+router.put('/user', async (ctx, next) => {
+  if (!ctx.request.body) return ctx.body = { success: false, message: '请求参数错误', rescode: 10031, data: {} }
 
+  const { _id, username, password, email } = ctx.request.body
+  if (!_id) return ctx.body = { success: false, message: '修改失败，缺少参数', rescode: 10032, data: {} }
+
+  if (password) {
+    // 实例化一个JSEncrypt对象
+    let jse = new JSEncrypt()
+    // 设置密钥
+    jse.setPrivateKey(privateKey)
+    // 解密加密过的字符串
+    let decrypted = jse.decrypt(password)
+  }
+
+  const User = mongoose.model('User')
+  const user = await User.findOne({_id: ObjectID(_id)})
+
+  if (user) {
+    if (username) user.username = username
+    if (password) user.password = decrypted
+    if (email) user.email = email
+
+    try {
+      const save = await user.save()  // save() 异步操作
+      return ctx.body = { success: true, message: '修改成功', rescode: 10030, data: { save } }
+    } catch (err) {
+      return ctx.body = { success: false, message: '修改失败', rescode: 10034, data: { err } }
+    }
+  } else {
+    return ctx.body = { success: false, message: '哦噢，出了点小问题，请联系管理员！', rescode: 10033, data: {} }
+  }
+})
+
+// async function getDocumentId(){
+//   const Document = mongoose.model('Document')
+//   let documents = await Document.find({})
+//   if (documents) {
+//     return documents[documents.length - 1].id + 1
+//   }
+//   return 1001
+// }
 // router.post('/document', async (ctx, next) => {
 //   console.log(ctx.request.body)
 //   return
@@ -186,24 +206,29 @@ router.get('/users', async(ctx, next) => {
   const users = await User.find({}).sort({ 'meta.createdAt': -1 })
 
   if (users) {
-    return (ctx.body = { success: true, message: '查找成功', rescode: 10030, data: { users } })
+    return (ctx.body = { success: true, message: '查找成功', rescode: 10040, data: { users } })
   } else {
-    return (ctx.body = { success: false, message: '查找用户信息失败', rescode: 10031, data: {} })
+    return (ctx.body = { success: false, message: '查找用户信息失败', rescode: 10041, data: {} })
   }
 })
 
 router.get('/user/:username', async(ctx, next) => {
   const username = ctx.params.username
   let params = {}
-  if (username) params.username = username
+  if (username) {
+    params.username = username
+  }
+  else {
+    return ctx.body = { success: false, message: '查找失败，缺少参数', rescode: 10051, data: {} }
+  }
 
   const User = mongoose.model('User')
   const users = await User.findOne(params).sort({ 'meta.createdAt': -1 })
 
   if (users) {
-    return (ctx.body = { success: true, message: '查找成功', rescode: 10040, data: { users } })
+    return ctx.body = { success: true, message: '查找成功', rescode: 10050, data: { users } }
   } else {
-    return (ctx.body = { success: false, message: '查找用户信息失败', rescode: 10041, data: {} })
+    return ctx.body = { success: false, message: '查找用户信息失败', rescode: 10052, data: {} }
   }
 })
 

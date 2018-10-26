@@ -69,7 +69,7 @@ router.post('/document', async (ctx, next) => {
       response: response
     })
 
-    try{
+    try {
       const save = await document.save()  // save() 异步操作
       // 保存成功执行的操作
       return ctx.body = { success: true, message: '添加成功', rescode: 30030, data: { save } }
@@ -101,7 +101,7 @@ router.put('/document', async (ctx, next) => {
     if (request) document.request = request
     if (response) document.response = response
 
-    try{
+    try {
       const save = await document.save()  // save() 异步操作
       return ctx.body = { success: true, message: '更改成功', rescode: 30040, data: { save } }
     } catch (err) {

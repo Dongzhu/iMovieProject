@@ -29,8 +29,8 @@
             <el-table-column label="用户角色">
               <template slot-scope="scope">
                 {{scope.row.role}}
-                <span v-if="scope.row.role === 'admin' && scope.row.username !== 'admin'" class="cancleadmin">取消管理员</span>
-                <span v-if="scope.row.role !== 'admin'" class="setadmin">设为管理员</span>
+                <span v-if="scope.row.role === 'admin' && scope.row.username !== 'admin'" class="setadmin" @click="changeRole(scope.row, 'normal')">取消管理员</span>
+                <span v-if="scope.row.role !== 'admin'" class="setadmin" @click="changeRole(scope.row, 'admin')">设为管理员</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -101,7 +101,8 @@
 import sidebar from '../sidebar'
 import setting from '../setting'
 
-import { getUsers, register, updUser } from '@/api/views/user'
+import { getUsers, register, updUser, delUser } from '@/api/views/user'
+import { JSEncrypt } from 'jsencrypt'
 
 export default {
   components: { sidebar, setting },
@@ -126,6 +127,7 @@ export default {
         email1: ''
       },
       userUpdateForm: {
+        _id: '',
         username2: '',
         email2: ''
       },
@@ -153,7 +155,7 @@ export default {
           { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
         ]
       },
-      dialog1: true,
+      dialog1: false,
       dialog2: false
     }
   },
@@ -172,7 +174,7 @@ export default {
         if (content && !this.isMobile) content.style.width = 'calc(100% - 200px)'
       }
 
-      getUsers().then(res => {
+      getUsers({}).then(res => {
         if (res.success) {
           this.userlist = res.data.users
         } else {
@@ -202,8 +204,35 @@ export default {
     },
     handleDelete (index, row) {
       console.log(row)
+      this.$confirm('确认是否删除该用户信息？', '确认信息', {
+        distinguishCancelAndClose: true,
+        confirmButtonText: '删除',
+        cancelButtonText: '取消'
+      }).then(() => {
+        delUser({id: row._id}).then(res => {
+          if (res.success) {
+            this.openSuccess('删除成功！')
+            this.userlist.forEach(item => {
+              if (item._id === row._id) {
+                this.userlist.splice(this.userlist.indexOf(item), 1)
+              }
+            })
+          } else {
+            this.openError(res.message)
+          }
+        })
+      }).catch(error => {
+        console.log(error)
+      })
     },
-    searchUser () {},
+    searchUser () {
+      if (this.searchTxt === '') return this.openError('请输入关键字再进行搜索！')
+      getUsers({keywords: this.searchTxt}).then(res => {
+        if (res.success) {
+          this.userlist = res.data.users
+        }
+      })
+    },
     AddUser () {
       this.dialog1 = true
     },
@@ -227,6 +256,8 @@ export default {
           register(params).then(res => {
             if (res.success === true) {
               this.openSuccess('Success Register!')
+              if (res.data.save) this.userlist.push(res.data.save)
+              this.dialog1 = false
             } else {
               this.openError(res.message)
             }
@@ -240,11 +271,17 @@ export default {
     confirmDialog2 (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          updUser(this.userUpdateForm).then(res => {
+          const params = {
+            '_id': this.userUpdateForm._id,
+            'username': this.userUpdateForm.username2,
+            'email': this.userUpdateForm.email2
+          }
+          console.log(params)
+          updUser(params).then(res => {
             if (res.success) {
-              this.openSuccess('添加成功！')
+              this.openSuccess('更改成功！')
               this.Userlist.push(res.data.save)
-              this.dialog1 = false
+              this.dialog2 = false
               this.clearForm()
             } else {
               this.openError(res.message)
@@ -262,7 +299,33 @@ export default {
     cancleDialog2 () {
       this.dialog2 = false
     },
+    changeRole (row, role) {
+      this.$confirm('确认是否更改该用户角色信息？', '确认信息', {
+        distinguishCancelAndClose: true,
+        confirmButtonText: '确认更改',
+        cancelButtonText: '取消'
+      }).then(() => {
+        updUser({_id: row._id, role: role}).then(res => {
+          if (res.success) {
+            this.openSuccess('更改成功！')
+            this.userlist.forEach(item => {
+              if (item._id === row._id) {
+                if (res.data.save) {
+                  item.role = res.data.save.role
+                  item.meta = res.data.save.meta
+                }
+              }
+            })
+          } else {
+            this.openError(res.message)
+          }
+        })
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     setForm (data) {
+      this.userUpdateForm._id = data._id
       this.userUpdateForm.username2 = data.username
       this.userUpdateForm.email2 = data.email
     },

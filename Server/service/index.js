@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const session = require('koa-session')
 const cors = require('koa2-cors')
 const bodyParser = require('koa-bodyparser')
-const router = require('../routes/index')
+// const router = require('../routes/index')
+const router = require('../routes/api')
 const { connect, initSchemas, initAdmins } = require('../database/init')
 
 const PORT = 2333
@@ -45,12 +46,13 @@ app.use(session(CONFIG, app))
 //   }
 //   await next()
 // })
+
 app.use(router.routes(), router.allowedMethods())
 app.use(bodyParser({enableTypes:['json', 'form', 'text']}))
 // app.use(async (ctx, next) => { ctx.body = 'Hello Koa!' })
-app.use(async (ctx, next) => { ctx.body = `
-  <h1 style="text-align: center; padding: 10px 0; border-bottom: 1px solid #333;">Hello Koa!</h1>
-  ` })
+// app.use(async (ctx, next) => { ctx.body = `
+//   <h1 style="text-align: center; padding: 10px 0; border-bottom: 1px solid #333;">Hello Koa!</h1>
+//   ` })
 
 app.use(cors())
 // app.use(cors({
