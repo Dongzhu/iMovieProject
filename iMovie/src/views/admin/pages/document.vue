@@ -77,32 +77,62 @@
       </div>
 
       <el-dialog
-        title="修改接口信息" width="50%" center
+        title="添加接口信息" width="50%" center
         :visible.sync="dialog1" class="documentdialog">
-        <el-form :model="form" :rules="rules" ref="form" class="documentform">
-          <el-form-item label="接口名称" :label-width="formLabelWidth" prop="name">
-            <el-input v-model="form.name" auto-complete="off"></el-input>
+        <el-form :model="docCreateForm" :rules="docCreateRules" ref="docCreateForm" class="documentform">
+          <el-form-item label="接口名称1" :label-width="formLabelWidth" prop="name">
+            <el-input v-model="docCreateForm.name" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="接口地址" :label-width="formLabelWidth" prop="url">
-            <el-input v-model="form.url" auto-complete="off"></el-input>
+            <el-input v-model="docCreateForm.url" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="请求方式" :label-width="formLabelWidth" prop="method">
-            <el-input v-model="form.method" auto-complete="off"></el-input>
+            <el-input v-model="docCreateForm.method" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="接口描述" :label-width="formLabelWidth" prop="desc">
-            <el-input v-model="form.desc" auto-complete="off"></el-input>
+            <el-input v-model="docCreateForm.desc" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="请求参数" :label-width="formLabelWidth" prop="request">
-            <el-input v-model="form.request" auto-complete="off"></el-input>
+            <el-input v-model="docCreateForm.request" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="返回结果" :label-width="formLabelWidth" prop="response">
-            <el-input v-model="form.response" auto-complete="off"></el-input>
+            <el-input v-model="docCreateForm.response" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
 
         <span slot="footer" class="dialog-footer">
-          <el-button @click="cancleDialog">取 消</el-button>
-          <el-button type="primary" @click="confirmDialog('form')">确 定</el-button>
+          <el-button @click="cancleDialog1">取 消</el-button>
+          <el-button type="primary" @click="confirmDialog1('docCreateForm')">确 定</el-button>
+        </span>
+      </el-dialog>
+
+      <el-dialog
+        title="修改接口信息" width="50%" center
+        :visible.sync="dialog2" class="documentdialog">
+        <el-form :model="docUpdateForm" :rules="docUpdateRules" ref="docUpdateForm" class="documentform">
+          <el-form-item label="接口名称" :label-width="formLabelWidth" prop="name">
+            <el-input v-model="docUpdateForm.name" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="接口地址" :label-width="formLabelWidth" prop="url">
+            <el-input v-model="docUpdateForm.url" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="请求方式" :label-width="formLabelWidth" prop="method">
+            <el-input v-model="docUpdateForm.method" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="接口描述" :label-width="formLabelWidth" prop="desc">
+            <el-input v-model="docUpdateForm.desc" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="请求参数" :label-width="formLabelWidth" prop="request">
+            <el-input v-model="docUpdateForm.request" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="返回结果" :label-width="formLabelWidth" prop="response">
+            <el-input v-model="docUpdateForm.response" auto-complete="off"></el-input>
+          </el-form-item>
+        </el-form>
+
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="cancleDialog2">取 消</el-button>
+          <el-button type="primary" @click="confirmDialog2('docUpdateForm')">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -140,14 +170,14 @@ export default {
       searchTxt: '',
       // Dialog
       dialog1: false,
-      form: {
-        id: '',
+      dialog2: false,
+      docCreateForm: {
         // name: '',
         // url: '',
         // method: '',
         // desc: '',
         // request: '',
-        // response: ''
+        // response1: ''
         name: '用户登录',
         url: '/api/user/login',
         method: 'POST',
@@ -155,8 +185,17 @@ export default {
         request: '{ "username": "admin", "password": "123456" }',
         response: '{ "success": true, "message": "登录成功", "rescode": 10020, "data": "" }'
       },
+      docUpdateForm: {
+        id: '',
+        name: '',
+        url: '',
+        method: '',
+        desc: '',
+        request: '',
+        response: ''
+      },
       formLabelWidth: '120px',
-      rules: {
+      docCreateRules: {
         name: [ { required: true, message: '请输入接口名称', trigger: 'change' } ],
         url: [ { required: true, message: '请输入接口地址', trigger: 'change' } ],
         method: [ { required: true, message: '请输入接口方式', trigger: 'change' } ],
@@ -169,6 +208,10 @@ export default {
           { required: true, message: '请输入请求参数', trigger: 'change' },
           { validator: isJSON, trigger: 'change' }
         ]
+      },
+      docUpdateRules: {
+        request: { validator: isJSON, trigger: 'change' },
+        response: { validator: isJSON, trigger: 'change' }
       }
     }
   },
@@ -180,12 +223,7 @@ export default {
   mounted () {
     this.hackReset = true
     this.$nextTick(() => {
-      let content = document.querySelector('.content')
-      if (this.isCollapse) {
-        if (content && !this.isMobile) content.style.width = 'calc(100% - 36px)'
-      } else {
-        if (content && !this.isMobile) content.style.width = 'calc(100% - 200px)'
-      }
+      this.setContent()
 
       getDocuments({}).then(res => {
         if (res.success) {
@@ -210,6 +248,21 @@ export default {
         type: 'error'
       })
     },
+    hack () {
+      // console.log('hack it!')
+      this.hackReset = false
+      this.$nextTick(() => {
+        this.hackReset = true
+      })
+    },
+    setContent () {
+      let content = document.querySelector('.content')
+      if (this.isCollapse) {
+        if (content && !this.isMobile) content.style.width = 'calc(100% - 36px)'
+      } else {
+        if (content && !this.isMobile) content.style.width = 'calc(100% - 200px)'
+      }
+    },
     searchDocument () {
       // if (this.searchTxt === '') return this.openError('请输入关键字再进行搜索哦！')
       getDocuments({keywords: this.searchTxt}).then(res => {
@@ -221,68 +274,91 @@ export default {
       })
     },
     addDocument () {
+      // this.clearForm()
       this.dialog1 = true
     },
-    confirmDialog (formName) {
+    confirmDialog1 (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.form.id === '') {
-            AddDocument(this.form).then(res => {
-              if (res.success) {
-                this.openSuccess('添加成功！')
-                this.documentlist.push(res.data.save)
-                this.dialog1 = false
-                this.clearForm()
-              } else {
-                this.openError(res.message)
-              }
-            })
-          } else {
-            UpdDocument(this.form).then(res => {
-              if (res.success) {
-                this.openSuccess('更改成功！')
-                this.dialog1 = false
-                this.clearForm()
-              } else {
-                this.openError(res.message)
-              }
-            })
-          }
+          AddDocument(this.docCreateForm).then(res => {
+            if (res.success) {
+              this.openSuccess('添加成功！')
+              this.documentlist.push(res.data.save)
+              this.dialog1 = false
+              this.clearForm()
+            } else {
+              this.openError(res.message)
+            }
+          })
         } else {
           this.openError('Error submit!!')
           return false
         }
       })
     },
-    cancleDialog () {
+    cancleDialog1 () {
       this.clearForm()
       this.dialog1 = false
     },
+    confirmDialog2 (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          UpdDocument(this.docUpdateForm).then(res => {
+            if (res.success) {
+              this.openSuccess('更改成功！')
+              this.documentlist.forEach(item => {
+                if (item._id === this.docUpdateForm.id) {
+                  this.documentlist.splice(this.documentlist.indexOf(item), 1)
+                  this.documentlist.push(res.data.save)
+                }
+              })
+              this.dialog2 = false
+              this.clearForm()
+            } else {
+              this.openError(res.message)
+            }
+          })
+        } else {
+          this.openError('Error submit!!')
+          return false
+        }
+      })
+    },
+    cancleDialog2 () {
+      this.clearForm()
+      this.dialog2 = false
+    },
     setForm (data) {
-      this.form.id = data._id
-      this.form.name = data.name
-      this.form.url = data.url
-      this.form.method = data.method
-      this.form.desc = data.desc
-      this.form.request = data.request
-      this.form.response = data.response
+      this.docUpdateForm.id = data._id
+      this.docUpdateForm.name = data.name
+      this.docUpdateForm.url = data.url
+      this.docUpdateForm.method = data.method
+      this.docUpdateForm.desc = data.desc
+      this.docUpdateForm.request = data.request
+      this.docUpdateForm.response = data.response
     },
     clearForm () {
-      this.form.id = ''
-      this.form.name = ''
-      this.form.url = ''
-      this.form.method = ''
-      this.form.desc = ''
-      this.form.request = ''
-      this.form.response = ''
+      this.docCreateForm.name = ''
+      this.docCreateForm.url = ''
+      this.docCreateForm.method = ''
+      this.docCreateForm.desc = ''
+      this.docCreateForm.request = ''
+      this.docCreateForm.response = ''
+      this.docUpdateForm.id = ''
+      this.docUpdateForm.name = ''
+      this.docUpdateForm.url = ''
+      this.docUpdateForm.method = ''
+      this.docUpdateForm.desc = ''
+      this.docUpdateForm.request = ''
+      this.docUpdateForm.response = ''
     },
     handleEdit (index, row) {
-      console.log(row)
+      // console.log(row)
       this.setForm(row)
-      this.dialog1 = true
+      this.dialog2 = true
     },
     handleDelete (index, row) {
-      console.log(row)
+      // console.log(row)
       this.$confirm('确认是否删除该接口信息？', '确认信息', {
         distinguishCancelAndClose: true,
         confirmButtonText: '删除',

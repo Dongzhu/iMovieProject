@@ -22,7 +22,7 @@ export function register (po) {
 }
 
 export function getUsers (po) {
-  let params = { 'keywords': po.keywords || '' }
+  let params = { 'keywords': po.keywords }
   return axios.get(`${base}/users`, { params: params }).then(res => { return res.data })
 }
 
@@ -37,7 +37,6 @@ export function updUser (po) {
     'email': po.email,
     'role': po.role
   }
-  console.log(params)
   return axios.put(`${base}/user`, qs.stringify(params)).then(res => { return res.data })
 }
 

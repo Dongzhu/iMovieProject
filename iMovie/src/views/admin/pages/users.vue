@@ -56,8 +56,8 @@
         title="注册用户信息" width="50%" center
         :visible.sync="dialog1" class="userdialog">
         <el-form :model="userCreateForm" :rules="userCreateRules" ref="userCreateForm" class="userform">
-          <el-form-item label="用户名" :label-width="formLabelWidth" prop="username1">
-            <el-input v-model="userCreateForm.username1" auto-complete="off"></el-input>
+          <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
+            <el-input v-model="userCreateForm.username" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="用户密码" :label-width="formLabelWidth" prop="password">
             <el-input type="password" v-model="userCreateForm.password" auto-complete="off"></el-input>
@@ -65,8 +65,8 @@
           <el-form-item label="用户确认密码" :label-width="formLabelWidth" prop="password2">
             <el-input type="password" v-model="userCreateForm.password2" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="用户邮箱" :label-width="formLabelWidth" prop="email1">
-            <el-input v-model="userCreateForm.email1" auto-complete="off"></el-input>
+          <el-form-item label="用户邮箱" :label-width="formLabelWidth" prop="email">
+            <el-input v-model="userCreateForm.email" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
 
@@ -80,11 +80,11 @@
         title="修改用户信息" width="50%" center
         :visible.sync="dialog2" class="userdialog">
         <el-form :model="userUpdateForm" :rules="userUpdateRules" ref="userUpdateForm" class="userform">
-          <el-form-item label="用户名" :label-width="formLabelWidth" prop="username2">
-            <el-input v-model="userUpdateForm.username2" auto-complete="off"></el-input>
+          <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
+            <el-input v-model="userUpdateForm.username" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="用户邮箱" :label-width="formLabelWidth" prop="email2">
-            <el-input v-model="userUpdateForm.email2" auto-complete="off"></el-input>
+          <el-form-item label="用户邮箱" :label-width="formLabelWidth" prop="email">
+            <el-input v-model="userUpdateForm.email" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
 
@@ -121,19 +121,23 @@ export default {
       userlist: [],
       searchTxt: '',
       userCreateForm: {
-        username1: '',
+        username: '',
         password: '',
         password2: '',
-        email1: ''
+        email: ''
+        // username: 'Jack2',
+        // password: '123456',
+        // password2: '123456',
+        // email: '1234562@gmail.com'
       },
       userUpdateForm: {
         _id: '',
-        username2: '',
-        email2: ''
+        username: '',
+        email: ''
       },
       formLabelWidth: '120px',
       userCreateRules: {
-        username1: [ { required: true, message: '请输入用户名', trigger: 'change' } ],
+        username: { required: true, message: '请输入用户名', trigger: 'change' },
         password: [
           { required: true, message: '请输入确认密码', trigger: 'change' },
           { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'change' }
@@ -143,14 +147,14 @@ export default {
           { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'change' },
           { validator: checkPass, trigger: 'change' }
         ],
-        email1: [
+        email: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
         ]
       },
       userUpdateRules: {
-        username2: [ { message: '请输入用户名', trigger: 'change' } ],
-        email2: [
+        username: { message: '请输入用户名', trigger: 'change' },
+        email: [
           { message: '请输入邮箱地址', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
         ]
@@ -198,12 +202,12 @@ export default {
       })
     },
     handleEdit (index, row) {
-      console.log(row)
+      // console.log(row)
       this.setForm(row)
       this.dialog2 = true
     },
     handleDelete (index, row) {
-      console.log(row)
+      // console.log(row)
       this.$confirm('确认是否删除该用户信息？', '确认信息', {
         distinguishCancelAndClose: true,
         confirmButtonText: '删除',
@@ -251,8 +255,8 @@ export default {
           let encrypted = jse.encrypt(this.userCreateForm.password)
           let encrypted2 = jse.encrypt(this.userCreateForm.password2)
 
-          let params = {user: this.userCreateForm.username1, password: encrypted, password2: encrypted2, email: this.userCreateForm.email1}
-          console.log(JSON.stringify(params))
+          let params = {user: this.userCreateForm.username, password: encrypted, password2: encrypted2, email: this.userCreateForm.email}
+          // console.log(JSON.stringify(params))
           register(params).then(res => {
             if (res.success === true) {
               this.openSuccess('Success Register!')
@@ -273,14 +277,19 @@ export default {
         if (valid) {
           const params = {
             '_id': this.userUpdateForm._id,
-            'username': this.userUpdateForm.username2,
-            'email': this.userUpdateForm.email2
+            'username': this.userUpdateForm.username,
+            'email': this.userUpdateForm.email
           }
-          console.log(params)
+          // console.log(params)
           updUser(params).then(res => {
             if (res.success) {
               this.openSuccess('更改成功！')
-              this.Userlist.push(res.data.save)
+              this.userlist.forEach(item => {
+                if (item._id === this.userUpdateForm._id) {
+                  this.userlist.splice(this.userlist.indexOf(item), 1)
+                  this.userlist.push(res.data.save)
+                }
+              })
               this.dialog2 = false
               this.clearForm()
             } else {
@@ -326,16 +335,16 @@ export default {
     },
     setForm (data) {
       this.userUpdateForm._id = data._id
-      this.userUpdateForm.username2 = data.username
-      this.userUpdateForm.email2 = data.email
+      this.userUpdateForm.username = data.username
+      this.userUpdateForm.email = data.email
     },
     clearForm () {
-      this.userCreateForm.username1 = ''
+      this.userCreateForm.username = ''
       this.userCreateForm.password1 = ''
       this.userCreateForm.password2 = ''
-      this.userCreateForm.email1 = ''
-      this.userUpdateForm.username2 = ''
-      this.userUpdateForm.email2 = ''
+      this.userCreateForm.email = ''
+      this.userUpdateForm.username = ''
+      this.userUpdateForm.email = ''
     }
   }
 }
