@@ -7,7 +7,7 @@
         <div class="info-section">
           <div class="card card-admin" v-for="(item,index) in movielist" :key="index">
             <div class="card-bg" :title="item.title+' '+item.rate">
-              <a :href="'/detail/'+item.id"><img :src="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
+              <a :href="'/detail/'+item.id"><img v-lazy="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
               <span class="card-rate">{{ item.rate }}</span>
             </div>
             <!-- <div class="video">

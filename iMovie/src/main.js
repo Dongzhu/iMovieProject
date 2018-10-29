@@ -17,6 +17,9 @@ import echarts from 'echarts'
 
 import IconSvg from '@/components/IconSvg' // 引入svg组件
 
+// 引入懒加载
+import VueLazyload from 'vue-lazyload'
+
 // 引入css、js静态文件
 import '@/assets/css/base.css'
 import '@/assets/js/iconfont.js'
@@ -24,9 +27,13 @@ import '@/assets/js/iconfont.js'
 Vue.config.productionTip = false
 Vue.prototype.$jsEncrypt = JsEncrypt
 Vue.prototype.$echarts = echarts
-Vue.use(ElementUI)
 
+Vue.use(ElementUI)
 Vue.use(Vuex)
+Vue.use(VueLazyload, {
+  loading: '@/assets/loading-svg/loading-spinning-bubbles.svg'
+})
+
 const store = new Vuex.Store({
   state: {
     isCollapse: false,

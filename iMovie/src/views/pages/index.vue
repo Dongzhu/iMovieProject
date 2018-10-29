@@ -8,7 +8,7 @@
           <el-carousel :interval="4000" type="card"  @change="showChange">
             <el-carousel-item v-for="(item,index) in bannerlist" :key="index">
               <h3>{{ item.name}}</h3>
-              <img :src="item.url" alt="" width="100%" height="100%">
+              <img v-lazy="item.url" alt="" width="100%" height="100%">
             </el-carousel-item>
           </el-carousel>
         </div>
@@ -29,7 +29,7 @@
             <div class="section-body">
               <div class="card" v-for="(item,index) in heighlist" :key="index" :title="item.title+' '+item.rate">
                 <div class="card-bg">
-                  <a :href="'/detail/'+item.id"><img :src="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
+                  <a :href="'/detail/'+item.id"><img v-lazy="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
                   <span class="card-rate">{{ item.rate }}</span>
                 </div>
                 <!-- <div class="video">
@@ -62,7 +62,7 @@
             <div class="section-body">
               <div class="card" v-for="(item,index) in newlist" :key="index" :title="item.title+' '+item.rate">
                 <div class="card-bg">
-                  <a :href="'/detail/'+item.id"><img :src="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
+                  <a :href="'/detail/'+item.id"><img v-lazy="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
                 </div>
                 <div class="card-info">
                   <p class="over"><a :href="'/detail/'+item.id">{{item.title}}</a></p>
@@ -126,7 +126,7 @@ export default {
       document.querySelector('.banner').style.marginTop = '90px'
     }
 
-    getMovies({}).then(res => {
+    getMovies({page:1, pageNum:18}).then(res => {
       if (res.success) {
         this.newlist = res.data.movies
       } else {
