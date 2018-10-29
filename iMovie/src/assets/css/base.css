@@ -314,6 +314,7 @@ body::-webkit-scrollbar-track {
 .el-pagination { display: inline-block; }
 @media screen and (max-width: 767px) {
   .main { margin: 0 15px; }
+  .content { width: 100%; }
   .el-carousel__container { height: 200px; }
   .search-box { display: none; }
   .top { padding: 15px 15px 0; }
@@ -339,6 +340,7 @@ body::-webkit-scrollbar-track {
   /* .el-header, .el-footer, .el-container { width: 100%; } */
   .el-header, .el-footer, .el-container { width: 738px; }
   .main { margin: 0 15px; }
+  .content { width: calc(100% - 200px) }
   .card { width: 150px; margin: 5px 12px; }
   .el-carousel__container { height: 300px; }
   .layer { width: 185px; }
@@ -346,5 +348,6 @@ body::-webkit-scrollbar-track {
 @media screen and (min-width: 1218px) {
   .el-header, .el-footer, .el-container { width: 1218px; }
   .main { margin: 0 15px; }
+  .content { width: calc(100% - 200px) }
   .el-carousel__container { height: 400px; }
 }

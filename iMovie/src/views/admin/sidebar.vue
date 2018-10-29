@@ -36,9 +36,9 @@ export default {
       // isCollapse: false
       hackReset: false,
       menulist: [
-        { index: 'main', icon: 'el-icon-document', name: '概览' },
-        { index: 'document', icon: 'el-icon-menu', name: 'API接口' },
-        { index: 'business', icon: 'el-icon-location', name: '业务中心', menuitem: [ {index: 'usercenter', name: '用户中心'}, {index: 'moviecenter', name: '影视中心'} ] },
+        { index: 'main', icon: 'el-icon-menu', name: '概览' },
+        { index: 'document', icon: 'el-icon-document', name: 'API接口' },
+        { index: 'business', icon: 'el-icon-bell', name: '业务中心', menuitem: [ {index: 'usercenter', name: '用户中心'}, {index: 'moviecenter', name: '影视中心'} ] },
         { index: 'setting', icon: 'el-icon-setting', name: '设置中心', menuitem: [ {index: 'choice3', name: '选项3'}, {index: 'choice4', name: '选项4'} ] }
       ],
       fullWidth: document.documentElement.clientWidth

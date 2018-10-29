@@ -11,7 +11,7 @@
             </el-input>
           </div>
           <div class="info-search-right">
-            <el-button type="primary" @click="AddUser">添加接口</el-button>
+            <el-button type="primary" @click="AddUser">添加用户</el-button>
           </div>
         </div>
         <div class="info-section">
@@ -352,9 +352,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-.cell .el-button+.el-button {
-  margin: 10px 0 0 0;
-}
+.cell .el-button+.el-button { margin: 10px 0 0 0; }
 
 .info-search-left .el-input { background-color: #fff; }
 .el-input__inner  { color: #000 !important; caret-color: auto; }

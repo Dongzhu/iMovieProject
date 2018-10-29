@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     handleClose (tag) {
-      console.log(this.dynamicTags)
+      // console.log(this.dynamicTags)
       this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
       if (this.dynamicTags.length !== 0) {
         this.$router.push(this.dynamicTags[this.dynamicTags.length - 1].index)
