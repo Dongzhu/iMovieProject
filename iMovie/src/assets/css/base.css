@@ -139,6 +139,9 @@ body::-webkit-scrollbar-track {
 
 /* main.vue */
 .main-admin { height: 100%; overflow: hidden; }
+.loadmore { padding: 20px 0 15px; text-align: center; }
+.loadmore span { cursor: pointer; }
+.loadmore span:hover { color: #f60; }
 
 /* categories.vue */
 .category-all { margin-top: 20px; }
@@ -151,7 +154,6 @@ body::-webkit-scrollbar-track {
 .category-rate span:nth-child(2) { width: 200px; }
 .category-rate span:nth-child(3) { position: relative; top: -13px; margin-left: 10px; }
 .active-span { color: #f60; }
-/* 192.168.16.217 */
 
 /* category.vue */
 .category { padding-top: 100px; }

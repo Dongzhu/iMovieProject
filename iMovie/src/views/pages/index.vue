@@ -71,6 +71,12 @@
                   </p>
                 </div>
               </div>
+              <div class="loadmore">
+                <span @click="loadmore" v-if="page < 3">加载更多</span>
+                <span @click="loadmore" v-else>
+                  <router-link :to="{ name: 'movies' }">查看更多</router-link>
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -104,18 +110,21 @@ export default {
         {id: 4, name: '权力的游戏', rate: 4.8, pubdate: '2018-08-31', url: require('@/assets/images/image4.jpg')},
         {id: 5, name: '中国有嘻哈', rate: 4.5, pubdate: '2018-08-31', url: require('@/assets/images/image5.jpg')}
       ],
-      newlist: [
-        // {id: 1, name: '狄仁杰之四大天王', pubdate: '2018-07-27', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2526405034.jpg'},
-        // {id: 1, name: '瞒天过海：美人计 Oceans Eight', pubdate: '2018-06-08', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2508259902.jpg'},
-        // {id: 1, name: '致所有我曾爱过的男孩 To All the Boys I have Loved Before', pubdate: '2018-08-17', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529112058.jpg'},
-        // {id: 1, name: '遗传厄运 Hereditary', pubdate: '2018-06-08', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2518865763.jpg'},
-        // {id: 1, name: '复仇者联盟3：无限战争 Avengers: Infinity War', pubdate: '2018-05-11', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2517753454.jpg'},
-        // {id: 1, name: '燃烧 버닝', pubdate: '2018-05-16', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2520095279.jpg'},
-        // {id: 1, name: '大象席地而坐', pubdate: '2018-02-16', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2511811355.jpg'},
-        // {id: 1, name: '肆式青春 詩季織々', pubdate: '2018-08-04', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2526429256.jpg'},
-        // {id: 1, name: '奇迹男孩 Wonder', pubdate: '2018-01-19', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2507709428.jpg'},
-        // {id: 1, name: '行动时刻 Action Point', pubdate: '2018-06-01', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2520177065.jpg'}
-      ]
+      heighlist: [
+        {id: 1, name: '狄仁杰之四大天王', pubdate: '2018-07-27', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2526405034.jpg'},
+        {id: 1, name: '瞒天过海：美人计 Oceans Eight', pubdate: '2018-06-08', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2508259902.jpg'},
+        {id: 1, name: '致所有我曾爱过的男孩 To All the Boys I have Loved Before', pubdate: '2018-08-17', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529112058.jpg'},
+        {id: 1, name: '遗传厄运 Hereditary', pubdate: '2018-06-08', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2518865763.jpg'},
+        {id: 1, name: '复仇者联盟3：无限战争 Avengers: Infinity War', pubdate: '2018-05-11', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2517753454.jpg'},
+        {id: 1, name: '燃烧 버닝', pubdate: '2018-05-16', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2520095279.jpg'},
+        {id: 1, name: '大象席地而坐', pubdate: '2018-02-16', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2511811355.jpg'},
+        {id: 1, name: '肆式青春 詩季織々', pubdate: '2018-08-04', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2526429256.jpg'},
+        {id: 1, name: '奇迹男孩 Wonder', pubdate: '2018-01-19', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2507709428.jpg'},
+        {id: 1, name: '行动时刻 Action Point', pubdate: '2018-06-01', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2520177065.jpg'}
+      ],
+      newlist: [],
+      page: 1,
+      pageNum: 18
     }
   },
   mounted () {
@@ -126,7 +135,7 @@ export default {
       document.querySelector('.banner').style.marginTop = '90px'
     }
 
-    getMovies({page:1, pageNum:18}).then(res => {
+    getMovies({page: this.page, pageNum: this.pageNum}).then(res => {
       if (res.success) {
         this.newlist = res.data.movies
       } else {
@@ -137,10 +146,10 @@ export default {
     window.addEventListener('scroll', this.handleScroll)
   },
   computed: {
-    heighlist () {
-      let templist = this.newlist
-      return templist.sort(this.sortRate).slice(0, 6)
-    }
+    // heighlist () {
+    //   let templist = this.newlist
+    //   return templist.sort(this.sortRate).slice(0, 6)
+    // }
   },
   methods: {
     handleScroll () {
@@ -161,6 +170,19 @@ export default {
     },
     sortRate (a, b) {
       return b.rate - a.rate
+    },
+    loadmore () {
+      if (this.page < 3) {
+        getMovies({page: ++this.page, pageNum: this.pageNum}).then(res => {
+          if (res.success) {
+             res.data.movies.forEach(item => {
+               this.newlist.push(item)
+             })
+          }
+        })
+      } else {
+        this.$router.push('/movies')
+      }
     }
   }
 }
