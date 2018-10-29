@@ -78,7 +78,7 @@
 
       <el-dialog
         title="添加接口信息" width="50%" center
-        :visible.sync="dialog1" class="documentdialog">
+        :visible.sync="dialog1" class="documentdialog" v-if="hackReset">
         <el-form :model="docCreateForm" :rules="docCreateRules" ref="docCreateForm" class="documentform">
           <el-form-item label="接口名称1" :label-width="formLabelWidth" prop="name">
             <el-input v-model="docCreateForm.name" auto-complete="off"></el-input>
@@ -108,7 +108,7 @@
 
       <el-dialog
         title="修改接口信息" width="50%" center
-        :visible.sync="dialog2" class="documentdialog">
+        :visible.sync="dialog2" class="documentdialog" v-if="hackReset">
         <el-form :model="docUpdateForm" :rules="docUpdateRules" ref="docUpdateForm" class="documentform">
           <el-form-item label="接口名称" :label-width="formLabelWidth" prop="name">
             <el-input v-model="docUpdateForm.name" auto-complete="off"></el-input>
@@ -178,12 +178,18 @@ export default {
         // desc: '',
         // request: '',
         // response1: ''
+        // name: '用户注册',
+        // url: '/api/user/register',
+        // method: 'POST',
+        // desc: '用户注册接口',
+        // request: '{ "username": "admin", "password": "123456", "password2": "123456" }',
+        // response: '{ "success": true, "message": "注册成功", "rescode": 10010, "data": {"username": "admin", "password": "123456", "role":"normal"} }'
         name: '用户登录',
         url: '/api/user/login',
         method: 'POST',
         desc: '用户登录接口',
         request: '{ "username": "admin", "password": "123456" }',
-        response: '{ "success": true, "message": "登录成功", "rescode": 10020, "data": "" }'
+        response: '{ "success": true, "message": "登录成功", "rescode": 10020, "data": { "username":"admin", "superrole": true } }'
       },
       docUpdateForm: {
         id: '',
@@ -285,6 +291,7 @@ export default {
               this.openSuccess('添加成功！')
               this.documentlist.push(res.data.save)
               this.dialog1 = false
+              this.hack()
               this.clearForm()
             } else {
               this.openError(res.message)

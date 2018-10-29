@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer')
 
-const url = `https://movie.douban.com/tag/#/?sort=U&range=6,10&tags=`
+const url = `https://movie.douban.com/tag/#/?sort=U&range=8,10&tags=`
 
 // 延时函数
 const sleep = time => new Promise(resolve =>  {
@@ -27,7 +27,7 @@ const sleep = time => new Promise(resolve =>  {
 
   await page.waitForSelector('.more')
 
-  for(let i=0; i<3; i++) {
+  for(let i=0; i<10; i++) {
     await sleep(3000)
     console.log('click more ',i)
     await page.click('.more')

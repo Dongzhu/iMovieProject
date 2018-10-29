@@ -312,7 +312,7 @@ router.get('/category/:id', async (ctx, next) => {
   const Movie = mongoose.model('Movie')
   for (let i=0; i<moviesid.length; i++) {
     let item = moviesid[i]
-    let movie = await Movie.findOne({_id:mongoose.Types.ObjectID(item)})
+    let movie = await Movie.findOne({_id:ObjectID(item)})
     movies.push(movie)
   }
   if (movies !== '') {

@@ -11,7 +11,7 @@ const sleep = time => new Promise(resolve =>  {
 })
 
 async function fetchMovie(item) {
-  sleep(2000)
+  sleep(10000)
 
   const url = `http://api.douban.com/v2/movie/${item.id}`
   const res = await request(url)
@@ -48,8 +48,10 @@ async function fetchMovie(item) {
     let movie = movies[i]
     let movieData = await fetchMovie(movie)
 
+    // console.log('movieData')
+    // console.log(movieData)
     if (movieData) {
-      movie.author = movieData.author || ''
+      movie.author = movieData.author || []
       movie.title = movieData.title || ''
       movie.alt_title = movieData.alt_title || ''
       movie.image = movieData.image || ''
@@ -58,15 +60,15 @@ async function fetchMovie(item) {
 
       if (movieData.attrs) {
         let attrs = movieData.attrs
-        movie.language = attrs.language || ''
-        movie.pubdate = attrs.pubdate || ''
-        movie.country = attrs.country || ''
-        movie.writer = attrs.writer || ''
-        movie.director = attrs.director || ''
-        movie.cast = attrs.cast || ''
-        movie.movie_duration = attrs.movie_duration || ''
-        movie.year = attrs.year || ''
-        movie.movie_type = attrs.movie_type || ''
+        movie.language = attrs.language || []
+        movie.pubdate = attrs.pubdate || []
+        movie.country = attrs.country || []
+        movie.writer = attrs.writer || []
+        movie.director = attrs.director || []
+        movie.cast = attrs.cast || []
+        movie.movie_duration = attrs.movie_duration || []
+        movie.year = attrs.year || []
+        movie.movie_type = attrs.movie_type || []
       }
 
       for (let i=0; i<movie.tags.length; i++) {
@@ -91,7 +93,17 @@ async function fetchMovie(item) {
         }
       }
 
-      await movie.save()
+      // await movie.save()
+      try {
+        // console.log('movie')
+        // console.log(movie)
+        const save = await movie.save();
+          // 保存成功执行的操作
+      } catch(err){
+          // 保存失败执行的操作
+          console.log('err')
+          console.log(err)
+      }
     }
   }
 
