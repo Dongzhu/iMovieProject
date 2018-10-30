@@ -102,9 +102,14 @@ body::-webkit-scrollbar-track {
 .section { width: 100%; min-height: 786px; }
 .section-item { margin-bottom: 15px; }
 .layer { width: 270px; float: right; padding: 0 15px; }
-.section h4 { border-bottom: 1px solid #eaeaea; }
+.section h4 { border-bottom: 1px solid #eaeaea; position: relative; }
 .section h4, .layer h4 { height: 40px; line-height: 40px; }
 .section-header h4 span span { margin-left: 10px; color: #9B9B9B; font-size: 13px; }
+
+.pagenator { line-height: 20px; position: absolute; right: 0; top: 10px; }
+.loadmore { padding: 20px 0 15px; text-align: center; }
+.loadmore span { cursor: pointer; }
+.loadmore span:hover { color: #f60; }
 .active-tag { color: #333333 !important; }
 .section-body { margin-top: 10px; }
 .card { width: 150px; display: inline-block; box-shadow: 0 5px 5px rgba(0,0,0,0.1); cursor: pointer; margin: 5px 6px; }
@@ -139,9 +144,6 @@ body::-webkit-scrollbar-track {
 
 /* main.vue */
 .main-admin { height: 100%; overflow: hidden; }
-.loadmore { padding: 20px 0 15px; text-align: center; }
-.loadmore span { cursor: pointer; }
-.loadmore span:hover { color: #f60; }
 
 /* categories.vue */
 .category-all { margin-top: 20px; }

@@ -18,12 +18,14 @@
     <div class="main">
       <el-container>
         <div class="section">
-          <div class="section-item">
+          <!-- <div class="section-item">
             <div class="section-header">
               <h4>高分推荐
-                <span>
-                  <page style="float:right;"></page>
-                </span>
+                <el-pagination
+                  small
+                  layout="prev, pager, next"
+                  :total="50">
+                </el-pagination>
               </h4>
             </div>
             <div class="section-body">
@@ -32,14 +34,14 @@
                   <a :href="'/detail/'+item.id"><img v-lazy="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
                   <span class="card-rate">{{ item.rate }}</span>
                 </div>
-                <!-- <div class="video">
+                <div class="video">
                   <video
                     src="http://120.132.18.193:8080/vod/2018/6/29/1530263522730512.mp4"
                     width="100%" height="100%"
                     onMouseOver="this.play()" onMouseOut="this.pause()" :poster="item.url">
                     您的浏览器不支持video标签
                   </video>
-                </div> -->
+                </div>
                 <div class="card-info">
                   <p class="over"><a :href="'/detail/'+item.id">{{item.title}}</a></p>
                   <p class="bottom clearfix">
@@ -48,18 +50,34 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="section-item">
             <div class="section-header">
               <h4>最近更新
-                <span class="tag"><span class="active-tag">热门</span><span>最新</span><span>豆瓣高分</span><span>冷门佳片</span><span>华语</span><span>欧美</span><span>日韩</span></span>
-                <span>
-                  <page showNum='true' style="float:right;"></page>
+                <span class="tag">
+                  <span class="active-tag">热门</span>
+                  <span @click="sortBy('newest')">最新</span>
+                  <span @click="sortBy('highrate')">豆瓣高分</span>
+                  <span @click="sortBy('coldfilm')">冷门佳片</span>
+                  <span @click="sortBy('chinese')">华语</span>
+                  <span @click="sortBy('EUAmerica')">欧美</span>
+                  <span @click="sortBy('KoJapan')">日韩</span>
                 </span>
+                <!-- <span>
+                  <page showNum='true' style="float:right;"></page>
+                </span> -->
+                <el-pagination
+                  small
+                  layout="prev, pager, next"
+                  :page-size="pageNum"
+                  :total="50"
+                  @current-change="currentChange"
+                  class="pagenator">
+                </el-pagination>
               </h4>
             </div>
-            <div class="section-body">
+            <div class="section-body" v-if="hackReset">
               <div class="card" v-for="(item,index) in newlist" :key="index" :title="item.title+' '+item.rate">
                 <div class="card-bg">
                   <a :href="'/detail/'+item.id"><img v-lazy="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
@@ -124,7 +142,8 @@ export default {
       ],
       newlist: [],
       page: 1,
-      pageNum: 18
+      pageNum: 18,
+      hackReset: false
     }
   },
   mounted () {
@@ -138,6 +157,7 @@ export default {
     getMovies({page: this.page, pageNum: this.pageNum}).then(res => {
       if (res.success) {
         this.newlist = res.data.movies
+        this.hack()
       } else {
         this.newlist = []
       }
@@ -165,6 +185,12 @@ export default {
         document.querySelector('.username').style.color = '#fff'
       }
     },
+    hack () {
+      this.hackReset = false
+      this.$nextTick(() => {
+        this.hackReset = true
+      })
+    },
     showChange (index) {
       document.querySelector('.bg').style.backgroundImage = 'url(' + this.bannerlist[index].url + ')'
     },
@@ -175,14 +201,44 @@ export default {
       if (this.page < 3) {
         getMovies({page: ++this.page, pageNum: this.pageNum}).then(res => {
           if (res.success) {
-             res.data.movies.forEach(item => {
-               this.newlist.push(item)
-             })
+            res.data.movies.forEach(item => {
+              this.newlist.push(item)
+            })
           }
         })
       } else {
         this.$router.push('/movies')
       }
+    },
+    sortBy (condition) {
+      console.log(condition)
+      // newest 最新、highrate 豆瓣高分、coldfilm 冷门佳片、chinese 华语、EUAmerica 欧美、KoJapan
+
+      let params = { page: this.page, pageNum: this.pageNum }
+      if (condition === 'chinese') params.country = '中国'
+      if (condition === 'EUAmerica') params.country = '欧美'
+      if (condition === 'KoJapan') params.country = '韩国,日本'
+
+      getMovies(params).then(res => {
+        if (res.success) {
+          this.newlist = res.data.movies
+          this.hack()
+        } else {
+          this.openError(res.message)
+        }
+      })
+    },
+    currentChange (currentPage) {
+      console.log(currentPage)
+      // let params = {page: currentPage, pageNum: this.pageNum}
+      // getMovies(params).then(res => {
+      //   if (res.success) {
+      //     this.newlist = res.data.movies
+      //     this.hack()
+      //   } else {
+      //     this.openError(res.message)
+      //   }
+      // })
     }
   }
 }

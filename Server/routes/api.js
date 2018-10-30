@@ -247,7 +247,23 @@ router.get('/movies', async (ctx, next) => {
 
   let params = {}
   if (country && country.indexOf('all') < 0) {
-    params.country = new RegExp(`^.*`+country+`.*$`)
+    // params.country = new RegExp(`^.*`+country+`.*$`)
+    console.log('index', country.indexOf(','));
+    if (country.indexOf(',') > -1) {
+      let countrylist = country.split(',')
+      let countryReg = '^.*'
+      countrylist.forEach(item => {
+        if (countrylist.indexOf(item) === countrylist.length-1) countryReg += item
+        else countryReg += item + '|'
+      })
+      countryReg += '.*$'
+      console.log('countryReg: '+countryReg)
+      params.country = new RegExp(countryReg)
+    } else if (country === '欧美') {
+      params.country = new RegExp('^.*英国|法国|德国|意大利|西班牙|俄罗斯|加拿大|澳大利亚|爱尔兰|瑞典|巴西|丹麦|美国.*$')
+    } else {
+      params.country = new RegExp(`^.*`+country+`.*$`)
+    }
   }
   if (year && year.indexOf('all') < 0) {
     if (year.indexOf('年代') > -1) {

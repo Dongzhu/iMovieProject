@@ -31,7 +31,8 @@ Vue.prototype.$echarts = echarts
 Vue.use(ElementUI)
 Vue.use(Vuex)
 Vue.use(VueLazyload, {
-  loading: '@/assets/loading-svg/loading-spinning-bubbles.svg'
+  loading: '@/assets/loading-svg/loading-spinning-bubbles.svg',
+  error: '@/assets/loading-svg/loading-spin.svg'
 })
 
 const store = new Vuex.Store({
