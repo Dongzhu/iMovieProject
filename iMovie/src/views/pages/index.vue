@@ -71,7 +71,8 @@
                   small
                   layout="prev, pager, next"
                   :page-size="pageNum"
-                  :total="50"
+                  :total="pageTotal"
+                  :pager-count="5"
                   @current-change="currentChange"
                   class="pagenator">
                 </el-pagination>
@@ -80,7 +81,7 @@
             <div class="section-body" v-if="hackReset">
               <div class="card" v-for="(item,index) in newlist" :key="index" :title="item.title+' '+item.rate">
                 <div class="card-bg">
-                  <a :href="'/detail/'+item.id"><img v-lazy="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
+                  <a :href="'/detail/'+item.id"><img v-lazy="item.poster" :alt="item.title" width="100%" height="100%"></a>
                 </div>
                 <div class="card-info">
                   <p class="over"><a :href="'/detail/'+item.id">{{item.title}}</a></p>
@@ -143,6 +144,7 @@ export default {
       newlist: [],
       page: 1,
       pageNum: 18,
+      pageTotal: 0,
       hackReset: false
     }
   },
@@ -157,6 +159,7 @@ export default {
     getMovies({page: this.page, pageNum: this.pageNum}).then(res => {
       if (res.success) {
         this.newlist = res.data.movies
+        this.pageTotal = res.data.legth
         this.hack()
       } else {
         this.newlist = []
@@ -229,16 +232,15 @@ export default {
       })
     },
     currentChange (currentPage) {
-      console.log(currentPage)
-      // let params = {page: currentPage, pageNum: this.pageNum}
-      // getMovies(params).then(res => {
-      //   if (res.success) {
-      //     this.newlist = res.data.movies
-      //     this.hack()
-      //   } else {
-      //     this.openError(res.message)
-      //   }
-      // })
+      let params = {page: currentPage, pageNum: this.pageNum}
+      getMovies(params).then(res => {
+        if (res.success) {
+          this.newlist = res.data.movies
+          this.hack()
+        } else {
+          this.openError(res.message)
+        }
+      })
     }
   }
 }
