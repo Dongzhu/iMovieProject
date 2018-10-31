@@ -11,7 +11,7 @@ const sleep = time => new Promise(resolve =>  {
 })
 
 async function fetchMovie(item) {
-  sleep(10000)
+  sleep(5000)
 
   const url = `http://api.douban.com/v2/movie/${item.id}`
   const res = await request(url)
@@ -38,7 +38,8 @@ async function fetchMovie(item) {
       { summary: null },
       { year: { $exists: false } },
       { title: '' },
-      { summary: '' }
+      { summary: '' },
+      { category: [] }
     ]
   })
   // console.log(movies);

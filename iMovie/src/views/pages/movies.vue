@@ -29,6 +29,16 @@
         </div>
         <div class="clearfix"></div>
         <div class="cate-info">
+          <div class="cate-page" v-if="pageTotal !== 0">
+            <el-pagination
+              layout="prev, pager, next"
+              :page-size="pageNum"
+              :total="pageTotal"
+              :pager-count="5"
+              @current-change="currentChange"
+              class="pagenator">
+            </el-pagination>
+          </div>
           <div class="catemovies" v-for="(item,index) in movielist" :key="index" v-if="movielist.length !== 0">
             <div class="movielogo">
               <router-link :to="{ name: 'detail', params: {id:item.id} }">
@@ -73,6 +83,9 @@ export default {
       yearlist: [ '所有', '2018', '2017', '2010年代', '2000年代', '1990年代', '1980年代' ],
       countrylist: [ '所有', '中国大陆', '美国', '香港', '台湾', '日本', '韩国', '英国', '法国', '德国', '意大利', '西班牙', '印度', '泰国', '俄罗斯', '伊朗', '加拿大', '澳大利亚', '爱尔兰', '瑞典', '巴西', '丹麦' ],
       rate: [0, 10],
+      page: 1,
+      pageNum: 10,
+      pageTotal: 0,
       hackReset: false
     }
   },
@@ -93,6 +106,7 @@ export default {
     getMovies(params).then(res => {
       if (res.success) {
         this.$store.commit('updateMovies', res.data.movies)
+        this.pageTotal = res.data.movies.length
       } else {
         this.movielist = []
       }
@@ -129,6 +143,18 @@ export default {
       document.querySelector('.username').style.color = '#000'
     },
     sortLen (a, b) { return b.movies.length - a.movies.length },
+    currentChange (currentPage) {
+      let params = { page: currentPage, pageNum: this.pageNum }
+      getMovies(params).then(res => {
+        if (res.success) {
+          this.newlist = res.data.movies
+          this.pageTotal = res.data.movies.length
+          this.hack()
+        } else {
+          this.openError(res.message)
+        }
+      })
+    },
     searchMovie (type, item) {
       let query = this.$route.query
       let params = {}
@@ -146,6 +172,7 @@ export default {
         if (res.success) {
           this.$store.commit('updateMovies', res.data.movies)
           this.$router.push({path: 'movies', query: params})
+          this.pageTotal = res.data.movies.length
         } else {
           this.movielist = []
         }
@@ -165,8 +192,8 @@ export default {
       getMovies(params).then(res => {
         if (res.success) {
           this.$store.commit('updateMovies', res.data.movies)
-
           this.$router.push({path: 'movies', query: params})
+          this.pageTotal = res.data.movies.length
         } else {
           this.movielist = []
         }

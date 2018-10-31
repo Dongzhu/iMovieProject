@@ -232,7 +232,7 @@ export default {
       })
     },
     currentChange (currentPage) {
-      let params = {page: currentPage, pageNum: this.pageNum}
+      let params = { page: currentPage, pageNum: this.pageNum }
       getMovies(params).then(res => {
         if (res.success) {
           this.newlist = res.data.movies

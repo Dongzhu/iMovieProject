@@ -18,7 +18,7 @@
         </div>
         <div class="clearfix"></div>
         <div class="cate-info" v-if="cateid !== ''">
-          <div class="cate-page" v-if="hackReset">
+          <div class="cate-page">
             <el-pagination
               layout="prev, pager, next"
               :page-size="pageNum"
@@ -35,7 +35,7 @@
               <el-breadcrumb-item>{{category}}</el-breadcrumb-item>
             </el-breadcrumb>
           </h4>
-          <div class="catemovies" v-for="(item,index) in movielist" :key="index">
+          <div class="catemovies" v-for="(item,index) in catemovies" :key="index">
             <div class="movielogo">
               <router-link :to="{ name: 'detail', params: {id:item.id} }">
                 <img :src="item.poster" :alt="item.title" width="100%" height="100%">
@@ -54,7 +54,7 @@
           </div>
         </div>
         <div class="cate-info" v-else>
-          <div class="cate-page" v-if="hackReset">
+          <div class="cate-page">
             <el-pagination
               layout="prev, pager, next"
               :page-size="pageNum"
@@ -107,14 +107,22 @@ export default {
       categories: [],
       category: '',
       catemovies: [],
-      // movielist: [],
+      movielist: [],
       page: 1,
-      pageNum: 8,
+      pageNum: 10,
       pageTotal: 0,
       hackReset: false
     }
   },
   mounted () {
+    getMovies({}).then(res => {
+      if (res.success) {
+        this.movielist = res.data.movies
+      } else {
+        this.movielist = []
+      }
+    })
+
     getCategories().then(res => {
       if (res.success) {
         this.categories = res.data.categories
@@ -129,17 +137,9 @@ export default {
           this.category = res.data.category.name
           this.catemovies = res.data.movies
           this.pageTotal = res.data.movies.length
+          this.movielist = this.catemovies
         } else {
           this.categories = []
-        }
-      })
-    } else {
-      getMovies({}).then(res => {
-        if (res.success) {
-          this.catemovies = res.data.movies
-          this.pageTotal = res.data.movies.length
-        } else {
-          this.catemovies = []
         }
       })
     }
@@ -160,18 +160,6 @@ export default {
     cateid () {
       let path = this.$route.path.split('/category/')
       return path.length > 1 ? path[1] : ''
-    },
-    movielist () {
-      let movies = []
-      let start = (this.page - 1) * this.pageNum
-      let mid = start + this.pageNum
-      let len = this.catemovies.length
-      let end = mid > len ? len : mid
-
-      for (let i = start; i < end; i++) {
-        movies.push(this.catemovies[i])
-      }
-      return movies
     }
   },
   methods: {
@@ -201,7 +189,6 @@ export default {
         if (res.success) {
           this.category = res.data.category.name
           this.catemovies = res.data.movies
-          this.pageTotal = res.data.movies.length
           this.hack()
         } else {
           this.categories = []
@@ -209,16 +196,15 @@ export default {
       })
     },
     currentChange (currentPage) {
-      this.page = currentPage
-      // let params = { page: currentPage, pageNum: this.pageNum }
-      // getMovies(params).then(res => {
-      //   if (res.success) {
-      //     this.newlist = res.data.movies
-      //     this.hack()
-      //   } else {
-      //     this.openError(res.message)
-      //   }
-      // })
+      let params = { page: currentPage, pageNum: this.pageNum }
+      getMovies(params).then(res => {
+        if (res.success) {
+          this.newlist = res.data.movies
+          this.hack()
+        } else {
+          this.openError(res.message)
+        }
+      })
     }
   }
 }
