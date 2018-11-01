@@ -298,8 +298,8 @@ router.get('/movies', async (ctx, next) => {
   }
 
   if (movies) {
-    const allmovies = await Movie.find({})
-    ctx.body = { success: true, message: '查询成功', rescode: 20010, data: { movies, length: allmovies.length } }
+    // const allmovies = await Movie.find({})
+    ctx.body = { success: true, message: '查询成功', rescode: 20010, data: { movies, length: movies.length } }
   } else {
     ctx.body = { success: false, message: '查询失败', rescode: 20011, data: {} }
   }

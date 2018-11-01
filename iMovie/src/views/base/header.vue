@@ -96,9 +96,9 @@ export default {
       if (this.searchTxt === '') return this.openError('请输入关键字搜索！')
 
       let params = {keywords: this.searchTxt}
-      getMovies(params).then(data => {
-        if (data.success) {
-          this.$store.commit('updateMovies', data.movies)
+      getMovies(params).then(res => {
+        if (res.success) {
+          this.$store.commit('updateMovies', res.data.movies)
           this.$router.push({path: '/movies', query: params})
         } else {
           this.movielist = []

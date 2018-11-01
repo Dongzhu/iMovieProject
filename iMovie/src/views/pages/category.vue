@@ -2,7 +2,7 @@
   <div>
     <Header></Header>
 
-    <div class="main category">
+    <div class="main category" v-if="hackReset">
       <el-container>
         <div class="cate-all">
           所有分类：
@@ -18,16 +18,6 @@
         </div>
         <div class="clearfix"></div>
         <div class="cate-info" v-if="cateid !== ''">
-          <div class="cate-page" v-if="hackReset">
-            <el-pagination
-              layout="prev, pager, next"
-              :page-size="pageNum"
-              :total="pageTotal"
-              :pager-count="5"
-              @current-change="currentChange"
-              class="pagenator">
-            </el-pagination>
-          </div>
           <h4>
             当前分类：
             <el-breadcrumb separator="/" v-if="hackReset">
@@ -38,7 +28,7 @@
           <div class="catemovies" v-for="(item,index) in movielist" :key="index">
             <div class="movielogo">
               <router-link :to="{ name: 'detail', params: {id:item.id} }">
-                <img :src="item.poster" :alt="item.title" width="100%" height="100%">
+                <img v-lazy="item.poster" :alt="item.title" width="100%" height="100%">
               </router-link>
             </div>
             <div class="movieinfo">
@@ -54,20 +44,10 @@
           </div>
         </div>
         <div class="cate-info" v-else>
-          <div class="cate-page" v-if="hackReset">
-            <el-pagination
-              layout="prev, pager, next"
-              :page-size="pageNum"
-              :total="pageTotal"
-              :pager-count="5"
-              @current-change="currentChange"
-              class="pagenator">
-            </el-pagination>
-          </div>
           <div class="catemovies" v-for="(item,index) in movielist" :key="index">
             <div class="movielogo">
               <router-link :to="{ name: 'detail', params: {id:item.id} }">
-                <img :src="item.poster" :alt="item.title" width="100%" height="100%">
+                <img v-lazy="item.poster" :alt="item.title" width="100%" height="100%">
               </router-link>
             </div>
             <div class="movieinfo">
@@ -81,6 +61,9 @@
               <p>剧情简介：{{item.summary}}</p>
             </div>
           </div>
+        </div>
+        <div class="loadmore" v-if="movielist.length !== 0">
+          <span @click="nextPage">加载更多</span>
         </div>
       </el-container>
     </div>
@@ -109,40 +92,42 @@ export default {
       catemovies: [],
       // movielist: [],
       page: 1,
-      pageNum: 8,
-      pageTotal: 0,
-      hackReset: false
+      pageNum: 10,
+      hackReset: false,
+      next: true
     }
   },
   mounted () {
+    let query = this.$route.query
+    if (query.page) this.page = query.page
     getCategories().then(res => {
       if (res.success) {
         this.categories = res.data.categories
+
+        if (this.cateid !== '') {
+          getCategory(this.cateid).then(res2 => {
+            if (res2.success) {
+              this.category = res2.data.category.name
+              this.catemovies = res2.data.movies
+              this.updateMovies(res2.data.movies)
+            } else {
+              this.categories = []
+            }
+          })
+        } else {
+          getMovies({}).then(res2 => {
+            if (res2.success) {
+              this.catemovies = res2.data.movies
+              this.updateMovies(res2.data.movies)
+            } else {
+              this.catemovies = []
+            }
+          })
+        }
       } else {
         this.categories = []
       }
     })
-
-    if (this.cateid !== '') {
-      getCategory(this.cateid).then(res => {
-        if (res.success) {
-          this.category = res.data.category.name
-          this.catemovies = res.data.movies
-          this.pageTotal = res.data.movies.length
-        } else {
-          this.categories = []
-        }
-      })
-    } else {
-      getMovies({}).then(res => {
-        if (res.success) {
-          this.catemovies = res.data.movies
-          this.pageTotal = res.data.movies.length
-        } else {
-          this.catemovies = []
-        }
-      })
-    }
 
     window.addEventListener('scroll', this.handleScroll)
     this.hack()
@@ -161,20 +146,22 @@ export default {
       let path = this.$route.path.split('/category/')
       return path.length > 1 ? path[1] : ''
     },
-    movielist () {
-      let movies = []
-      let start = (this.page - 1) * this.pageNum
-      let mid = start + this.pageNum
-      let len = this.catemovies.length
-      let end = mid > len ? len : mid
-
-      for (let i = start; i < end; i++) {
-        movies.push(this.catemovies[i])
-      }
-      return movies
-    }
+    movielist () { return this.$store.state.movielist }
   },
   methods: {
+    openSuccess (text) {
+      this.$message({
+        message: text,
+        type: 'success'
+      })
+    },
+    openError (text) {
+      this.$message({
+        showClose: true,
+        message: text,
+        type: 'error'
+      })
+    },
     hack () {
       // console.log('hack it!')
       this.hackReset = false
@@ -199,26 +186,50 @@ export default {
     gotoCate (item) {
       getCategory(this.cateid).then(res => {
         if (res.success) {
+          this.page = 1
           this.category = res.data.category.name
           this.catemovies = res.data.movies
-          this.pageTotal = res.data.movies.length
+          this.updateMovies(res.data.movies)
           this.hack()
         } else {
           this.categories = []
         }
       })
     },
-    currentChange (currentPage) {
-      this.page = currentPage
-      // let params = { page: currentPage, pageNum: this.pageNum }
-      // getMovies(params).then(res => {
-      //   if (res.success) {
-      //     this.newlist = res.data.movies
-      //     this.hack()
-      //   } else {
-      //     this.openError(res.message)
-      //   }
-      // })
+    updateMovies (list) {
+      let movies = []
+      let start = (this.page - 1) * this.pageNum
+      let mid = start + this.pageNum - 1
+      let len = list.length
+      let end = mid > len ? len : mid
+      for (let i = start; i <= end; i++) {
+        if (list[i]) movies.push(list[i])
+      }
+      this.$store.commit('updateMovies', movies)
+      if (movies.length < 10) this.next = false
+      else this.next = true
+      this.hack()
+    },
+    nextPage () {
+      if (this.cateid === '') {
+        if (this.next) {
+          this.page++
+          this.updateMovies(this.catemovies)
+          this.$router.push({path: 'categories', query: { page: this.page }})
+        } else {
+          this.openError('当前已是最后一页！')
+        }
+      } else {
+        if (this.next) {
+          console.log(this.$route.path)
+          console.log(this.$route.query)
+          this.page++
+          this.updateMovies(this.catemovies)
+          this.$router.push({path: this.cateid, query: { page: this.page }})
+        } else {
+          this.openError('当前已是最后一页！')
+        }
+      }
     }
   }
 }

@@ -28,21 +28,21 @@
           </p>
         </div>
         <div class="clearfix"></div>
-        <div class="cate-info" v-if="hackReset">
-          <!-- <div class="cate-page" v-if="pageTotal !== 0">
+        <div class="cate-info">
+          <div class="cate-page" v-if="pageTotal !== 0">
             <el-pagination
               layout="prev, pager, next"
               :page-size="pageNum"
-              :total="200"
+              :total="pageTotal"
               :pager-count="5"
               @current-change="currentChange"
               class="pagenator">
             </el-pagination>
-          </div> -->
+          </div>
           <div class="catemovies" v-for="(item,index) in movielist" :key="index" v-if="movielist.length !== 0">
             <div class="movielogo">
               <router-link :to="{ name: 'detail', params: {id:item.id} }">
-                <img v-lazy="item.poster" :alt="item.title" width="100%" height="100%">
+                <img :src="item.poster" :alt="item.title" width="100%" height="100%">
               </router-link>
             </div>
             <div class="movieinfo">
@@ -56,11 +56,8 @@
               <p>剧情简介：{{item.summary}}</p>
             </div>
           </div>
-          <div v-if="movielist && movielist.length === 0">
+          <div v-if="movielist.length === 0">
             <p style="padding: 100px 0; text-align: center">暂无数据</p>
-          </div>
-          <div class="loadmore" v-if="movielist && movielist.length !== 0">
-            <span @click="nextPage">下一页</span>
           </div>
         </div>
       </el-container>
@@ -85,13 +82,11 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       yearlist: [ '所有', '2018', '2017', '2010年代', '2000年代', '1990年代', '1980年代' ],
       countrylist: [ '所有', '中国大陆', '美国', '香港', '台湾', '日本', '韩国', '英国', '法国', '德国', '意大利', '西班牙', '印度', '泰国', '俄罗斯', '伊朗', '加拿大', '澳大利亚', '爱尔兰', '瑞典', '巴西', '丹麦' ],
-      movies: [],
       rate: [0, 10],
       page: 1,
       pageNum: 10,
       pageTotal: 0,
-      hackReset: false,
-      next: true
+      hackReset: false
     }
   },
   mounted () {
@@ -106,16 +101,12 @@ export default {
     }
     if (query.page) params.page = query.page
     if (query.pageNum) params.pageNum = query.pageNum
-    if (query.keywords) {
-      params.keywords = query.keywords
-    }
+    if (query.keywords) params.keywords = query.keywords
 
     getMovies(params).then(res => {
       if (res.success) {
-        // this.$store.commit('updateMovies', res.data.movies)
-        this.movies = res.data.movies
-        this.updateMovies(res.data.movies)
-        this.hack()
+        this.$store.commit('updateMovies', res.data.movies)
+        this.pageTotal = res.data.movies.length
       } else {
         this.movielist = []
       }
@@ -140,19 +131,6 @@ export default {
     }
   },
   methods: {
-    openSuccess (text) {
-      this.$message({
-        message: text,
-        type: 'success'
-      })
-    },
-    openError (text) {
-      this.$message({
-        showClose: true,
-        message: text,
-        type: 'error'
-      })
-    },
     hack () {
       // console.log('hack it!')
       this.hackReset = false
@@ -166,55 +144,16 @@ export default {
     },
     sortLen (a, b) { return b.movies.length - a.movies.length },
     currentChange (currentPage) {
-      this.page = currentPage
-    },
-    nextPage () {
-      if (this.next) {
-        let query = this.$route.query
-        let params = {}
-        if (query.cate) params.cate = query.cate
-        if (query.country) params.country = query.country
-        if (query.year) params.year = query.year
-        if (query.rate) {
-          params.rate = query.rate
-          this.rate = query.rate.split(',')
+      let params = { page: currentPage, pageNum: this.pageNum }
+      getMovies(params).then(res => {
+        if (res.success) {
+          this.newlist = res.data.movies
+          this.pageTotal = res.data.movies.length
+          this.hack()
+        } else {
+          this.openError(res.message)
         }
-        if (query.page) params.page = query.page
-        else params.page = this.page
-        if (query.pageNum) params.pageNum = query.pageNum
-        else params.pageNum = this.pageNum
-        if (query.keywords) {
-          params.keywords = query.keywords
-        }
-        params.page++
-
-        getMovies(params).then(res => {
-          if (res.success) {
-            // this.$store.commit('updateMovies', res.data.movies)
-            this.movies = res.data.movies
-            this.updateMovies(res.data.movies)
-            this.$router.push({path: 'movies', query: params})
-            this.hack()
-          } else {
-            this.movielist = []
-          }
-        })
-      } else {
-        this.openError('当前已是最后一页！')
-      }
-    },
-    updateMovies (list) {
-      let movies = []
-      let start = (this.page - 1) * this.pageNum
-      let mid = start + this.pageNum - 1
-      let len = list.length
-      let end = mid > len ? len : mid
-      for (let i = start; i <= end; i++) {
-        if (list[i]) movies.push(list[i])
-      }
-      if (movies.length < 10) this.next = false
-      else this.next = true
-      this.$store.commit('updateMovies', movies)
+      })
     },
     searchMovie (type, item) {
       let query = this.$route.query
@@ -223,7 +162,7 @@ export default {
       if (query.country) params.country = query.country
       if (query.year) params.year = query.year
       if (query.rate) params.rate = query.rate
-      if (query.page) params.page = '1'
+      if (query.page) params.page = query.page
       if (query.pageNum) params.pageNum = query.pageNum
 
       if (type === 'year') { params.year = item === '所有' ? 'all' : item }
@@ -231,11 +170,9 @@ export default {
 
       getMovies(params).then(res => {
         if (res.success) {
-          params.page = 1
-          // this.$store.commit('updateMovies', res.data.movies)
+          this.$store.commit('updateMovies', res.data.movies)
           this.$router.push({path: 'movies', query: params})
-          this.updateMovies(res.data.movies)
-          this.hack()
+          this.pageTotal = res.data.movies.length
         } else {
           this.movielist = []
         }
@@ -254,11 +191,9 @@ export default {
 
       getMovies(params).then(res => {
         if (res.success) {
-          this.page = 1
-          // this.$store.commit('updateMovies', res.data.movies)
+          this.$store.commit('updateMovies', res.data.movies)
           this.$router.push({path: 'movies', query: params})
-          this.updateMovies(res.data.movies)
-          this.hack()
+          this.pageTotal = res.data.movies.length
         } else {
           this.movielist = []
         }

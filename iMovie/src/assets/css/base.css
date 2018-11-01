@@ -86,8 +86,8 @@ body::-webkit-scrollbar-track {
 .top-bottom ul li:first-child { margin-left: 0; }
 
 /* navbar.vue */
-.navbar .more { float: right; font-size: 12px; color: #333; cursor: pointer; }
-.navbar .more:hover, .navbar-tag span:hover { color: #f60; }
+.more { float: right; font-size: 12px; color: #333; cursor: pointer; }
+.more:hover, .navbar-tag span:hover { color: #f60; }
 .tagspan {
   width: auto; height: 20px; line-height: 20px; cursor: pointer;
   margin: 4px 4px 4px 0; padding: 5px; display: inline-block;
@@ -105,12 +105,13 @@ body::-webkit-scrollbar-track {
 .section h4 { border-bottom: 1px solid #eaeaea; position: relative; }
 .section h4, .layer h4 { height: 40px; line-height: 40px; }
 .section-header h4 span span { margin-left: 10px; color: #9B9B9B; font-size: 13px; }
+.tag span:hover { color: #f60; cursor: pointer; }
+.active-tag { color: #f60 !important; }
 
 .pagenator { line-height: 20px; position: absolute; right: 0; top: 10px; }
 .loadmore { padding: 20px 0 15px; text-align: center; }
 .loadmore span { cursor: pointer; }
 .loadmore span:hover { color: #f60; }
-.active-tag { color: #333333 !important; }
 .section-body { margin-top: 10px; }
 .card { width: 150px; display: inline-block; box-shadow: 0 5px 5px rgba(0,0,0,0.1); cursor: pointer; margin: 5px 6px; }
 .card-admin .card-info { height: 60px; }
