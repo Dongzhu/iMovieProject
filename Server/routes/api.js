@@ -337,10 +337,24 @@ router.get('/category/:id', async (ctx, next) => {
     movies.push(movie)
   }
   if (movies !== '') {
-    ctx.body = { success: true, message: '查询成功', rescode: 20020, data: { category, movies, length: movies.length } }
+    ctx.body = { success: true, message: '查询成功', rescode: 20040, data: { category, movies, length: movies.length } }
   } else {
-    ctx.body = { success: false, message: '查询失败', rescode: 20021, data: { movies } }
+    ctx.body = { success: false, message: '查询失败', rescode: 20041, data: { movies } }
   }
+})
+
+router.del('/movie', async (ctx, next) => {
+  const _id = ctx.request.query._id
+  if (!_id) return ctx.body = { success: false, message: '删除失败，缺少参数', rescode: 20081, data: {} }
+
+  const Movie = mongoose.model('Movie')
+  await Movie.remove({_id:ObjectID(_id)}, (err, res) => {
+    if (err) {
+      return ctx.body = { success: false, message: '删除失败', rescode: 20082, data: { err } }
+    } else {
+      return ctx.body = { success: true, message: '删除成功', rescode: 20080, data: {} }
+    }
+  })
 })
 
 // document

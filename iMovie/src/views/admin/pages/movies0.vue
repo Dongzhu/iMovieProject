@@ -17,8 +17,8 @@
         <div class="clearfix"></div>
         <div class="info-section">
           <div class="card card-admin" v-for="(item,index) in movielist" :key="index" v-if="movielist.length !== 0">
-            <div class="card-bg" :title="item.title+' '+item.rate" @click="viewMovie(item)">
-              <img v-lazy="item.poster" :alt="item.title" width="100%" height="100%" class="image">
+            <div class="card-bg" :title="item.title+' '+item.rate">
+              <a :href="'/detail/'+item.id"><img v-lazy="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
               <span class="card-rate">{{ item.rate }}</span>
             </div>
             <!-- <div class="video">
@@ -30,9 +30,9 @@
               </video>
             </div> -->
             <div class="card-info">
-              <p class="over" @click="viewMovie(item)">{{item.title}}</p>
-              <p class="bottom clearfix" @click="viewMovie(item)">
-                <time class="time">{{ item.year }}</time>
+              <p class="over"><a :href="'/detail/'+item.id">{{item.title}}</a></p>
+              <p class="bottom clearfix">
+                <time class="time"><a :href="'/detail/'+item.id">{{ item.year }}</a></time>
               </p>
               <p>
                 <el-button type="text" class="button">推荐</el-button>
@@ -48,7 +48,7 @@
       </div>
 
       <el-dialog
-        title="添加电影信息" :width="dialogwidth" center
+        title="添加电影信息" width="50%" center
         :visible.sync="dialog1" class="dialog moviedialog" v-if="hackReset">
         <el-form :model="movieCreateForm" :rules="movieCreateRules" ref="movieCreateForm" class="form">
           <el-form-item label="电影名称" :label-width="formLabelWidth" prop="title">
@@ -93,7 +93,7 @@
       </el-dialog>
 
       <el-dialog
-        title="编辑电影信息" :width="dialogwidth" center
+        title="编辑电影信息" width="50%" center
         :visible.sync="dialog2" class="dialog moviedialog" v-if="hackReset">
         <el-form :model="movieUpdateForm" :rules="movieUpdateRules" ref="movieCreateForm" class="form">
           <el-form-item label="电影名称" :label-width="formLabelWidth" prop="name">
@@ -138,8 +138,8 @@
       </el-dialog>
 
       <el-dialog
-        :title="movie.title" :width="dialogwidth" center
-        :visible.sync="dialog3" class="dialog" v-if="hackReset">
+        :title="movie.title" width="60%" center
+        :visible.sync="dialog3" class="dialog moviedialog" v-if="hackReset">
         <div class="section-info">
           <div class="section-info1">
             <img :src="movie.poster || ''" :alt="movie.title || ''" width="100%">
@@ -159,14 +159,13 @@
                 disabled
                 text-color="#ff9900">
               </el-rate>
-              <span>{{movie.rate}}</span>
+              <span>{{movie.rate*2}}</span>
             </p>
             <p>剧情简介：{{movie.summary || 0 }}</p>
           </div>
         </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="cancleDialog3">关闭</el-button>
-          <el-button @click="editMovie2">编辑</el-button>
         </span>
       </el-dialog>
     </div>
@@ -253,21 +252,14 @@ export default {
         summary: [ { required: true, message: '请输入剧情简介', trigger: 'blur' } ]
       },
       movieUpdateRules: {
-        // name: [ { required: true, message: '请输入接口名称', trigger: 'blur' } ]
+        name: [ { required: true, message: '请输入接口名称', trigger: 'blur' } ]
       }
     }
   },
   computed: {
     tag () { return this.$store.state.tag },
     isMobile () { return this.$store.state.isMobile },
-    isCollapse () { return this.$store.state.isCollapse },
-    dialogwidth () {
-      if (this.$store.state.isMobile) {
-        return '90%'
-      } else {
-        return '50%'
-      }
-    }
+    isCollapse () { return this.$store.state.isCollapse }
   },
   mounted () {
     this.hackReset = true
@@ -322,7 +314,6 @@ export default {
     },
     setForm (data) {
       console.log(data.tags)
-      this.movieUpdateForm.id = data._id
       this.movieUpdateForm.title = data.title
       this.movieUpdateForm.director = data.director.join('/')
       this.movieUpdateForm.cast = data.cast.join('/')
@@ -343,24 +334,12 @@ export default {
       this.movieUpdateForm.movie_duration = ''
       this.movieUpdateForm.year = ''
     },
-    viewMovie (item) {
-      this.movie = item
-      this.dialog3 = true
-    },
     addMovie () {
       this.dialog1 = true
     },
     editMovie (item) {
       this.setForm(item)
       this.dialog2 = true
-    },
-    editMovie2 () {
-      if (this.movie.length !== 0) {
-        this.setForm(this.movie)
-        this.dialog2 = true
-      } else {
-        this.openError('电影信息为空！')
-      }
     },
     confirmDialog1 (formName) {
       this.$refs[formName].validate((valid) => {
@@ -391,9 +370,6 @@ export default {
     },
     cancleDialog2 () {
       this.dialog2 = false
-    },
-    cancleDialog3 () {
-      this.dialog3 = false
     }
   }
 }
@@ -403,8 +379,5 @@ export default {
 <style>
 .moviedialog .el-dialog.el-dialog--center {
   margin-top: 5vh !important;
-}
-.moviedialog .el-form-item {
-  margin-bottom: 10px;
 }
 </style>

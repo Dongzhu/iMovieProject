@@ -18,7 +18,7 @@
         <div class="info-section">
           <el-table
             :data="documentlist"
-            style="width: 100%" class="documenttable">
+            style="width: 100%" class="table">
             <el-table-column type="expand">
               <template slot-scope="props">
                 <el-form label-position="left" inline class="demo-table-expand">
@@ -77,9 +77,9 @@
       </div>
 
       <el-dialog
-        title="添加接口信息" width="50%" center
-        :visible.sync="dialog1" class="documentdialog" v-if="hackReset">
-        <el-form :model="docCreateForm" :rules="docCreateRules" ref="docCreateForm" class="documentform">
+        title="添加接口信息" :width="dialogwidth" center
+        :visible.sync="dialog1" class="dialog" v-if="hackReset">
+        <el-form :model="docCreateForm" :rules="docCreateRules" ref="docCreateForm" class="form">
           <el-form-item label="接口名称1" :label-width="formLabelWidth" prop="name">
             <el-input v-model="docCreateForm.name" auto-complete="off"></el-input>
           </el-form-item>
@@ -107,9 +107,9 @@
       </el-dialog>
 
       <el-dialog
-        title="修改接口信息" width="50%" center
-        :visible.sync="dialog2" class="documentdialog" v-if="hackReset">
-        <el-form :model="docUpdateForm" :rules="docUpdateRules" ref="docUpdateForm" class="documentform">
+        title="修改接口信息" :width="dialogwidth" center
+        :visible.sync="dialog2" class="dialog" v-if="hackReset">
+        <el-form :model="docUpdateForm" :rules="docUpdateRules" ref="docUpdateForm" class="form">
           <el-form-item label="接口名称" :label-width="formLabelWidth" prop="name">
             <el-input v-model="docUpdateForm.name" auto-complete="off"></el-input>
           </el-form-item>
@@ -172,24 +172,26 @@ export default {
       dialog1: false,
       dialog2: false,
       docCreateForm: {
-        // name: '',
-        // url: '',
-        // method: '',
-        // desc: '',
-        // request: '',
-        // response1: ''
+        name: '',
+        url: '',
+        method: '',
+        desc: '',
+        request: '',
+        response1: ''
+
         // name: '用户注册',
         // url: '/api/user/register',
         // method: 'POST',
         // desc: '用户注册接口',
         // request: '{ "username": "admin", "password": "123456", "password2": "123456" }',
         // response: '{ "success": true, "message": "注册成功", "rescode": 10010, "data": {"username": "admin", "password": "123456", "role":"normal"} }'
-        name: '用户登录',
-        url: '/api/user/login',
-        method: 'POST',
-        desc: '用户登录接口',
-        request: '{ "username": "admin", "password": "123456" }',
-        response: '{ "success": true, "message": "登录成功", "rescode": 10020, "data": { "username":"admin", "superrole": true } }'
+
+        // name: '用户登录',
+        // url: '/api/user/login',
+        // method: 'POST',
+        // desc: '用户登录接口',
+        // request: '{ "username": "admin", "password": "123456" }',
+        // response: '{ "success": true, "message": "登录成功", "rescode": 10020, "data": { "username":"admin", "superrole": true } }'
       },
       docUpdateForm: {
         id: '',
@@ -224,7 +226,14 @@ export default {
   computed: {
     tag () { return this.$store.state.tag },
     isMobile () { return this.$store.state.isMobile },
-    isCollapse () { return this.$store.state.isCollapse }
+    isCollapse () { return this.$store.state.isCollapse },
+    dialogwidth () {
+      if (this.$store.state.isMobile) {
+        return '90%'
+      } else {
+        return '50%'
+      }
+    }
   },
   mounted () {
     this.hackReset = true
@@ -405,13 +414,4 @@ export default {
   margin-bottom: 0;
   width: 50%;
 }
-
-.info-search-left .el-input { background-color: #fff; }
-.el-input__inner  { color: #000 !important; caret-color: auto; }
-.el-input-group__append, .el-input-group__prepend { border: none !important; }
-.input-with-select .el-input-group__append { background-color: #fff; border-left: 1px solid #ccc !important; }
-
-.documenttable .cell .el-button+.el-button { margin: 10px 0 0 0; }
-.documentform .el-input__inner { height: 40px; border: 1px solid #dcdfe6; }
-.documentdialog .el-dialog--center .el-dialog__body { padding: 25px 25px 0; }
 </style>

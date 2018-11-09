@@ -60,7 +60,7 @@
             <p style="padding: 100px 0; text-align: center">暂无数据</p>
           </div>
           <div class="loadmore" v-if="movielist && movielist.length !== 0">
-            <span @click="nextPage">下一页</span>
+            <span @click="nextPage">加载更多</span>
           </div>
         </div>
       </el-container>

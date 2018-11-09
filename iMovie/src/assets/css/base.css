@@ -225,6 +225,13 @@ body::-webkit-scrollbar-track {
 .login .tips p span.right a { color: #fff; }
 .login .tips p span.right a:hover { color: #37a; }
 
+.info-search-left .el-input { background-color: #fff; }
+.el-input__inner  { color: #000 !important; caret-color: auto; }
+.el-input-group__append, .el-input-group__prepend { border: none !important; }
+.input-with-select .el-input-group__append { background-color: #fff; border-left: 1px solid #ccc !important; }
+.form .el-input__inner { height: 40px; border: 1px solid #dcdfe6; }
+.dialog .el-dialog--center .el-dialog__body { padding: 25px 25px 0; }
+
 /* sidebar.vue */
 .sidebar {
   float: left; background-color:#304156;

@@ -53,9 +53,9 @@
       </div>
 
       <el-dialog
-        title="注册用户信息" width="50%" center
-        :visible.sync="dialog1" class="userdialog">
-        <el-form :model="userCreateForm" :rules="userCreateRules" ref="userCreateForm" class="userform">
+        title="注册用户信息" :width="dialogwidth" center
+        :visible.sync="dialog1" class="dialog">
+        <el-form :model="userCreateForm" :rules="userCreateRules" ref="userCreateForm" class="form">
           <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
             <el-input v-model="userCreateForm.username" auto-complete="off"></el-input>
           </el-form-item>
@@ -77,9 +77,9 @@
       </el-dialog>
 
       <el-dialog
-        title="修改用户信息" width="50%" center
-        :visible.sync="dialog2" class="userdialog">
-        <el-form :model="userUpdateForm" :rules="userUpdateRules" ref="userUpdateForm" class="userform">
+        title="修改用户信息" :width="dialogwidth" center
+        :visible.sync="dialog2" class="dialog">
+        <el-form :model="userUpdateForm" :rules="userUpdateRules" ref="userUpdateForm" class="form">
           <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
             <el-input v-model="userUpdateForm.username" auto-complete="off"></el-input>
           </el-form-item>
@@ -166,7 +166,14 @@ export default {
   computed: {
     tag () { return this.$store.state.tag },
     isMobile () { return this.$store.state.isMobile },
-    isCollapse () { return this.$store.state.isCollapse }
+    isCollapse () { return this.$store.state.isCollapse },
+    dialogwidth () {
+      if (this.$store.state.isMobile) {
+        return '90%'
+      } else {
+        return '50%'
+      }
+    }
   },
   mounted () {
     this.hackReset = true
@@ -351,14 +358,6 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped>
 .cell .el-button+.el-button { margin: 10px 0 0 0; }
-
-.info-search-left .el-input { background-color: #fff; }
-.el-input__inner  { color: #000 !important; caret-color: auto; }
-.el-input-group__append, .el-input-group__prepend { border: none !important; }
-.input-with-select .el-input-group__append { background-color: #fff; border-left: 1px solid #ccc !important; }
-
-.userform .el-input__inner { height: 40px; border: 1px solid #dcdfe6; }
-.userdialog .el-dialog--center .el-dialog__body { padding: 25px 25px 0; }
- </style>
+</style>

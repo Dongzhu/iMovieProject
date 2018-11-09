@@ -22,6 +22,7 @@ const movieSchema = new Schema({
   tags: [ { name: String, count: Number } ],
 
   rate: Number,
+  recommend: { type: Boolean, default: false },
 
   video: String,
   poster: String,

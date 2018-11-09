@@ -20,6 +20,8 @@ const movieSchema = new Schema({
   comments_count: Number,
   ratings_count: Number,
 
+  recommend: { type: Boolean, default: false },
+
   video: String,
   poster: String,
   cover: String,
