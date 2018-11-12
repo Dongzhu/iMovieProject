@@ -11,7 +11,7 @@ const app = new koa()
   // console.log(movies)
 
   // require('../tasks/movie.js')
-  require('../tasks/api.js')
+  // require('../tasks/api.js')
 
   await connect()
 

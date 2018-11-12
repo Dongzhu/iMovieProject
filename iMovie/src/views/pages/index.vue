@@ -79,7 +79,7 @@
                 <div class="card-info">
                   <p class="over"><a :href="'/detail/'+item.id">{{item.title}}</a></p>
                   <p class="bottom clearfix">
-                    <time class="time"><a :href="'/detail/'+item.id">{{ item.year }}</a></time>
+                    <time class="time"><a :href="'/detail/'+item.id">{{ item.year[0] }}</a></time>
                   </p>
                 </div>
               </div>

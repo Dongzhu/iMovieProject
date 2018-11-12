@@ -167,13 +167,7 @@ export default {
     tag () { return this.$store.state.tag },
     isMobile () { return this.$store.state.isMobile },
     isCollapse () { return this.$store.state.isCollapse },
-    dialogwidth () {
-      if (this.$store.state.isMobile) {
-        return '90%'
-      } else {
-        return '50%'
-      }
-    }
+    dialogwidth () { return this.$store.state.isMobile ? '90%' : '50%' }
   },
   mounted () {
     this.hackReset = true

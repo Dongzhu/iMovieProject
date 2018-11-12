@@ -21,7 +21,7 @@
                 <p>类型：<span v-for="(item,index) in itemInfo.movie_type || ''" :key="index">{{item}} </span></p>
                 <p>地区：<span v-for="(item,index) in itemInfo.country || ''" :key="index">{{item}} </span></p>
                 <p>上映日期：<span v-for="(item,index) in itemInfo.pubdate || ''" :key="index">{{item}} </span></p>
-                <p>年份：{{itemInfo.year || ''}}</p>
+                <p>年份：<span v-for="(item,index) in itemInfo.year || ''" :key="index">{{item}} </span></p>
                 <p>评分：
                   <el-rate
                     v-model="itemInfo.rate"

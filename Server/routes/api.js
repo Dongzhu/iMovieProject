@@ -343,6 +343,64 @@ router.get('/category/:id', async (ctx, next) => {
   }
 })
 
+function FormateArray (array) {
+  let newArray = array.split('/')
+  for (var i = 0; i<newArray.length; i++) {
+    if (newArray[i]=='' || newArray[i]==null || typeof(newArray[i])==undefined) {
+        newArray.splice(i,1)
+        i = i-1
+    }
+  }
+  return newArray
+}
+
+router.post('/movie', async (ctx, next) => {
+  console.log(ctx.request.body)
+  if (ctx.request.body) {
+    // author, title, alt_title, image, summary, language, pubdate, country, writer, director, cast, movie_duration, year, movie_type, rate, recommend
+    const { author, title, alt_title, image, summary, language, pubdate, country, writer, director, cast, movie_duration, year, movie_type, rate, recommend } = ctx.request.body
+
+    const Movie = mongoose.model('Movie')
+
+    let authorArray = author.split('/')
+    let authorObject = []
+    authorArray.forEach(item => {
+      authorObject.push({name:item})
+    })
+    const movie = new Movie({
+      author: authorObject,
+      title: title,
+      alt_title: alt_title,
+      image: image,
+      summary: summary,
+      language: FormateArray(language),
+      pubdate: FormateArray(pubdate),
+      country: FormateArray(country),
+      writer: FormateArray(writer),
+      director: FormateArray(director),
+      cast: FormateArray(cast),
+      movie_duration: FormateArray(movie_duration),
+      year: FormateArray(year),
+      movie_type: FormateArray(movie_type),
+      rate: rate,
+      recommend: recommend
+    })
+
+    try {
+      const save = await movie.save()  // save() 异步操作
+      // 保存成功执行的操作
+      return ctx.body = { success: true, message: '添加成功', rescode: 20050, data: { save } }
+    } catch (err) {
+      // 保存失败执行的操作
+      console.log('err: ', err)
+      return ctx.body = { success: false, message: '添加失败', rescode: 20054, data: { err } }
+    }
+    // return ctx.body = { success: false, message: '添加失败', rescode: 20054, data: { err } }
+  } else {
+    return ctx.body = { success: false, message: '添加失败', rescode: 20051, data: {} }
+  }
+})
+
 router.del('/movie', async (ctx, next) => {
   const _id = ctx.request.query._id
   if (!_id) return ctx.body = { success: false, message: '删除失败，缺少参数', rescode: 20081, data: {} }

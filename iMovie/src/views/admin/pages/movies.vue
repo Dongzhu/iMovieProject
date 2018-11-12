@@ -32,7 +32,7 @@
             <div class="card-info">
               <p class="over" @click="viewMovie(item)">{{item.title}}</p>
               <p class="bottom clearfix" @click="viewMovie(item)">
-                <time class="time">{{ item.year }}</time>
+                <time class="time">{{ item.year[0] }}</time>
               </p>
               <p>
                 <el-button type="text" class="button">推荐</el-button>
@@ -51,6 +51,7 @@
         title="添加电影信息" :width="dialogwidth" center
         :visible.sync="dialog1" class="dialog moviedialog" v-if="hackReset">
         <el-form :model="movieCreateForm" :rules="movieCreateRules" ref="movieCreateForm" class="form">
+          <div class="model-tip">注：导演、主演、语言、类型、地区，如有多个用 / 分隔</div>
           <el-form-item label="电影名称" :label-width="formLabelWidth" prop="title">
             <el-input v-model="movieCreateForm.title" auto-complete="off"></el-input>
           </el-form-item>
@@ -152,7 +153,7 @@
             <p>类型：<span v-for="(item,index) in movie.movie_type || ''" :key="index">{{item}} </span></p>
             <p>地区：<span v-for="(item,index) in movie.country || ''" :key="index">{{item}} </span></p>
             <p>上映日期：<span v-for="(item,index) in movie.pubdate || ''" :key="index">{{item}} </span></p>
-            <p>年份：{{movie.year || ''}}</p>
+            <p>年份：<span v-for="(item,index) in movie.year || ''" :key="index">{{item}} </span></p>
             <p>评分：
               <el-rate
                 v-model="movie.rate"
@@ -177,16 +178,16 @@
 import sidebar from '../sidebar'
 import setting from '../setting'
 
-import { getMovies } from '@/api/views/movies'
+import { getMovies, AddMovie } from '@/api/views/movies'
 
 export default {
   components: { sidebar, setting },
   data () {
     var checkNum = (rule, value, callback) => {
-      console.log(value, typeof value, !value, !Number.isInteger(value))
-      // if (!value) { return callback(new Error('值不能为空')) }
+      // console.log(value, typeof value, !Number.isInteger(value))
       setTimeout(() => {
-        if (!Number.isInteger(value)) {
+        // if (!Number.isInteger(value)) {
+        if (!(/^(-?\d+)(\.\d+)?$/.test(value))) {
           callback(new Error('请输入数字值'))
         } else {
           callback()
@@ -203,21 +204,38 @@ export default {
       dialog2: false,
       dialog3: false,
       movieCreateForm: {
-        author: '',
-        title: '',
-        alt_title: '',
-        image: '',
-        summary: '',
-        language: '',
-        pubdate: '',
-        country: '',
-        writer: '',
-        director: '',
-        cast: '',
-        movie_duration: '',
-        year: '',
-        movie_type: '',
-        rate: '',
+        // author: '',
+        // title: '',
+        // alt_title: '',
+        // image: '',
+        // summary: '',
+        // language: '',
+        // pubdate: '',
+        // country: '',
+        // writer: '',
+        // director: '',
+        // cast: '',
+        // movie_duration: '',
+        // year: '',
+        // movie_type: '',
+        // rate: '',
+        // recommend: false
+
+        author: '岩井俊二 Shunji Iwai',
+        title: '你好，之华',
+        alt_title: '之华',
+        image: 'http://img3.doubanio.com/view/photo/s_ratio_poster/public/p2538345957.webp',
+        summary: '这是一个关于错过的故事。有人慌张地见面，有人简单地告别。姐姐袁之南离世的那个清晨，只匆匆留下一封信和一张同学会邀请函。妹妹之华代替姐姐参加同学会，却意外遇见年少时的倾慕对象尹川。往日的记忆在苏醒，但再次相见，已物是人非。',
+        language: '汉语普通话',
+        pubdate: '2018-11-09(中国大陆)',
+        country: '中国大陆',
+        writer: '岩井俊二 Shunji Iwai',
+        director: '岩井俊二 Shunji Iwai',
+        cast: '周迅 Xun Zhou/秦昊 Hao Qin/杜江 Jiang Du/张子枫 Zifeng Zhang/邓恩熙 Enxi Deng/边天扬 Tianyang Bian/吴彦姝 Yanshu Wu/谭卓 Zhuo Tan/胡歌 Ge Hu',
+        movie_duration: 114,
+        year: 2018,
+        movie_type: '剧情/爱情',
+        rate: 7.9,
         recommend: false
       },
       movieUpdateForm: {
@@ -238,13 +256,13 @@ export default {
         rate: '',
         recommend: false
       },
-      formLabelWidth: '120px',
+      // formLabelWidth: '120px',
       movieCreateRules: {
         title: [ { required: true, message: '请输入电影名称', trigger: 'blur' } ],
         director: [ { required: true, message: '请输入导演，如有多个用 / 分隔', trigger: 'blur' } ],
         cast: [ { required: true, message: '请输入主演，如有多个用 / 分隔', trigger: 'blur' } ],
         language: [ { required: true, message: '请输入语言，如有多个用 / 分隔', trigger: 'blur' } ],
-        movie_duration: [ { validator: checkNum, trigger: 'blur' } ],
+        movie_duration: [ { required: true, message: '请输入电影时长', trigger: 'blur' }, { validator: checkNum, trigger: 'blur' } ],
         movie_type: [ { required: true, message: '请输入电影类型，如有多个用 / 分隔', trigger: 'blur' } ],
         country: [ { required: true, message: '请输入地区，如有多个用 / 分隔', trigger: 'blur' } ],
         pubdate: [ { required: true, message: '请输入上映日期，如有多个用 / 分隔', trigger: 'blur' } ],
@@ -261,13 +279,8 @@ export default {
     tag () { return this.$store.state.tag },
     isMobile () { return this.$store.state.isMobile },
     isCollapse () { return this.$store.state.isCollapse },
-    dialogwidth () {
-      if (this.$store.state.isMobile) {
-        return '90%'
-      } else {
-        return '50%'
-      }
-    }
+    dialogwidth () { return this.$store.state.isMobile ? '90%' : '50%' },
+    formLabelWidth () { return this.$store.state.isMobile ? '80px' : '120px' }
   },
   mounted () {
     this.hackReset = true
@@ -331,7 +344,7 @@ export default {
       this.movieUpdateForm.movie_type = data.movie_type.join('/')
       this.movieUpdateForm.country = data.country.join('/')
       this.movieUpdateForm.pubdate = data.pubdate.join('/')
-      this.movieUpdateForm.year = data.year
+      this.movieUpdateForm.year = data.year.join('/')
       this.movieUpdateForm.rate = data.rate
       this.movieUpdateForm.summary = data.summary
     },
@@ -363,20 +376,21 @@ export default {
       }
     },
     confirmDialog1 (formName) {
+      console.log(this.movieCreateForm)
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.movieCreateForm)
-          // AddDocument(this.movieCreateForm).then(res => {
-          //   if (res.success) {
-          //     this.openSuccess('添加成功！')
-          //     this.documentlist.push(res.data.save)
-          //     this.dialog1 = false
-          //     this.hack()
-          //     this.clearForm()
-          //   } else {
-          //     this.openError(res.message)
-          //   }
-          // })
+          AddMovie(this.movieCreateForm).then(res => {
+            console.log(res)
+            if (res.success) {
+              this.openSuccess('添加成功！')
+              this.movielist.unshift(res.data.save)
+              this.dialog1 = false
+              this.hack()
+              this.clearForm()
+            } else {
+              this.openError(res.message)
+            }
+          })
         } else {
           this.openError('Error submit!!')
           return false
@@ -405,6 +419,6 @@ export default {
   margin-top: 5vh !important;
 }
 .moviedialog .el-form-item {
-  margin-bottom: 10px;
+  margin-bottom: 18px;
 }
 </style>
