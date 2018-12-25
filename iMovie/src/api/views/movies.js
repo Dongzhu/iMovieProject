@@ -57,3 +57,38 @@ export function AddMovie (po) {
   }
   return axios.post(`${base}/movie`, qs.stringify(params)).then(res => { return res.data })
 }
+
+export function UpdMovie (po) {
+  var params = {
+    id: po.id,
+    author: po.author,
+    title: po.title,
+    alt_title: po.alt_title,
+    image: po.image,
+    summary: po.summary,
+    language: po.language,
+    pubdate: po.pubdate,
+    country: po.country,
+    writer: po.writer,
+    director: po.director,
+    cast: po.cast,
+    movie_duration: po.movie_duration,
+    year: po.year,
+    movie_type: po.movie_type,
+    rate: po.rate,
+    recommend: po.recommend
+  }
+  return axios.put(`${base}/movie`, qs.stringify(params)).then(res => { return res.data })
+}
+
+export function RecommendMovie (po) {
+  var params = {
+    id: po.id,
+    recommend: po.recommend
+  }
+  return axios.put(`${base}/movie`, qs.stringify(params)).then(res => { return res.data })
+}
+
+export function DelMovie (po) {
+  return axios.delete(`${base}/movie`, { params: { _id: po.id } }).then(res => { return res.data })
+}

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const db = 'mongodb://localhost/douban-trainer' //数据库连接
+// const db = 'mongodb://localhost/douban-trainer' //数据库连接
+const db = 'mongodb://douban:douban123456@120.78.177.86/douban_trainer' //数据库连接
 const glob = require('glob')
 const { resolve } = require('path')
 

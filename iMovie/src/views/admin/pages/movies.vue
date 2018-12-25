@@ -15,11 +15,11 @@
           </div>
         </div>
         <div class="clearfix"></div>
-        <div class="info-section">
-          <div class="card card-admin" v-for="(item,index) in movielist" :key="index" v-if="movielist.length !== 0">
+        <div class="info-section info-content" v-loading="loading">
+          <div class="card card-admin" style="width: 160px" v-for="(item,index) in movielist" :key="index" v-if="hackReset">
             <div class="card-bg" :title="item.title+' '+item.rate" @click="viewMovie(item)">
               <img v-lazy="item.poster" :alt="item.title" width="100%" height="100%" class="image">
-              <span class="card-rate">{{ item.rate }}</span>
+              <span class="card-rate" v-if="item.recommend">{{ item.rate }}</span>
             </div>
             <!-- <div class="video">
               <video
@@ -33,16 +33,18 @@
               <p class="over" @click="viewMovie(item)">{{item.title}}</p>
               <p class="bottom clearfix" @click="viewMovie(item)">
                 <time class="time">{{ item.year[0] }}</time>
+                <time class="time">{{ item.rate }}</time>
               </p>
               <p>
-                <el-button type="text" class="button">推荐</el-button>
+                <el-button type="text" class="button" @click="Recommend(item)" v-if="item.recommend">取消推荐</el-button>
+                <el-button type="text" class="button" @click="Recommend(item)" v-else>推荐</el-button>
                 <el-button type="text" class="button" @click="editMovie(item)">编辑</el-button>
-                <el-button type="text" class="button">删除</el-button>
+                <el-button type="text" class="button" @click="deleteMovie(item)">删除</el-button>
               </p>
             </div>
           </div>
-          <div class="" v-if="movielist.length === 0">
-            <p style="padding: 100px 0; text-align: center">暂无数据</p>
+          <div class="" v-if="!loading">
+            <p style="padding: 100px 0; text-align: center;" v-if="movielist.length === 0">暂无数据</p>
           </div>
         </div>
       </div>
@@ -96,7 +98,8 @@
       <el-dialog
         title="编辑电影信息" :width="dialogwidth" center
         :visible.sync="dialog2" class="dialog moviedialog" v-if="hackReset">
-        <el-form :model="movieUpdateForm" :rules="movieUpdateRules" ref="movieCreateForm" class="form">
+        <el-form :model="movieUpdateForm" :rules="movieUpdateRules" ref="movieUpdateForm" class="form">
+          <div class="model-tip">注：导演、主演、语言、类型、地区，如有多个用 / 分隔</div>
           <el-form-item label="电影名称" :label-width="formLabelWidth" prop="name">
             <el-input v-model="movieUpdateForm.title" auto-complete="off"></el-input>
           </el-form-item>
@@ -129,6 +132,12 @@
           </el-form-item>
           <el-form-item label="剧情简介" :label-width="formLabelWidth" prop="request">
             <el-input v-model="movieUpdateForm.summary" type="textarea" :rows="4" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="设为推荐" :label-width="formLabelWidth" prop="request">
+            <el-switch
+              v-model="movieUpdateForm.recommend"
+              :active-text="recommendMsg">
+            </el-switch>
           </el-form-item>
         </el-form>
 
@@ -178,7 +187,7 @@
 import sidebar from '../sidebar'
 import setting from '../setting'
 
-import { getMovies, AddMovie } from '@/api/views/movies'
+import { getMovies, AddMovie, UpdMovie, RecommendMovie, DelMovie } from '@/api/views/movies'
 
 export default {
   components: { sidebar, setting },
@@ -199,6 +208,7 @@ export default {
       searchTxt: '',
       hackReset: false,
       movie: [],
+      loading: true, // 列表loading控制
       // Dialog
       dialog1: false,
       dialog2: false,
@@ -271,7 +281,17 @@ export default {
         summary: [ { required: true, message: '请输入剧情简介', trigger: 'blur' } ]
       },
       movieUpdateRules: {
-        // name: [ { required: true, message: '请输入接口名称', trigger: 'blur' } ]
+        title: [ { required: true, message: '请输入电影名称', trigger: 'blur' } ],
+        director: [ { required: true, message: '请输入导演，如有多个用 / 分隔', trigger: 'blur' } ],
+        cast: [ { required: true, message: '请输入主演，如有多个用 / 分隔', trigger: 'blur' } ],
+        language: [ { required: true, message: '请输入语言，如有多个用 / 分隔', trigger: 'blur' } ],
+        movie_duration: [ { required: true, message: '请输入电影时长', trigger: 'blur' }, { validator: checkNum, trigger: 'blur' } ],
+        movie_type: [ { required: true, message: '请输入电影类型，如有多个用 / 分隔', trigger: 'blur' } ],
+        country: [ { required: true, message: '请输入地区，如有多个用 / 分隔', trigger: 'blur' } ],
+        pubdate: [ { required: true, message: '请输入上映日期，如有多个用 / 分隔', trigger: 'blur' } ],
+        year: [ { validator: checkNum, trigger: 'blur' }, { required: true, message: '请输入年份', trigger: 'blur' } ],
+        rate: [ { validator: checkNum, trigger: 'blur' }, { required: true, message: '请输入评分', trigger: 'blur' } ],
+        summary: [ { required: true, message: '请输入剧情简介', trigger: 'blur' } ]
       }
     }
   },
@@ -280,7 +300,8 @@ export default {
     isMobile () { return this.$store.state.isMobile },
     isCollapse () { return this.$store.state.isCollapse },
     dialogwidth () { return this.$store.state.isMobile ? '90%' : '50%' },
-    formLabelWidth () { return this.$store.state.isMobile ? '80px' : '120px' }
+    formLabelWidth () { return this.$store.state.isMobile ? '80px' : '120px' },
+    recommendMsg () { return this.movieUpdateForm.recommend ? '推荐' : '不推荐' }
   },
   mounted () {
     this.hackReset = true
@@ -298,6 +319,7 @@ export default {
         } else {
           this.openError(res.message)
         }
+        this.loading = false
       })
     })
   },
@@ -334,7 +356,7 @@ export default {
       })
     },
     setForm (data) {
-      console.log(data.tags)
+      // console.log(data.tags)
       this.movieUpdateForm.id = data._id
       this.movieUpdateForm.title = data.title
       this.movieUpdateForm.director = data.director.join('/')
@@ -347,6 +369,7 @@ export default {
       this.movieUpdateForm.year = data.year.join('/')
       this.movieUpdateForm.rate = data.rate
       this.movieUpdateForm.summary = data.summary
+      this.movieUpdateForm.recommend = data.recommend
     },
     clearForm (data) {
       this.movieUpdateForm.title = ''
@@ -376,11 +399,9 @@ export default {
       }
     },
     confirmDialog1 (formName) {
-      console.log(this.movieCreateForm)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           AddMovie(this.movieCreateForm).then(res => {
-            console.log(res)
             if (res.success) {
               this.openSuccess('添加成功！')
               this.movielist.unshift(res.data.save)
@@ -397,8 +418,72 @@ export default {
         }
       })
     },
-    confirmDialog2 () {
-      this.dialog2 = false
+    confirmDialog2 (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          UpdMovie(this.movieUpdateForm).then(res => {
+            if (res.success) {
+              this.openSuccess('编辑成功！')
+              // this.movielist.forEach(item => {
+              //   if (item._id === res.data.save._id) {
+              //     item = res.data.save
+              //   }
+              // })  // why can't?
+              for (let i = 0; i < this.movielist.length; i++) {
+                if (this.movielist[i]._id === res.data.save._id) {
+                  this.movielist[i] = res.data.save
+                }
+              }
+              this.dialog2 = false
+              this.hack()
+              this.clearForm()
+            } else {
+              this.openError(res.message)
+            }
+          })
+        } else {
+          this.openError('Error submit!!')
+          return false
+        }
+      })
+    },
+    Recommend (data) {
+      let param = { id: data._id, recommend: !data.recommend }
+      RecommendMovie(param).then(res => {
+        if (res.success) {
+          this.openSuccess('推荐成功！')
+          for (let i = 0; i < this.movielist.length; i++) {
+            if (this.movielist[i]._id === res.data.save._id) {
+              this.movielist[i] = res.data.save
+            }
+          }
+          this.hack()
+        } else {
+          this.openError(res.message)
+        }
+      })
+    },
+    deleteMovie (data) {
+      this.$confirm('确认是否删除该电影信息？', '确认信息', {
+        distinguishCancelAndClose: true,
+        confirmButtonText: '删除',
+        cancelButtonText: '取消'
+      }).then(() => {
+        DelMovie({id: data._id}).then(res => {
+          if (res.success) {
+            this.openSuccess('删除成功！')
+            this.movielist.forEach(item => {
+              if (item._id === data._id) {
+                this.movielist.splice(this.movielist.indexOf(item), 1)
+              }
+            })
+          } else {
+            this.openError(res.message)
+          }
+        })
+      }).catch(error => {
+        console.log(error)
+      })
     },
     cancleDialog1 () {
       this.dialog1 = false

@@ -4,7 +4,7 @@ const router = new Router({prefix: '/api'})
 const koaBody = require('koa-body')
 router.use(koaBody())
 const mongoose = require('mongoose')
-const ObjectID = require('mongodb').ObjectID
+const ObjectId = require('mongodb').ObjectID
 
 /* setup.js: solve the problem "ReferenceError: navigator is not defined" */
 const { JSDOM } = require('jsdom');
@@ -47,7 +47,7 @@ router.post('/user/register', async (ctx, next) => {
   if (decrypted !== decrypted2) return ctx.body = { success: false, message: '注册失败，两次密码不一致', rescode: 10012, data: {} }
 
   if (decrypted === decrypted2) {
-    let register = await checkRegister(username)
+    let { register, message } = await checkRegister(username, email)
 
     if (!register) {
       // create a user a new user
@@ -73,10 +73,10 @@ router.post('/user/register', async (ctx, next) => {
           }
         })
       } catch (error) {
-        return ctx.body = { success: false, message: '注册失败', rescode: 10015, data: { err } }
+        return ctx.body = { success: false, message: '注册失败', rescode: 10015, data: { error } }
       }
     } else {
-      return ctx.body = { success: false, message: '当前用户已存在', rescode: 10014, data: {} }
+      return ctx.body = { success: false, message: message, rescode: 10014, data: {} }
     }
     return ctx.body = { success: false, message: '哦噢，出了点小问题，请联系管理员！', rescode: 10013, data: {} }
   }
@@ -146,7 +146,7 @@ router.put('/user', async (ctx, next) => {
   }
 
   const User = mongoose.model('User')
-  const user = await User.findOne({_id: ObjectID(_id)})
+  const user = await User.findOne({_id: ObjectId(_id)})
 
   // console.log(user)
   if (user) {
@@ -223,7 +223,7 @@ router.del('/user', async (ctx, next) => {
   if (!_id) return ctx.body = { success: false, message: '删除失败，缺少参数', rescode: 10061, data: {} }
 
   const User = mongoose.model('User')
-  await User.remove({_id:ObjectID(_id)}, (err, res) => {
+  await User.remove({_id:ObjectId(_id)}, (err, res) => {
     if (err) {
       return ctx.body = { success: false, message: '删除失败', rescode: 10062, data: { err } }
     } else {
@@ -290,11 +290,9 @@ router.get('/movies', async (ctx, next) => {
         { summary: new RegExp(`^.*`+keywords+`.*$`) }
       ]
     }
-    movies = await Movie.find(params).limit(pageNum).skip((page-1) * pageNum).sort({ 'meta.createdAt': -1 })
+    movies = await Movie.find(params).limit(pageNum).skip((page-1) * pageNum).sort({ 'meta.createdAt': 1 })
   } else {
-    movies = await Movie.find(params).limit(pageNum).skip((page-1) * pageNum).sort({
-      'meta.createdAt': -1
-    })
+    movies = await Movie.find(params).limit(pageNum).skip((page-1) * pageNum).sort({ 'meta.createdAt': 1 })
   }
 
   if (movies) {
@@ -308,7 +306,7 @@ router.get('/movies', async (ctx, next) => {
 router.get('/movies/:id', async (ctx, next) => {
   const Movie = mongoose.model('Movie')
   const id = ctx.params.id
-  const movie = await Movie.findOne({id:id}).sort({
+  const movie = await Movie.findOne({id:ObjectId(id)}).sort({
     'meta.createdAt': -1
   })
 
@@ -327,13 +325,13 @@ router.get('/categories', async (ctx, next) => {
 router.get('/category/:id', async (ctx, next) => {
   const Category = mongoose.model('Category')
   const id = ctx.params.id
-  const category = await Category.findOne({_id:id})
+  const category = await Category.findOne({_id:ObjectId(id)})
 
   let movies = [], moviesid = category.movies
   const Movie = mongoose.model('Movie')
   for (let i=0; i<moviesid.length; i++) {
     let item = moviesid[i]
-    let movie = await Movie.findOne({_id:ObjectID(item)})
+    let movie = await Movie.findOne({_id:ObjectId(item)})
     movies.push(movie)
   }
   if (movies !== '') {
@@ -401,12 +399,71 @@ router.post('/movie', async (ctx, next) => {
   }
 })
 
-router.del('/movie', async (ctx, next) => {
+/**
+ * @api { put } /movie/
+ * @apiParam {String} id  movieId, require
+ */
+ router.put('/movie', async (ctx, next) => {
+   console.log(ctx.request.body)
+   if (ctx.request.body) {
+     // author, title, alt_title, image, summary, language, pubdate, country, writer, director, cast, movie_duration, year, movie_type, rate, recommend
+     const { id, author, title, alt_title, image, summary, language, pubdate, country, writer, director, cast, movie_duration, year, movie_type, rate, recommend } = ctx.request.body
+
+     const Movie = mongoose.model('Movie')
+     try {
+       var _id = ObjectId(ctx.request.query.id)
+     } catch (e) {
+       return ctx.body = { success: false, message: '添加失败，参数错误', rescode: 20061 }
+     }
+
+     let movie = await Movie.findOne({_id:ObjectId(id)})
+     if (movie) {
+       if (author) {
+         let authorArray = author.split('/')
+         let authorObject = []
+         authorArray.forEach(item => {
+           authorObject.push({name:item})
+         })
+         movie.author = authorObject
+       }
+       if (title) movie.title = title
+       if (alt_title) movie.alt_title = alt_title
+       if (image) movie.image = image
+       if (summary) movie.summary = summary
+       if (language) movie.language = FormateArray(language)
+       if (pubdate) movie.pubdate = FormateArray(pubdate)
+       if (country) movie.country = FormateArray(country)
+       if (writer) movie.writer = FormateArray(writer)
+       if (director) movie.director = FormateArray(director)
+       if (cast) movie.cast = FormateArray(cast)
+       if (movie_duration) movie.movie_duration = FormateArray(movie_duration)
+       if (year) movie.year = FormateArray(year)
+       if (movie_type) movie.movie_type = FormateArray(movie_type)
+       if (rate) movie.rate = rate
+       if (recommend) movie.recommend = recommend==='true'?true:false
+
+       try {
+         const save = await movie.save()  // save() 异步操作
+         // 保存成功执行的操作
+         return ctx.body = { success: true, message: '添加成功', rescode: 20060, data: { save } }
+       } catch (err) {
+         // 保存失败执行的操作
+         console.log('err: ', err)
+         return ctx.body = { success: false, message: '添加失败', rescode: 20063, data: { err } }
+       }
+     } else {
+       return ctx.body = { success: false, message: '添加失败', rescode: 20062 }
+     }
+   }
+ })
+
+router.delete('/movie', async (ctx, next) => {
+  console.log(ctx.request.query);
   const _id = ctx.request.query._id
   if (!_id) return ctx.body = { success: false, message: '删除失败，缺少参数', rescode: 20081, data: {} }
 
   const Movie = mongoose.model('Movie')
-  await Movie.remove({_id:ObjectID(_id)}, (err, res) => {
+  await Movie.remove({_id:ObjectId(_id)}, (err, res) => {
     if (err) {
       return ctx.body = { success: false, message: '删除失败', rescode: 20082, data: { err } }
     } else {
@@ -448,7 +505,7 @@ router.get('/document/:id', async (ctx, next) => {
   const id = ctx.params.id
 
   const Document = mongoose.model('Document')
-  const document = await Document.findOne({_id:id})
+  const document = await Document.findOne({_id:ObjectId(id)})
 
   if (document !== '') {
     ctx.body = { success: true, message: '查询成功', rescode: 30020, data: { document } }
@@ -503,8 +560,8 @@ router.put('/document', async (ctx, next) => {
 
     const Document = mongoose.model('Document')
     const id = await getDocumentId()
-    const document = await Document.findOne({_id:ObjectID(_id)})
-    if (!document) return ctx.body = { success: false, message: '更改失败', rescode: 30044, data: { err } }
+    const document = await Document.findOne({_id:ObjectId(_id)})
+    if (!document) return ctx.body = { success: false, message: '更改失败', rescode: 30044, data: {} }
 
     if (name) document.name = name
     if (url) document.url = url
@@ -529,7 +586,7 @@ router.del('/document', async (ctx, next) => {
   if (!_id) return ctx.body = { success: false, message: '删除失败，缺少参数', rescode: 30051, data: {} }
 
   const Document = mongoose.model('Document')
-  await Document.remove({_id:ObjectID(_id)}, (err, res) => {
+  await Document.remove({_id:ObjectId(_id)}, (err, res) => {
     if (err) {
       return ctx.body = { success: false, message: '删除失败', rescode: 30052, data: { err } }
     } else {

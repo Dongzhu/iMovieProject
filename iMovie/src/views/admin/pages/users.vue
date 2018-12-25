@@ -341,7 +341,7 @@ export default {
     },
     clearForm () {
       this.userCreateForm.username = ''
-      this.userCreateForm.password1 = ''
+      this.userCreateForm.password = ''
       this.userCreateForm.password2 = ''
       this.userCreateForm.email = ''
       this.userUpdateForm.username = ''

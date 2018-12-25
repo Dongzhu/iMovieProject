@@ -80,7 +80,7 @@
         title="添加接口信息" :width="dialogwidth" center
         :visible.sync="dialog1" class="dialog" v-if="hackReset">
         <el-form :model="docCreateForm" :rules="docCreateRules" ref="docCreateForm" class="form">
-          <el-form-item label="接口名称1" :label-width="formLabelWidth" prop="name">
+          <el-form-item label="接口名称" :label-width="formLabelWidth" prop="name">
             <el-input v-model="docCreateForm.name" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="接口地址" :label-width="formLabelWidth" prop="url">

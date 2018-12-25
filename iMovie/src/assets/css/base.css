@@ -56,12 +56,10 @@ body::-webkit-scrollbar-track {
 
 /* header.vue */
 .top {
-  /* padding-top: 15px; */
   position: fixed;
   right: 0;
   left: 0;
   z-index: 1030;
-  /* background: #f8f8f8; */
 }
 .top-left { float: left; height: 40px; line-height: 40px; cursor: pointer; }
 .top-right { float: right; height: 40px; line-height: 40px; cursor: pointer; }
@@ -226,11 +224,11 @@ body::-webkit-scrollbar-track {
 .login .tips p span.right a:hover { color: #37a; }
 
 .info-search-left .el-input { background-color: #fff; }
-.el-input__inner  { color: #000 !important; caret-color: auto; }
 .el-input-group__append, .el-input-group__prepend { border: none !important; }
 .input-with-select .el-input-group__append { background-color: #fff; border-left: 1px solid #ccc !important; }
 .form .el-input__inner { height: 40px; border: 1px solid #dcdfe6; }
 .dialog .el-dialog--center .el-dialog__body { padding: 25px 25px 0; }
+.dialog .el-input__inner { background: #fff; color: #000!important; caret-color: auto; }
 
 /* sidebar.vue */
 .sidebar {
@@ -301,10 +299,11 @@ body::-webkit-scrollbar-track {
   z-index: 999;
 }
 .info { height: calc(100% - 92px); background: #f0f2f5;  }
-.info-section { height: fit-content; padding: 10px 20px; }
+.info-section { height: inherit; padding: 10px 20px; }
 .info-section:after { content: ''; clear: both; }
 .info-users { height: 120px; padding: 10px 10px; }
 .info-search { height: 47px; }
+.info-content { background: #ffffff; }
 .card-pannel {
   width: 25%; height: 100px; line-height: 100px;
   margin-top: 15px; padding: 0 10px; float: left;
@@ -338,8 +337,8 @@ body::-webkit-scrollbar-track {
   .section-info2 { width: 100%; padding-left: 0; float: none; }
   .tag { display: none; }
   .search-box { display: none; }
-  .box .login { padding: 35px 0 15px; width: 90%; }
-  .login .el-input { width: 75% !important; }
+  .box .login { padding: 20px 0; width: 90%; height: 420px; }
+  .login .el-input { width: calc(100% - 85px); }
   .catemovies { display: inline-block; }
   .movies { display: inline-block; }
   .movielogo { display: inline-block; position: relative; left: 50%; margin-left: -80px; }

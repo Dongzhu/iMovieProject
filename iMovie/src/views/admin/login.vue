@@ -45,8 +45,10 @@ export default {
   data () {
     return {
       ruleForm: {
-        user: 'admin',
-        pass: '123456'
+        // user: 'admin',
+        // pass: '123456'
+        user: '',
+        pass: ''
       },
       rules: {
         user: [
