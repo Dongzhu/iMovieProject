@@ -28,7 +28,7 @@
           </p>
         </div>
         <div class="clearfix"></div>
-        <div class="cate-info" v-if="hackReset">
+        <div class="cate-info" v-loading="loading" v-if="hackReset">
           <!-- <div class="cate-page" v-if="pageTotal !== 0">
             <el-pagination
               layout="prev, pager, next"
@@ -56,8 +56,8 @@
               <p>剧情简介：{{item.summary}}</p>
             </div>
           </div>
-          <div v-if="movielist && movielist.length === 0">
-            <p style="padding: 100px 0; text-align: center">暂无数据</p>
+          <div v-if="(!loading && movielist.length === 0) || (loading && movielist.length !== 0)">
+            <p style="height:200px;line-height:200px;text-align:center">暂无数据</p>
           </div>
           <div class="loadmore" v-if="movielist && movielist.length !== 0">
             <span @click="nextPage">加载更多</span>
@@ -86,6 +86,7 @@ export default {
       yearlist: [ '所有', '2018', '2017', '2010年代', '2000年代', '1990年代', '1980年代' ],
       countrylist: [ '所有', '中国大陆', '美国', '香港', '台湾', '日本', '韩国', '英国', '法国', '德国', '意大利', '西班牙', '印度', '泰国', '俄罗斯', '伊朗', '加拿大', '澳大利亚', '爱尔兰', '瑞典', '巴西', '丹麦' ],
       movies: [],
+      loading: true,
       rate: [0, 10],
       page: 1,
       pageNum: 10,
@@ -119,6 +120,7 @@ export default {
       } else {
         this.movielist = []
       }
+      this.loading = false
     })
 
     window.addEventListener('scroll', this.handleScroll)

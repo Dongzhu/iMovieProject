@@ -22,16 +22,17 @@
             <div class="section-header">
               <h4>推荐
                 <el-pagination
+                  class="pagenator"
                   small
                   layout="prev, pager, next"
-                  :page-size="pageNum"
-                  @current-change="currentChange"
-                  class="pagenator">
+                  :page-size="pageNum2"
+                  :total="pageTotal2"
+                  @current-change="currentChange">
                 </el-pagination>
               </h4>
             </div>
-            <div class="section-body">
-              <div class="card" v-for="(item,index) in heighlist" :key="index" :title="item.title+' '+item.rate">
+            <div class="section-body" v-loading="loading">
+              <div class="card" v-for="(item,index) in recommendlist" :key="index" :title="item.title+' '+item.rate" v-if="hackReset2">
                 <div class="card-bg">
                   <a :href="'/detail/'+item.id"><img v-lazy="item.poster" :alt="item.title" width="100%" height="100%" class="image"></a>
                   <span class="card-rate">{{ item.rate }}</span>
@@ -47,7 +48,7 @@
                 <div class="card-info">
                   <p class="over"><a :href="'/detail/'+item.id">{{item.title}}</a></p>
                   <p class="bottom clearfix">
-                    <time class="time"><a :href="'/detail/'+item.id">{{ item.year }}</a></time>
+                    <time class="time"><a :href="'/detail/'+item.id">{{ item.year[0] }}</a></time>
                   </p>
                 </div>
               </div>
@@ -70,8 +71,8 @@
                 </span>
               </h4>
             </div>
-            <div class="section-body" v-if="hackReset">
-              <div class="card" v-for="(item,index) in newlist" :key="index" :title="item.title+' '+item.rate">
+            <div class="section-body" v-loading="loading" v-if="hackReset">
+              <div class="card" v-for="(item,index) in movielist" :key="index" :title="item.title+' '+item.rate">
                 <div class="card-bg">
                   <a :href="'/detail/'+item.id"><img v-lazy="item.poster" :alt="item.title" width="100%" height="100%"></a>
                   <span class="card-rate" v-if="item.rate >= 9">{{ item.rate }}</span>
@@ -83,7 +84,7 @@
                   </p>
                 </div>
               </div>
-              <div class="loadmore">
+              <div class="loadmore" v-if="!loading2">
                 <span @click="loadmore" v-if="page <= 3">加载更多</span>
                 <span @click="loadmore" v-else>
                   <router-link :to="{ name: 'movies' }">查看更多</router-link>
@@ -108,7 +109,7 @@ import Footer from '../base/foot'
 import Page from '../base/page'
 import Sidebar from '../base/sidebar'
 
-import { getMovies } from '@/api/views/movies'
+import { getMovies, getRecommend } from '@/api/views/movies'
 
 export default {
   components: { Header, Footer, Page, Sidebar },
@@ -122,20 +123,25 @@ export default {
         {id: 4, name: '权力的游戏', rate: 4.8, pubdate: '2018-08-31', url: require('@/assets/images/image4.jpg')},
         {id: 5, name: '中国有嘻哈', rate: 4.5, pubdate: '2018-08-31', url: require('@/assets/images/image5.jpg')}
       ],
-      heighlist: [
-        {id: 1, name: '狄仁杰之四大天王', pubdate: '2018-07-27', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2526405034.jpg'},
-        {id: 1, name: '瞒天过海：美人计 Oceans Eight', pubdate: '2018-06-08', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2508259902.jpg'},
-        {id: 1, name: '致所有我曾爱过的男孩 To All the Boys I have Loved Before', pubdate: '2018-08-17', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529112058.jpg'},
-        {id: 1, name: '遗传厄运 Hereditary', pubdate: '2018-06-08', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2518865763.jpg'},
-        {id: 1, name: '复仇者联盟3：无限战争 Avengers: Infinity War', pubdate: '2018-05-11', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2517753454.jpg'},
-        {id: 1, name: '燃烧 버닝', pubdate: '2018-05-16', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2520095279.jpg'}
+      recommendlist: [
+      //   {id: 1, name: '狄仁杰之四大天王', pubdate: '2018-07-27', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2526405034.jpg'},
+      //   {id: 1, name: '瞒天过海：美人计 Oceans Eight', pubdate: '2018-06-08', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2508259902.jpg'},
+      //   {id: 1, name: '致所有我曾爱过的男孩 To All the Boys I have Loved Before', pubdate: '2018-08-17', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2529112058.jpg'},
+      //   {id: 1, name: '遗传厄运 Hereditary', pubdate: '2018-06-08', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2518865763.jpg'},
+      //   {id: 1, name: '复仇者联盟3：无限战争 Avengers: Infinity War', pubdate: '2018-05-11', url: 'https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2517753454.jpg'},
+      //   {id: 1, name: '燃烧 버닝', pubdate: '2018-05-16', url: 'https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2520095279.jpg'}
       ],
-      newlist: [],
+      movielist: [],
       activespan: '',
       page: 1,
       pageNum: 18,
-      // pageTotal: 0,
+      page2: 1,
+      pageNum2: 6,
+      pageTotal2: 0,
+      loading: true,
+      loading2: true,
       hackReset: false,
+      hackReset2: false,
       condition: ''
     }
   },
@@ -149,41 +155,58 @@ export default {
 
     getMovies({page: this.page, pageNum: this.pageNum}).then(res => {
       if (res.success) {
-        this.newlist = res.data.movies
-        // this.pageTotal = res.data.length
-        this.hack()
+        this.movielist = res.data.movies
+        this.getRecommendMovies({page: this.page2, pageNum: this.pageNum2})
       } else {
-        this.newlist = []
+        this.movielist = []
       }
+      this.loading2 = false
+      this.hack()
     })
 
     window.addEventListener('scroll', this.handleScroll)
   },
   computed: {
-    // heighlist () {
-    //   let templist = this.newlist
-    //   return templist.sort(this.sortRate).slice(0, 6)
-    // }
-    pageTotal () { return this.heighlist.length || 0 }
+    // pageTotal2 () { return this.recommendlist.length || 0 }
   },
   methods: {
     handleScroll () {
-      let scrollY = 480
-      if (document.documentElement.clientWidth <= 600) {
-        scrollY = 280
-      }
-      if (window.scrollY > scrollY) {
-        document.querySelector('.top').style.background = '#f8f8f8'
-        document.querySelector('.username').style.color = '#000'
-      } else {
-        document.querySelector('.top').style.background = 'none'
-        document.querySelector('.username').style.color = '#fff'
-      }
+      // let scrollY = 480
+      // if (document.documentElement.clientWidth <= 600) {
+      //   scrollY = 280
+      // }
+      // if (window.scrollY > scrollY) {
+      //   let top = document.querySelector('.top')
+      //   if (top) {
+      //     top.style.backgroundImage = 'url(' + require('@/assets/images/bg.jpg') + ')'
+      //     top.style.backgroundRepeat = 'round'
+      //   }
+      // } else {
+      //   document.querySelector('.top').style.background = 'none'
+      // }
     },
     hack () {
       this.hackReset = false
       this.$nextTick(() => {
         this.hackReset = true
+      })
+    },
+    hack2 () {
+      this.hackReset2 = false
+      this.$nextTick(() => {
+        this.hackReset2 = true
+      })
+    },
+    getRecommendMovies (param) {
+      getRecommend(param).then(res2 => {
+        if (res2.success) {
+          this.recommendlist = res2.data.movies
+          this.pageTotal2 = res2.data.length
+        } else {
+          this.recommendlist = []
+        }
+        this.loading = false
+        this.hack2()
       })
     },
     showChange (index) {
@@ -201,14 +224,14 @@ export default {
         params = { page: ++this.page, pageNum: this.pageNum }
       }
 
-      if (this.page > 3 || this.newlist.length < 18) {
+      if (this.page > 3 || this.movielist.length < 18) {
         this.$router.push('/movies')
       } else {
         getMovies(params).then(res => {
           if (res.success) {
             res.data.movies.forEach(item => {
-              if (JSON.stringify(this.newlist).indexOf(item.id) < 0) {
-                this.newlist.push(item)
+              if (JSON.stringify(this.movielist).indexOf(item.id) < 0) {
+                this.movielist.push(item)
               }
             })
           }
@@ -247,7 +270,7 @@ export default {
 
       getMovies(params).then(res => {
         if (res.success) {
-          this.newlist = res.data.movies
+          this.movielist = res.data.movies
           this.condition = JSON.stringify(params)
           this.hack()
         } else {
@@ -257,6 +280,7 @@ export default {
     },
     currentChange (currentPage) {
       console.log(currentPage)
+      this.getRecommendMovies({page: currentPage, pageNum: this.pageNum2})
     }
   }
 }

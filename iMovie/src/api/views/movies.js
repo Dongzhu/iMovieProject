@@ -18,8 +18,18 @@ export function getMovies (po) {
     .catch(error => { console.log(error) })
 }
 
+export function getRecommend (po) {
+  let params = {
+    page: po.page,
+    pageNum: po.pageNum
+  }
+  return axios.get(`${base}/movies/recommend`, { params: params })
+    .then(res => { return res.data })
+    .catch(error => { console.log(error) })
+}
+
 export function getMovie (id) {
-  return axios.get(`${base}/movies/` + id)
+  return axios.get(`${base}/movie/` + id)
     .then(res => { return res.data })
     .catch(error => { console.log(error) })
 }

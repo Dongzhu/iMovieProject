@@ -9,7 +9,7 @@ import Vuex from 'vuex'
 import JsEncrypt from 'jsencrypt'
 
 // 引入Element
-import ElementUI from 'element-ui'
+// import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 // 引入echarts
@@ -28,7 +28,7 @@ Vue.config.productionTip = false
 Vue.prototype.$jsEncrypt = JsEncrypt
 Vue.prototype.$echarts = echarts
 
-Vue.use(ElementUI)
+// Vue.use(ElementUI)
 Vue.use(Vuex)
 Vue.use(VueLazyload, {
   loading: require('@/assets/loading-svg/loading-spinning-bubbles.svg'),

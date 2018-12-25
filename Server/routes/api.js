@@ -248,7 +248,7 @@ router.get('/movies', async (ctx, next) => {
   let params = {}
   if (country && country.indexOf('all') < 0) {
     // params.country = new RegExp(`^.*`+country+`.*$`)
-    console.log('index', country.indexOf(','));
+    // console.log('index', country.indexOf(','));
     if (country.indexOf(',') > -1) {
       let countrylist = country.split(',')
       let countryReg = '^.*'
@@ -257,7 +257,7 @@ router.get('/movies', async (ctx, next) => {
         else countryReg += item + '|'
       })
       countryReg += '.*$'
-      console.log('countryReg: '+countryReg)
+      // console.log('countryReg: '+countryReg)
       params.country = new RegExp(countryReg)
     } else if (country === '欧美') {
       params.country = new RegExp('^.*英国|法国|德国|意大利|西班牙|俄罗斯|加拿大|澳大利亚|爱尔兰|瑞典|巴西|丹麦|美国.*$')
@@ -303,10 +303,10 @@ router.get('/movies', async (ctx, next) => {
   }
 })
 
-router.get('/movies/:id', async (ctx, next) => {
+router.get('/movie/:id', async (ctx, next) => {
   const Movie = mongoose.model('Movie')
   const id = ctx.params.id
-  const movie = await Movie.findOne({id:ObjectId(id)}).sort({
+  const movie = await Movie.findOne({id:id}).sort({
     'meta.createdAt': -1
   })
 
@@ -352,8 +352,28 @@ function FormateArray (array) {
   return newArray
 }
 
+// add movies to collection.Category, if none, create it.
+async function AddToCategory (array, data) {
+  const Category = mongoose.model('Category')
+  const _id = data._id
+
+  for (var i = 0; i<array.length; i++) {
+    let item = array[i]
+    let cate = await Category.findOne({name:item})
+    if (cate) {
+      cate.movies.push(ObjectId(_id))
+    } else {
+      cate = new Category({ name: item, movies: [ _id ] })
+    }
+    let save = await cate.save()
+    if (!save) return false
+  }
+
+  return true
+}
+
 router.post('/movie', async (ctx, next) => {
-  console.log(ctx.request.body)
+  // console.log(ctx.request.body)
   if (ctx.request.body) {
     // author, title, alt_title, image, summary, language, pubdate, country, writer, director, cast, movie_duration, year, movie_type, rate, recommend
     const { author, title, alt_title, image, summary, language, pubdate, country, writer, director, cast, movie_duration, year, movie_type, rate, recommend } = ctx.request.body
@@ -386,8 +406,14 @@ router.post('/movie', async (ctx, next) => {
 
     try {
       const save = await movie.save()  // save() 异步操作
+      const flag = AddToCategory(FormateArray(movie_type), save)
+
       // 保存成功执行的操作
-      return ctx.body = { success: true, message: '添加成功', rescode: 20050, data: { save } }
+      if (flag) {
+        return ctx.body = { success: true, message: '添加成功', rescode: 20050, data: { save, flag } }
+      } else {
+        return ctx.body = { success: false, message: '添加失败', rescode: 20055, data: {} }
+      }
     } catch (err) {
       // 保存失败执行的操作
       console.log('err: ', err)
@@ -404,7 +430,7 @@ router.post('/movie', async (ctx, next) => {
  * @apiParam {String} id  movieId, require
  */
  router.put('/movie', async (ctx, next) => {
-   console.log(ctx.request.body)
+   // console.log(ctx.request.body)
    if (ctx.request.body) {
      // author, title, alt_title, image, summary, language, pubdate, country, writer, director, cast, movie_duration, year, movie_type, rate, recommend
      const { id, author, title, alt_title, image, summary, language, pubdate, country, writer, director, cast, movie_duration, year, movie_type, rate, recommend } = ctx.request.body
@@ -457,17 +483,55 @@ router.post('/movie', async (ctx, next) => {
    }
  })
 
+router.get('/movies/recommend', async (ctx, next) => {
+  let page = parseInt(ctx.request.query.page) || 1
+  let pageNum = parseInt(ctx.request.query.pageNum) || 9999
+
+  const Movie = mongoose.model('Movie')
+  let movies = await Movie.find({recommend:true}).limit(pageNum).skip((page-1) * pageNum).sort({ 'meta.createdAt': 1 })
+  let allmovies = await Movie.find({recommend:true}).sort({ 'meta.createdAt': 1 })
+
+  if (movies && allmovies) {
+   ctx.body = { success: true, message: '查询成功', rescode: 20070, data: { movies, length: allmovies.length } }
+  } else {
+   ctx.body = { success: false, message: '查询失败', rescode: 20071, data: {} }
+  }
+})
+
+// delete movie._id from collection.Category
+async function DeleteCates(_id) {
+  const Category = mongoose.model('Category')
+  const cates = await Category.find({movies:ObjectId(_id)})
+
+  if (cates) {
+    for (var i = 0; i<cates.length; i++) {
+      let item = cates[i]
+      let index = item.movies.indexOf(ObjectId(_id))
+      item.movies.splice(index, 1)
+      let save = await item.save()
+      if (!save) return false
+    }
+  }
+  return true
+}
+
 router.delete('/movie', async (ctx, next) => {
-  console.log(ctx.request.query);
+  // console.log(ctx.request.query);
   const _id = ctx.request.query._id
   if (!_id) return ctx.body = { success: false, message: '删除失败，缺少参数', rescode: 20081, data: {} }
 
   const Movie = mongoose.model('Movie')
-  await Movie.remove({_id:ObjectId(_id)}, (err, res) => {
+
+  await Movie.deleteOne({_id:ObjectId(_id)}, (err, res) => {
     if (err) {
       return ctx.body = { success: false, message: '删除失败', rescode: 20082, data: { err } }
     } else {
-      return ctx.body = { success: true, message: '删除成功', rescode: 20080, data: {} }
+      const flag = DeleteCates(_id)
+      if (flag) {
+        return ctx.body = { success: true, message: '删除成功', rescode: 20080, data: {} }
+      } else {
+        return ctx.body = { success: false, message: '删除失败', rescode: 20083, data: {} }
+      }
     }
   })
 })

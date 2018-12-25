@@ -16,7 +16,7 @@
         </div>
         <div class="clearfix"></div>
         <div class="info-section info-content" v-loading="loading">
-          <div class="card card-admin" style="width: 160px" v-for="(item,index) in movielist" :key="index" v-if="hackReset">
+          <div class="card card-admin" v-for="(item,index) in movielist" :key="index" v-if="hackReset">
             <div class="card-bg" :title="item.title+' '+item.rate" @click="viewMovie(item)">
               <img v-lazy="item.poster" :alt="item.title" width="100%" height="100%" class="image">
               <span class="card-rate" v-if="item.recommend">{{ item.rate }}</span>
@@ -35,7 +35,7 @@
                 <time class="time">{{ item.year[0] }}</time>
                 <time class="time">{{ item.rate }}</time>
               </p>
-              <p>
+              <p class="options">
                 <el-button type="text" class="button" @click="Recommend(item)" v-if="item.recommend">取消推荐</el-button>
                 <el-button type="text" class="button" @click="Recommend(item)" v-else>推荐</el-button>
                 <el-button type="text" class="button" @click="editMovie(item)">编辑</el-button>
@@ -43,8 +43,8 @@
               </p>
             </div>
           </div>
-          <div class="" v-if="!loading">
-            <p style="padding: 100px 0; text-align: center;" v-if="movielist.length === 0">暂无数据</p>
+          <div v-if="(!loading && movielist.length === 0) || (loading && movielist.length !== 0)">
+            <p style="height:200px;line-height:200px;text-align:center">暂无数据</p>
           </div>
         </div>
       </div>
@@ -451,7 +451,8 @@ export default {
       let param = { id: data._id, recommend: !data.recommend }
       RecommendMovie(param).then(res => {
         if (res.success) {
-          this.openSuccess('推荐成功！')
+          let msg = data.recommend ? '取消推荐成功！' : '推荐成功！'
+          this.openSuccess(msg)
           for (let i = 0; i < this.movielist.length; i++) {
             if (this.movielist[i]._id === res.data.save._id) {
               this.movielist[i] = res.data.save

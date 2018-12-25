@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     isCollapse () { return this.$store.state.isCollapse },
-    tag () { return this.$route.path.split('/')[1] },
+    tag () { return this.$route.path.split('/')[1] !== 'admin' ? this.$route.path.split('/')[1] : 'main' },
     openeds () {
       let arr = []
       let that = this

@@ -35,7 +35,9 @@
             </div>
           </div>
         </div>
-        <div class="section" v-else><p>暂无数据</p></div>
+        <div class="section" v-else>
+          <p style="height:200px;line-height:200px;text-align:center">暂无数据</p>
+        </div>
 
         <Sidebar></Sidebar>
       </el-container>
@@ -93,12 +95,6 @@ export default {
         console.log('Error')
       }
     })
-  },
-  methods: {
-    showChange (index) {
-      // console.log(index)
-      document.querySelector('.bg').style.backgroundImage = 'url(' + this.bannerlist[index].url + ')'
-    }
   }
 }
 </script>

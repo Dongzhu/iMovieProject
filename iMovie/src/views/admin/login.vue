@@ -109,6 +109,9 @@ export default {
             } else {
               this.openError(res.message)
             }
+          }).catch(error => {
+            this.openError('login error')
+            console.log(error)
           })
         } else {
           this.openError('error submit!!')

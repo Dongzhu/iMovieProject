@@ -3,36 +3,39 @@
     <div class="top">
       <el-header>
         <div class="top-left">
-          <div class="brand"><a href="/">BRAND</a></div>
-          <div class="nav">
+          <a href="/">BRAND</a>
+        </div>
+        <div class="top-right" v-if="hackReset">
+          <span v-if="username !== ''">
+            <span :class="['username', {'color-fff':$route.path==='/'}]">{{ username }}</span>
+            <img class="userimg" src="../../assets/images/avatar.jpg" alt="">
+          </span>
+          <span :class="['username', {'color-fff':$route.path==='/'}]" v-if="username === ''">
+            <a href="/login" @click="login">登录</a> /
+            <a href="/register" @click="register">注册</a>
+          </span>
+          <div class="top-right-info" v-if="username !== ''">
             <ul>
-              <li><a href="/">首页</a></li>
-              <li><a href="#">排行榜</a></li>
-              <li><router-link :to="{ name: 'movies'}">分类</router-link></li>
-              <li><a href="#">关于</a></li>
+              <li>我的资料</li>
+              <li>我的收藏</li>
+              <li @click="logout">退出</li>
             </ul>
           </div>
         </div>
-        <div class="top-right" v-if="hackReset">
-          <div class="search-box" v-if="!isMobile">
-            <input v-model="searchTxt" type="text" placeholder="请输入内容" @keyup.enter="searchMovie">
-            <i class="el-icon-search" @click="searchMovie"></i>
-          </div>
-          <div :class="['userinfo', {'userinfoMobile': isMobile}]">
-            <span v-if="username !== ''">
-              <span class="username" v-if="!isMobile">{{ username }}</span>
-              <span class="userimg"><img src="../../assets/images/avatar.jpg" alt=""></span>
-            </span>
-            <span class="username" v-if="username === ''">
-              <a href="/login" @click="login">登录</a> /
-              <a href="/register" @click="register">注册</a>
-            </span>
-            <div :class="['top-right-info', {'top-right-infoMobile': isMobile}]" v-if="username !== ''">
+        <div class="top-bottom">
+          <div class="">
+            <div class="top-left">
               <ul>
-                <li>我的资料</li>
-                <li>我的收藏</li>
-                <li @click="logout">退出</li>
+                <li><a href="/">首页</a></li>
+                <li><a href="#">国产电影</a></li>
+                <li><a href="#">国外电影</a></li>
+                <li><a href="#">排行榜</a></li>
+                <li><router-link :to="{ name: 'movies'}">分类</router-link></li>
               </ul>
+            </div>
+            <div class="top-right search-box">
+              <input v-model="searchTxt" type="text" placeholder="请输入内容" @keyup.enter="searchMovie">
+              <i class="el-icon-search" @click="searchMovie"></i>
             </div>
           </div>
         </div>
@@ -64,29 +67,18 @@ export default {
     this.hack()
     this.searchTxt = this.$route.query.keywords
     this.username = this.getCookie('username')
+    let route = this.$route.path
 
-    window.addEventListener('resize', this.handleResize)
-
-    this.fullWidth = document.documentElement.clientWidth
-    if (this.fullWidth <= 600) {
-      this.$store.commit('updateMobile', true)
+    let top = document.querySelector('.top')
+    if (route.indexOf('index') > -1 || route.length === 1) {
+      if (top) {
+        top.style.color = '#fff'
+      }
     } else {
-      this.$store.commit('updateMobile', false)
+      top.style.backgroundImage = 'url(' + require('@/assets/images/bg.jpg') + ')'
+      top.style.backgroundRepeat = 'round'
     }
-
-    // let route = this.$route.path
-    // let top = document.querySelector('.top')
-    // top.style.backgroundRepeat = 'round'
-    // if (route.indexOf('index') > -1 || route.length === 1) {
-    //   if (top) {
-    //     top.style.color = '#fff'
-    //   }
-    // } else {
-    //   top.style.backgroundImage = 'url(' + require('@/assets/images/bg.jpg') + ')'
-    //   top.style.backgroundRepeat = 'round'
-    // }
   },
-  computed: { isMobile () { return this.$store.state.isMobile } },
   methods: {
     hack () {
       // console.log('hack it!')
@@ -107,14 +99,6 @@ export default {
         message: text,
         type: 'error'
       })
-    },
-    handleResize (event) {
-      this.fullWidth = document.documentElement.clientWidth
-      if (this.fullWidth <= 600) {
-        this.$store.commit('updateMobile', true)
-      } else {
-        this.$store.commit('updateMobile', false)
-      }
     },
     searchMovie () {
       if (this.searchTxt === '') return this.openError('请输入关键字搜索！')
@@ -152,8 +136,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.el-header { }
-.el-footer { line-height: 50px; }
-.username { vertical-align: text-bottom; }
+.el-header {
+  height: auto !important;
+  line-height: 40px;
+}
+.el-footer {
+  line-height: 40px;
+}
+.username { vertical-align: text-bottom; color: #fff; }
 .color-fff { color: #fff; }
 </style>

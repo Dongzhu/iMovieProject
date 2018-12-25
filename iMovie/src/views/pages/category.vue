@@ -17,7 +17,7 @@
           </el-switch><span> {{valueText}}</span>
         </div>
         <div class="clearfix"></div>
-        <div class="cate-info" v-if="cateid !== ''">
+        <div class="cate-info" v-loading="loading" v-if="cateid !== ''">
           <h4>
             当前分类：
             <el-breadcrumb separator="/" v-if="hackReset">
@@ -43,7 +43,7 @@
             </div>
           </div>
         </div>
-        <div class="cate-info" v-else>
+        <div class="cate-info" v-loading="loading" v-else>
           <div class="catemovies" v-for="(item,index) in movielist" :key="index">
             <div class="movielogo">
               <router-link :to="{ name: 'detail', params: {id:item.id} }">
@@ -60,6 +60,9 @@
               <p>上映日期：<span v-for="(item,index) in item.pubdate || ''" :key="index">{{item}} </span></p>
               <p>剧情简介：{{item.summary}}</p>
             </div>
+          </div>
+          <div v-if="(!loading && movielist.length === 0) || (loading && movielist.length !== 0)">
+            <p style="height:200px;line-height:200px;text-align:center">暂无数据</p>
           </div>
         </div>
         <div class="loadmore" v-if="movielist.length !== 0">
@@ -85,6 +88,7 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
+      loading: true,
       value: true,
       taglength: 30,
       categories: [],
@@ -113,6 +117,7 @@ export default {
             } else {
               this.categories = []
             }
+            this.loading = false
           })
         } else {
           getMovies({}).then(res2 => {
@@ -122,6 +127,7 @@ export default {
             } else {
               this.catemovies = []
             }
+            this.loading = false
           })
         }
       } else {
